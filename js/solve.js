@@ -29,6 +29,7 @@ export function solve(grid16original, line16original) {
   const line16 = [...line16original];
 
   const potentialQuads = findPotentialQuads(grid16, line16);
+  console.log(potentialQuads);
   if (isBrokenBranch(potentialQuads)) {
     return "invalid";
   }
