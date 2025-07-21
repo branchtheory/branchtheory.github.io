@@ -11,14 +11,11 @@ export function findPotentialQuads(grid16, line16) {
 
   for (let gridItemIndex = 0; gridItemIndex < NUMBER_OF_GRID_ITEMS; gridItemIndex++) {
     const gridItemValue = grid16[gridItemIndex];
-    console.log(gridItemIndex);
-    console.log(gridItemValue);
 
     const productQuads = getQuadsWhereThisGridItemIsTheProductOfTwoNumbers(gridItemValue, gridItemIndex, grid16, line16);
     const sumQuads = getQuadsWhereThisGridItemIsTheSumOfTwoNumbers(gridItemValue, gridItemIndex, grid16, line16);
 
     potentialQuads[gridItemIndex] = [...productQuads, ...sumQuads];
-    console.log(potentialQuads);
   }
 
   return potentialQuads;
