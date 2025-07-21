@@ -3,6 +3,7 @@ import { getSolution } from './solve.js';
 let originalGridData = [];
 let originalStripData = [];
 let isSolved = false;
+let isDemoMode = false;
 
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
@@ -11,6 +12,17 @@ function showError(message) {
     setTimeout(() => {
         errorDiv.style.display = 'none';
     }, 5000);
+}
+
+function isInDemoMode() {
+    if (isDemoMode) return true;
+    
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
+    const hasGridPlaceholders = Array.from(gridInputs).some(input => input.placeholder && !input.value.trim());
+    const hasStripPlaceholders = Array.from(stripInputs).some(input => input.placeholder && !input.value.trim());
+    
+    return hasGridPlaceholders && hasStripPlaceholders;
 }
 
 function collectGridData() {
@@ -129,34 +141,29 @@ function validateStripSequential() {
 }
 
 function getDemoOrUserData() {
-    const gridInputs = document.querySelectorAll('.grid-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
-    const hasGridPlaceholders = Array.from(gridInputs).some(input => input.placeholder && !input.value.trim());
-    const hasStripPlaceholders = Array.from(stripInputs).some(input => input.placeholder && !input.value.trim());
-    
-    if (hasGridPlaceholders && hasStripPlaceholders) {
-        // Demo mode - use hardcoded data
+    if (isInDemoMode()) {
+        isDemoMode = true; // Lock into demo mode once detected
         return {
             isDemo: true,
             gridData: [38, 500, 37, 28, 420, 50, 256, 40, 41, 264, 32, 336, 192, 52, 342, 60],
             stripData: [0, 6, 8, 0, 0, 0, 18, 19, 0, 21, 24, 0, 0, 0, 0, 50]
         };
-    } else {
-        // Normal mode - validate and collect user data
-        if (!validateAllFieldsFilled()) {
-            return { isDemo: false, error: 'Fill in the grid first.' };
-        }
-        
-        if (!validateStripSequential()) {
-            return { isDemo: false, error: 'Numbers in the bottom strip must be in ascending order from left to right.' };
-        }
-        
-        return {
-            isDemo: false,
-            gridData: collectGridData().map(str => parseInt(str, 10)),
-            stripData: collectStripData().map(str => parseInt(str, 10))
-        };
     }
+    
+    // Normal mode validation
+    if (!validateAllFieldsFilled()) {
+        return { error: 'Fill in the grid first.' };
+    }
+    
+    if (!validateStripSequential()) {
+        return { error: 'Numbers in the bottom strip must be in ascending order from left to right.' };
+    }
+    
+    return {
+        isDemo: false,
+        gridData: collectGridData().map(str => parseInt(str, 10)),
+        stripData: collectStripData().map(str => parseInt(str, 10))
+    };
 }
 
 function clearAllData() {
@@ -188,6 +195,8 @@ function clearAllData() {
     // Reset arrays
     originalGridData = [];
     originalStripData = [];
+
+    isDemoMode = false;
 
     document.getElementById('partialResultsTable').style.display = 'none';
 }
