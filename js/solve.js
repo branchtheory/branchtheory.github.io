@@ -6,6 +6,8 @@ import { BROKEN_BRANCH, isBrokenBranch, NUMBER_OF_GRID_ITEMS } from './sharedVal
 import { findPotentialQuads } from './potentialQuadsFinder.js';
 
 export function getSolution (grid16original, line16original) {
+  console.log(grid16original);
+  console.log(line16original);
   const grid16 = [...grid16original];
   const line16 = [...line16original];
   const result = solve(grid16, line16);
