@@ -4,6 +4,10 @@ let originalGridData = [];
 let originalStripData = [];
 let isSolved = false;
 let isDemoMode = false;
+const GRID_PLACEHOLDERS = ['38', '500', '37', '28', '420', '50', '256', '40', '41', '264', '32', '336', '192', '52', '342', '60'];
+const STRIP_PLACEHOLDERS = ['', '6', '8', '', '', '', '18', '19', '', '21', '24', '', '', '', '', '50'];
+const DEMO_GRID_DATA = GRID_PLACEHOLDERS.map(str => parseInt(str, 10));
+const DEMO_STRIP_DATA = STRIP_PLACEHOLDERS.map(str => parseInt(str, 10));
 
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
@@ -145,8 +149,8 @@ function getDemoOrUserData() {
         isDemoMode = true; // Lock into demo mode once detected
         return {
             isDemo: true,
-            gridData: [38, 500, 37, 28, 420, 50, 256, 40, 41, 264, 32, 336, 192, 52, 342, 60],
-            stripData: [0, 6, 8, 0, 0, 0, 18, 19, 0, 21, 24, 0, 0, 0, 0, 50]
+            gridData: DEMO_GRID_DATA,
+            stripData: DEMO_STRIP_DATA
         };
     }
     
@@ -196,6 +200,14 @@ function clearAllData() {
     originalGridData = [];
     originalStripData = [];
 
+    gridInputs.forEach((input, index) => {
+    input.placeholder = GRID_PLACEHOLDERS[index] || '';
+    });
+    
+    stripInputs.forEach((input, index) => {
+        input.placeholder = STRIP_PLACEHOLDERS[index] || '';
+    });
+
     isDemoMode = false;
 
     document.getElementById('partialResultsTable').style.display = 'none';
@@ -221,15 +233,14 @@ function validateGridInput(event) {
     const input = event.target;
     const value = input.value;
     
-    // Clear all grid placeholders on first input
+    // Clear all placeholders on first input to any field
     if (value.length === 1) {
         clearAllGridPlaceholders();
+        clearAllStripPlaceholders();
     }
     
-    // Remove any non-digit characters
+    // Remove any non-digit characters and limit to 3 digits
     let cleanValue = value.replace(/\D/g, '');
-    
-    // Limit to 3 digits
     if (cleanValue.length > 3) {
         cleanValue = cleanValue.substring(0, 3);
     }
@@ -241,15 +252,14 @@ function validateStripInput(event) {
     const input = event.target;
     const value = input.value;
     
-    // Clear all strip placeholders on first input
+    // Clear all placeholders on first input to any field
     if (value.length === 1) {
+        clearAllGridPlaceholders();
         clearAllStripPlaceholders();
     }
     
-    // Remove any non-digit characters
+    // Remove any non-digit characters and limit to 2 digits
     let cleanValue = value.replace(/\D/g, '');
-    
-    // Limit to 2 digits
     if (cleanValue.length > 2) {
         cleanValue = cleanValue.substring(0, 2);
     }
@@ -344,6 +354,17 @@ function generatePartialResultsTable(partialSolveMap) {
         
 // Add event listeners
 document.addEventListener('DOMContentLoaded', function() {
+    // Set placeholders from constants
+    const gridInputs = document.querySelectorAll('.grid-input');
+    gridInputs.forEach((input, index) => {
+        input.placeholder = GRID_PLACEHOLDERS[index] || '';
+    });
+    
+    const stripInputs = document.querySelectorAll('.strip-input');
+    stripInputs.forEach((input, index) => {
+        input.placeholder = STRIP_PLACEHOLDERS[index] || '';
+    });
+    
     // Grid inputs (3 digits max)
     const gridInputs = document.querySelectorAll('.grid-input');
     gridInputs.forEach(input => {
