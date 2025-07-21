@@ -7,7 +7,7 @@ let isDemoMode = false;
 const GRID_PLACEHOLDERS = ['38', '500', '37', '28', '420', '50', '256', '40', '41', '264', '32', '336', '192', '52', '342', '60'];
 const STRIP_PLACEHOLDERS = ['', '6', '8', '', '', '', '18', '19', '', '21', '24', '', '', '', '', '50'];
 const DEMO_GRID_DATA = GRID_PLACEHOLDERS.map(str => parseInt(str, 10));
-const DEMO_STRIP_DATA = STRIP_PLACEHOLDERS.map(str => parseInt(str, 10));
+const DEMO_STRIP_DATA = STRIP_PLACEHOLDERS.map(str => str === '' ? 0 : parseInt(str, 10));
 
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
