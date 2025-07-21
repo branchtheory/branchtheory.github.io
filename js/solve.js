@@ -6,10 +6,7 @@ import { BROKEN_BRANCH, isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } fr
 import { findPotentialQuads } from './potentialQuadsFinder.js';
 
 export function getSolution (grid16, line16) {
-  console.log(grid16);
-  console.log(line16);
   const result = solve(grid16, line16);
-  console.log(result);
   if (isBrokenBranch(result) || isBrokenBranch(result.solution)) {
     return("invalid");
   } else {
@@ -26,7 +23,6 @@ export function getSolution (grid16, line16) {
 
 export function solve(grid16, line16) {
   const potentialQuads = findPotentialQuads(grid16, line16);
-  console.log(potentialQuads);
   if (isBrokenBranch(potentialQuads)) {
     return "invalid";
   }
@@ -86,9 +82,7 @@ function loopBranchDeductions(branchQueue, grid16, line16) {
 }
 
 function convertInitialExpansionToOutput(initialExpansion) {
-  const result = new Map();
-
-  initialExpansion.forEach(innerArray => {
+  return initialExpansion.map(innerArray => {
     const primaryGridValue = innerArray[0].primaryGridValue;
 
     const transformedObjects = innerArray.map(obj => {
@@ -103,12 +97,9 @@ function convertInitialExpansionToOutput(initialExpansion) {
       };
     });
 
-    result.set(primaryGridValue, transformedObjects);
+    return [primaryGridValue, transformedObjects];
   });
-
-  return result;
 }
-
 
 function convertSolutionToOutput(solution) {
   const result = {};
