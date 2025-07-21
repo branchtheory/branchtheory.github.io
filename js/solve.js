@@ -82,10 +82,12 @@ function loopBranchDeductions(branchQueue, grid16, line16) {
 }
 
 function convertInitialExpansionToOutput(initialExpansion) {
-  return initialExpansion.map(innerArray => {
-    const primaryGridValue = innerArray[0].primaryGridValue;
+  return initialExpansion.map(group => {
+    if (!Array.isArray(group) || group.length === 0) return null;
 
-    const transformedObjects = innerArray.map(obj => {
+    const primaryGridValue = group[0].primaryGridValue;
+
+    const transformedObjects = group.map(obj => {
       const operationType = obj.operationType === 'sum' ? '+' : '×';
 
       return {
@@ -98,7 +100,7 @@ function convertInitialExpansionToOutput(initialExpansion) {
     });
 
     return [primaryGridValue, transformedObjects];
-  });
+  }).filter(Boolean); // Filter out any nulls in case of bad input
 }
 
 function convertSolutionToOutput(solution) {
