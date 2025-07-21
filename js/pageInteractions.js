@@ -400,6 +400,10 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         showError('There is no solution for this puzzle.');
         return;
     }
+
+    if (solution.solutionCount && solution.solutionCount > 1) {
+        showError(`This puzzle has ${solution.solutionCount} solutions. Showing one of them.`);
+    }
     
     // Make all inputs non-editable
     const allInputs = document.querySelectorAll('input');
@@ -447,6 +451,8 @@ document.getElementById('solveBtn').addEventListener('click', function() {
 
 // Unsolve button event listener
 document.getElementById('unsolveBtn').addEventListener('click', function() {
+    document.getElementById('errorMessage').style.display = 'none';
+    
     restoreOriginalData();
     
     // Update button states
@@ -458,6 +464,8 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
 
 // Reset button event listener
 document.getElementById('resetBtn').addEventListener('click', function() {
+    document.getElementById('errorMessage').style.display = 'none';
+    
     clearAllData();
     
     // Update button states
