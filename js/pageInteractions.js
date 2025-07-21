@@ -1,4 +1,4 @@
-import { solve } from './solve.js';
+import { getSolution } from './solve.js';
 // Store original data for restore functionality
 let originalGridData = [];
 let originalStripData = [];
