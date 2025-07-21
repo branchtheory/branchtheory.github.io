@@ -365,14 +365,11 @@ document.addEventListener('DOMContentLoaded', function() {
         input.placeholder = STRIP_PLACEHOLDERS[index] || '';
     });
     
-    // Grid inputs (3 digits max)
-    const gridInputs = document.querySelectorAll('.grid-input');
+    // Existing validation event listeners...
     gridInputs.forEach(input => {
         input.addEventListener('input', validateGridInput);
     });
     
-    // Strip inputs (2 digits max)
-    const stripInputs = document.querySelectorAll('.strip-input');
     stripInputs.forEach(input => {
         input.addEventListener('input', validateStripInput);
     });
