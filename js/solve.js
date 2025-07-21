@@ -9,6 +9,7 @@ export function getSolution (grid16original, line16original) {
   const grid16 = [...grid16original];
   const line16 = [...line16original];
   const result = solve(grid16, line16);
+  console.log(result);
   if (isBrokenBranch(result) || isBrokenBranch(result.solution)) {
     return("invalid");
   } else {
