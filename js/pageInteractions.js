@@ -2,6 +2,7 @@ import { getSolution } from './solve.js';
 // Store original data for restore functionality
 let originalGridData = [];
 let originalStripData = [];
+let originalDataSaved = false; 
 let isSolved = false;
 let isDemoMode = false;
 const GRID_PLACEHOLDERS = ['38', '500', '37', '28', '420', '50', '256', '40', '41', '264', '32', '336', '192', '52', '342', '60'];
@@ -89,6 +90,8 @@ function restoreOriginalData() {
     operationCells.forEach(cell => {
         cell.textContent = '';
     });
+
+    originalDataSaved = false;
 
     document.getElementById('partialResultsTable').style.display = 'none';
 }
@@ -209,6 +212,7 @@ function clearAllData() {
     });
 
     isDemoMode = false;
+    originalDataSaved = false; 
 
     document.getElementById('partialResultsTable').style.display = 'none';
 }
@@ -265,6 +269,20 @@ function validateStripInput(event) {
     }
     
     input.value = cleanValue;
+}
+
+function saveOriginalData() {
+    if (originalDataSaved) return; // Don't overwrite already saved data
+    
+    // Save grid data
+    const gridInputs = document.querySelectorAll('.grid-input');
+    originalGridData = Array.from(gridInputs).map(input => input.value);
+    
+    // Save strip data
+    const stripInputs = document.querySelectorAll('.strip-input');
+    originalStripData = Array.from(stripInputs).map(input => input.value);
+    
+    originalDataSaved = true;
 }
 
 function partialSolve() {
