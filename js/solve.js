@@ -2,7 +2,7 @@ import { BranchQueue } from './branchQueue.js';
 import { isPotentialSolution, isValidSolution } from './solutionChecker.js';
 import { deduceFromSingles, deduceAfterASplit } from './logicalDeductions.js';
 import { splitFirstBranch } from './branchSplitter.js';
-import { BROKEN_BRANCH, isBrokenBranch, NUMBER_OF_GRID_ITEMS } from './sharedValuesAndTools.js';
+import { BROKEN_BRANCH, isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } from './sharedValuesAndTools.js';
 import { findPotentialQuads } from './potentialQuadsFinder.js';
 
 export function getSolution (grid16, line16) {
