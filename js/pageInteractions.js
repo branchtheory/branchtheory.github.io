@@ -320,23 +320,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Solve button event listener
 document.getElementById('solveBtn').addEventListener('click', function() {
-    // Validate all fields are filled
-    if (!validateAllFieldsFilled()) {
-        showError('Fill in the grid first.');
-        return;
-    }
+   // Check if this is demo mode (placeholders present and no user input)
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
+    const hasGridPlaceholders = Array.from(gridInputs).some(input => input.placeholder && !input.value.trim());
+    const hasStripPlaceholders = Array.from(stripInputs).some(input => input.placeholder && !input.value.trim());
     
-    // Validate strip sequential order
-    if (!validateStripSequential()) {
-        showError('Numbers in the bottom strip must be in ascending order from left to right.');
-        return;
+    let userGridData, userStripData;
+    
+    if (hasGridPlaceholders && hasStripPlaceholders) {
+        // Demo mode - use hardcoded data
+        userGridData = [38, 500, 37, 28, 420, 50, 256, 40, 41, 264, 32, 336, 192, 52, 342, 60];
+        userStripData = [0, 6, 8, 0, 0, 0, 18, 19, 0, 21, 24, 0, 0, 0, 0, 50];
+    } else {
+        // Normal mode - validate and collect user data
+        if (!validateAllFieldsFilled()) {
+            showError('Fill in the grid first.');
+            return;
+        }
+        
+        if (!validateStripSequential()) {
+            showError('Numbers in the bottom strip must be in ascending order from left to right.');
+            return;
+        }
+        
+        userGridData = collectGridData().map(str => parseInt(str, 10));
+        userStripData = collectStripData().map(str => parseInt(str, 10));
     }
     
     // Save original data
     saveOriginalData();
-    
-    const userGridData = collectGridData().map(str => parseInt(str, 10));
-    const userStripData = collectStripData().map(str => parseInt(str, 10));
 
     // Get solution data
     const solution = getSolution(userGridData, userStripData);
