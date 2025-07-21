@@ -5,11 +5,9 @@ import { splitFirstBranch } from './branchSplitter.js';
 import { BROKEN_BRANCH, isBrokenBranch, NUMBER_OF_GRID_ITEMS } from './sharedValuesAndTools.js';
 import { findPotentialQuads } from './potentialQuadsFinder.js';
 
-export function getSolution (grid16original, line16original) {
+export function getSolution (grid16, line16) {
   console.log(grid16original);
   console.log(line16original);
-  const grid16 = [...grid16original];
-  const line16 = [...line16original];
   const result = solve(grid16, line16);
   console.log(result);
   if (isBrokenBranch(result) || isBrokenBranch(result.solution)) {
@@ -26,10 +24,7 @@ export function getSolution (grid16original, line16original) {
   }
 }
 
-export function solve(grid16original, line16original) {
-  const grid16 = [...grid16original]//.sort((a, b) => a - b);
-  const line16 = [...line16original];
-
+export function solve(grid16, line16) {
   const potentialQuads = findPotentialQuads(grid16, line16);
   console.log(potentialQuads);
   if (isBrokenBranch(potentialQuads)) {
