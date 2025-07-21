@@ -1,27 +1,14 @@
 import { BranchQueue } from './branchQueue.js';
 import { isPotentialSolution, isValidSolution } from './solutionChecker.js';
 import { deduceFromSingles, deduceAfterASplit } from './logicalDeductions.js';
-import { splitFirstBranch } from './branchSplitter.js';
-import { BROKEN_BRANCH, isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } from './sharedValuesAndTools.js';
+import { splitFirstBranch, deepCopyABranch } from './branchSplitter.js';
+import { isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } from './sharedValuesAndTools.js';
 import { findPotentialQuads } from './potentialQuadsFinder.js';
 
-export function getSolution (grid16, line16) {
-  const result = solve(grid16, line16);
-  if (isBrokenBranch(result) || isBrokenBranch(result.solution)) {
-    return("invalid");
-  } else {
-    const line16OfSolution = extractLine16FromSolution(result.solution);
-    const gridSolution = convertSolutionToOutput(result.solution);
-    const initialExpansion = convertInitialExpansionToOutput(result.initialExpansion);
-    return {
-      line: line16OfSolution,
-      grid: gridSolution,
-      crunchedNumbers: initialExpansion
-    }
-  }
-}
+export function getSolution(grid16original, line16original) {
+  const grid16 = [...grid16original];
+  const line16 = [...line16original];
 
-export function solve(grid16, line16) {
   const potentialQuads = findPotentialQuads(grid16, line16);
   if (isBrokenBranch(potentialQuads)) {
     return "invalid";
@@ -30,30 +17,27 @@ export function solve(grid16, line16) {
   const branchQueue = new BranchQueue();
   prepBranchQueue(potentialQuads, branchQueue, grid16);
 
-  if (!isPotentialSolution(branchQueue.firstBranch)) {
-    return {
-      initialExpansion: potentialQuads,
-      solution: loopBranchDeductions(branchQueue, grid16, line16)
-    }
-  } else {
+  if (isPotentialSolution(branchQueue.firstBranch)) {
     if (isValidSolution(branchQueue.firstBranch, line16)) {
-      return {
-        initialExpansion: potentialQuads,
-        solution: branchQueue.firstBranch
-      }
+      return buildSolutionObject(branchQueue.firstBranch, 1, potentialQuads);
     } else {
-      return BROKEN_BRANCH;
+      return "invalid";
     }
+  }
+
+  const result = loopBranchDeductions(branchQueue, grid16, line16)
+
+  if (result.solutionCount === 0) {
+    return "invalid";
+  } else {
+    return buildSolutionObject(result.solution, result.solutionCount, potentialQuads);
   }
 }
 
-function prepBranchQueue(initialQuads, branchQueue, grid16) {
-  branchQueue.createNewBranch(initialQuads);
-  branchQueue.setFirstBranch();
-  branchQueue.firstBranch = deduceFromSingles(branchQueue.firstBranch, grid16);
-}
-
 function loopBranchDeductions(branchQueue, grid16, line16) {
+  let solutionCount = 0;
+  let solution = [];
+
   splitFirstBranch(branchQueue);
 
   while (!branchQueue.isEmpty()) {
@@ -69,18 +53,40 @@ function loopBranchDeductions(branchQueue, grid16, line16) {
       branchQueue.removeFirstBranch();
     } else if (isPotentialSolution(branchQueue.firstBranch)) {
       if (isValidSolution(branchQueue.firstBranch, line16)) {
-        return branchQueue.firstBranch;
-      } else {
-        branchQueue.removeFirstBranch();
+        if (solution.length === 0) {
+          solution = deepCopyABranch(branchQueue.firstBranch);
+        }
+        solutionCount++;
       }
+      branchQueue.removeFirstBranch();
     } else {
       splitFirstBranch(branchQueue);
     }
   }
 
-  return BROKEN_BRANCH;
+  return {
+    "solution": solution,
+    "solutionCount": solutionCount
+  }
 }
 
+function buildSolutionObject(solution, solutionCount, potentialQuads) {
+  const line16OfSolution = extractLine16FromSolution(solution);
+  const gridSolution = convertSolutionToOutput(solution);
+  const initialExpansion = convertInitialExpansionToOutput(potentialQuads);
+  return {
+    line: line16OfSolution,
+    crunchedNumbers: initialExpansion,
+    grid: gridSolution,
+    "solutionCount": solutionCount
+  }
+}
+
+function prepBranchQueue(initialQuads, branchQueue, grid16) {
+  branchQueue.createNewBranch(initialQuads);
+  branchQueue.setFirstBranch();
+  branchQueue.firstBranch = deduceFromSingles(branchQueue.firstBranch, grid16);
+}
 function convertInitialExpansionToOutput(initialExpansion) {
   return initialExpansion.map(group => {
     if (!Array.isArray(group) || group.length === 0) return null;
