@@ -21,13 +21,12 @@ function showError(message) {
 
 function isInDemoMode() {
     if (isDemoMode) return true;
-    
-    const gridInputs = document.querySelectorAll('.grid-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
-    const hasGridPlaceholders = Array.from(gridInputs).some(input => input.placeholder && !input.value.trim());
-    const hasStripPlaceholders = Array.from(stripInputs).some(input => input.placeholder && !input.value.trim());
-    
-    return hasGridPlaceholders && hasStripPlaceholders;
+
+    const allInputs = document.querySelectorAll('.grid-input, .strip-input');
+    // Demo mode is when the user has not entered any data into any field.
+    const isAllEmpty = Array.from(allInputs).every(input => !input.value.trim());
+
+    return isAllEmpty;
 }
 
 function collectGridData() {
