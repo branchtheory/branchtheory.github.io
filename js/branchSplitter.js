@@ -25,14 +25,14 @@ function createANewBranchForEachQuad(branchQueue, indexOfGridItemToSplit, ns) {
   let quadIndex = 0;
 
   while (quadIndex < branchQueue.firstBranch[indexOfGridItemToSplit].length) {
-    const branchCopy = deepCopyTheFirstBranch(branchQueue.firstBranch);
+    const branchCopy = deepCopyABranch(branchQueue.firstBranch);
     setThisQuadToBeTheOnlyQuadInThisGridItem(branchCopy, indexOfGridItemToSplit, quadIndex);
     branchQueue.createNewBranch(branchCopy, ns);
     quadIndex++;
   }
 }
 
-function deepCopyTheFirstBranch(firstBranch) {
+export function deepCopyABranch(firstBranch) {
   const branchCopy = Array(NUMBER_OF_GRID_ITEMS).fill(null).map((_, gridItemIndex) =>
     firstBranch[gridItemIndex].map(quad => ({ ...quad }))
   );
