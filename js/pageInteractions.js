@@ -223,8 +223,8 @@ function partialSolve() {
         return;
     }
     
-    const userGridData = collectGridData();
-    const userStripData = collectStripData();
+    const userGridData = collectGridData().map(str => parseInt(str, 10));
+    const userStripData = collectStripData().map(str => parseInt(str, 10));
 
     // Get solution data
     const solution = getSolution(userGridData, userStripData);
