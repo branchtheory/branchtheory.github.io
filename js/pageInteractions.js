@@ -54,16 +54,6 @@ function collectStripData() {
     return stripData;
 }
 
-function saveOriginalData() {
-    // Save grid data
-    const gridInputs = document.querySelectorAll('.grid-input');
-    originalGridData = Array.from(gridInputs).map(input => input.value);
-    
-    // Save strip data
-    const stripInputs = document.querySelectorAll('.strip-input');
-    originalStripData = Array.from(stripInputs).map(input => input.value);
-}
-
 function restoreOriginalData() {
     // Restore grid data
     const gridInputs = document.querySelectorAll('.grid-input');
