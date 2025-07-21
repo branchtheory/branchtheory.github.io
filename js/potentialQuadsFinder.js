@@ -16,6 +16,7 @@ export function findPotentialQuads(grid16, line16) {
     const sumQuads = getQuadsWhereThisGridItemIsTheSumOfTwoNumbers(gridItemValue, gridItemIndex, grid16, line16);
 
     potentialQuads[gridItemIndex] = [...productQuads, ...sumQuads];
+    console.log(potentialQuads);
   }
 
   return potentialQuads;
