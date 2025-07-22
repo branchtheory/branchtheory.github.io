@@ -14,9 +14,12 @@ function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
     errorDiv.textContent = message;
     errorDiv.style.display = 'block';
-    setTimeout(() => {
-        errorDiv.style.display = 'none';
-    }, 5000);
+}
+
+function showNotification(message) {
+    const notificationDiv = document.getElementById('notificationMessage');
+    notificationDiv.textContent = message;
+    notificationDiv.style.display = 'block';
 }
 
 function isInDemoMode() {
@@ -397,7 +400,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     }
 
     if (solution.solutionCount && solution.solutionCount > 1) {
-        showError(`This puzzle has ${solution.solutionCount} solutions. Showing one of them.`);
+        showNotification(`This puzzle has ${solution.solutionCount} solutions. Showing one of them.`);
     }
     
     // Make all inputs non-editable
@@ -447,6 +450,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
 // Unsolve button event listener
 document.getElementById('unsolveBtn').addEventListener('click', function() {
     document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('notificationMessage').style.display = 'none';
     
     restoreOriginalData();
     
@@ -460,6 +464,7 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
 // Reset button event listener
 document.getElementById('resetBtn').addEventListener('click', function() {
     document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('notificationMessage').style.display = 'none';
     
     clearAllData();
     
