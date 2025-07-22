@@ -20,13 +20,8 @@ function showError(message) {
 }
 
 function isInDemoMode() {
-    if (isDemoMode) return true;
-
     const allInputs = document.querySelectorAll('.grid-input, .strip-input');
-    // Demo mode is when the user has not entered any data into any field.
-    const isAllEmpty = Array.from(allInputs).every(input => !input.value.trim());
-
-    return isAllEmpty;
+    return Array.from(allInputs).every(input => !input.value.trim());
 }
 
 function collectGridData() {
