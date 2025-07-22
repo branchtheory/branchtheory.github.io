@@ -442,6 +442,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
                 
     // Update button states
     this.disabled = true;
+    document.getElementById('partialSolveBtn').disabled = true; // Add this line
     document.getElementById('unsolveBtn').disabled = false;
     document.getElementById('resetBtn').disabled = false;
     isSolved = true;
@@ -456,6 +457,7 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
     
     // Update button states
     document.getElementById('solveBtn').disabled = false;
+    document.getElementById('partialSolveBtn').disabled = false; // Add this line
     this.disabled = true;
     document.getElementById('resetBtn').disabled = false;
     isSolved = false;
@@ -470,6 +472,7 @@ document.getElementById('resetBtn').addEventListener('click', function() {
     
     // Update button states
     document.getElementById('solveBtn').disabled = false;
+    document.getElementById('partialSolveBtn').disabled = false; // Add this line
     document.getElementById('unsolveBtn').disabled = true;
     this.disabled = false;
     isSolved = false;
