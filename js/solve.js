@@ -31,7 +31,6 @@ export function getSolution(grid16original, line16original) {
   if (solutions.length === 0) {
     return "invalid";
   } else {
-    console.log(buildSolutionObject(solutions, potentialQuads));
     return buildSolutionObject(solutions, potentialQuads);
   }
 }
