@@ -369,10 +369,18 @@ function collectUserGrid() {
             const operand1Input = smallInputs[baseIndex];
             const operationInput = operationInputs[(row - 1) * 4 + col]; // 4 operations per row
             const operand2Input = smallInputs[baseIndex + 2];
+
+            console.log("operand1 raw input: " + operand1Input);
+            console.log("operation raw input: " + operationInput);
+            console.log("operand2 raw input: " + operand2Input);
             
             const operand1 = operand1Input?.value.trim();
             const operation = operationInput?.value.trim();
             const operand2 = operand2Input?.value.trim();
+
+            console.log("operand1 trimmed: " + operand1);
+            console.log("operation trimmed: " + operation);
+            console.log("operand2 trimmed: " + operand2);
             
             userGrid[row.toString()].push({
                 operand1: operand1 === '' ? null : parseInt(operand1, 10),
