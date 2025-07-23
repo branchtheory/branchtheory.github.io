@@ -357,35 +357,23 @@ function collectUserGrid() {
     const operationInputs = document.querySelectorAll('.operation-input');
     
     const userGrid = {};
-    
     // Process each row (4 rows total)
     for (let row = 1; row <= 4; row++) {
         userGrid[row.toString()] = [];
-        
         // Each row has 4 groups of (operand1, operation, operand2)
         for (let col = 0; col < 4; col++) {
-            const baseIndex = (row - 1) * 12 + col * 3; // 12 cells per row, 3 cells per group
-            
-            const operand1Input = smallInputs[baseIndex];
-            const operationInput = operationInputs[(row - 1) * 4 + col]; // 4 operations per row
-            const operand2Input = smallInputs[baseIndex + 2];
+            // Corrected indexing: There are 8 small inputs per row.
+            const smallInputBaseIndex = (row - 1) * 8 + col * 2;
+            const operationIndex = (row - 1) * 4 + col;
 
-            console.log("operand1 raw input: " + operand1Input);
-            console.log("operation raw input: " + operationInput);
-            console.log("operand2 raw input: " + operand2Input);
-
-            console.log("operand1 input untrimmed value: " + operand1Input?.value);
-            console.log("operation input untrimmed value: " + operationInput?.value);
-            console.log("operand2 input untrimmed value: " + operand2Input?.value);
+            const operand1Input = smallInputs[smallInputBaseIndex];
+            const operationInput = operationInputs[operationIndex];
+            const operand2Input = smallInputs[smallInputBaseIndex + 1]; // Get the next small input
             
             const operand1 = operand1Input?.value.trim();
             const operation = operationInput?.value.trim();
             const operand2 = operand2Input?.value.trim();
 
-            console.log("operand1 trimmed value: " + operand1);
-            console.log("operation trimmed value: " + operation);
-            console.log("operand2 trimmed value: " + operand2);
-            
             userGrid[row.toString()].push({
                 operand1: operand1 === '' ? null : parseInt(operand1, 10),
                 operation: operation === '' ? null : operation,
@@ -396,7 +384,6 @@ function collectUserGrid() {
     
     return userGrid;
 }
-
 function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, solutionGrid) {
     // Check bottom strip
     for (let i = 0; i < userBottomStrip.length; i++) {
