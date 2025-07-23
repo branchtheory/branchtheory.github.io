@@ -107,11 +107,7 @@ function convertInitialExpansionToOutput(initialExpansion) {
 }
 
 function convertSolutionToOutput(solution) {
-  const result = {};
-  const objectsPerGroup = 4;
-
-  // Extract all objects from the nested arrays and transform them
-  const transformedObjects = solution.map(innerArray => {
+  return solution.map(innerArray => {
     const obj = innerArray[0];
     const operationType = obj.operationType === 'sum' ? '+' : '×';
 
@@ -121,14 +117,6 @@ function convertSolutionToOutput(solution) {
       operands: [obj.operand1, obj.operand2]
     };
   });
-
-  // Group into chunks of 4 and assign to numbered keys
-  for (let i = 0; i < transformedObjects.length; i += objectsPerGroup) {
-    const groupNumber = Math.floor(i / objectsPerGroup) + 1;
-    result[groupNumber] = transformedObjects.slice(i, i + objectsPerGroup);
-  }
-
-  return result;
 }
 
 function extractLine16FromSolution(solution) {
