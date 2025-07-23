@@ -1,11 +1,4 @@
-import { BranchQueue } from './branchQueue.js';
-import { isPotentialSolution, isValidSolution } from './solutionChecker.js';
-import { deduceFromSingles, deduceAfterASplit } from './logicalDeductions.js';
-import { splitFirstBranch, deepCopyABranch } from './branchSplitter.js';
-import { isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } from './sharedValuesAndTools.js';
-import { findPotentialQuads } from './potentialQuadsFinder.js';
-
-export function getSolution(grid16original, line16original) {
+export function getSolution(grid16original, line16original, ns) {
   const grid16 = [...grid16original];
   const line16 = [...line16original];
 
@@ -19,24 +12,23 @@ export function getSolution(grid16original, line16original) {
 
   if (isPotentialSolution(branchQueue.firstBranch)) {
     if (isValidSolution(branchQueue.firstBranch, line16)) {
-      return buildSolutionObject(branchQueue.firstBranch, 1, potentialQuads);
+      return buildSolutionObject([branchQueue.firstBranch], potentialQuads, ns);
     } else {
       return "invalid";
     }
   }
 
-  const result = loopBranchDeductions(branchQueue, grid16, line16)
+  const solutions = loopBranchDeductions(branchQueue, grid16, line16, ns)
 
-  if (result.solutionCount === 0) {
+  if (solutions.length === 0) {
     return "invalid";
   } else {
-    return buildSolutionObject(result.solution, result.solutionCount, potentialQuads);
+    return buildSolutionObject(solutions, potentialQuads, ns);
   }
 }
 
-function loopBranchDeductions(branchQueue, grid16, line16) {
-  let solutionCount = 0;
-  let solution = [];
+function loopBranchDeductions(branchQueue, grid16, line16,ns) {
+  let solutions = [];
 
   splitFirstBranch(branchQueue);
 
@@ -53,10 +45,7 @@ function loopBranchDeductions(branchQueue, grid16, line16) {
       branchQueue.removeFirstBranch();
     } else if (isPotentialSolution(branchQueue.firstBranch)) {
       if (isValidSolution(branchQueue.firstBranch, line16)) {
-        if (solution.length === 0) {
-          solution = deepCopyABranch(branchQueue.firstBranch);
-        }
-        solutionCount++;
+        solutions.push(deepCopyABranch(branchQueue.firstBranch));
       }
       branchQueue.removeFirstBranch();
     } else {
@@ -64,21 +53,22 @@ function loopBranchDeductions(branchQueue, grid16, line16) {
     }
   }
 
-  return {
-    "solution": solution,
-    "solutionCount": solutionCount
-  }
+  return solutions;
 }
 
-function buildSolutionObject(solution, solutionCount, potentialQuads) {
-  const line16OfSolution = extractLine16FromSolution(solution);
-  const gridSolution = convertSolutionToOutput(solution);
+function buildSolutionObject(solutions, potentialQuads, ns) {
+  let line16OfSolutions = [];
+  let gridSolutions = [];
+  for (let s of solutions) {
+    gridSolutions.push(convertSolutionToOutput(s));
+    line16OfSolutions.push(extractLine16FromSolution(s))
+  }
   const initialExpansion = convertInitialExpansionToOutput(potentialQuads);
   return {
-    line: line16OfSolution,
+    line: line16OfSolutions,
     crunchedNumbers: initialExpansion,
-    grid: gridSolution,
-    "solutionCount": solutionCount
+    grids: gridSolutions,
+    "solutionCount": gridSolutions.length
   }
 }
 
@@ -87,6 +77,7 @@ function prepBranchQueue(initialQuads, branchQueue, grid16) {
   branchQueue.setFirstBranch();
   branchQueue.firstBranch = deduceFromSingles(branchQueue.firstBranch, grid16);
 }
+
 function convertInitialExpansionToOutput(initialExpansion) {
   return initialExpansion.map(group => {
     if (!Array.isArray(group) || group.length === 0) return null;
@@ -134,7 +125,6 @@ function convertSolutionToOutput(solution) {
 
   return result;
 }
-
 
 function extractLine16FromSolution(solution) {
   if (isBrokenBranch(solution)) return null;
