@@ -405,6 +405,7 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
             
             // Check operand1
             if (userCell.operand1 !== null && userCell.operand1 !== solutionCell.operand1) {
+                console.log(solutionCell.operand1);
                 console.log(userCell.operand1);
                 return false;
             }
@@ -414,6 +415,7 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
                 const normalizedUserOp = userCell.operation === '×' ? 'x' : userCell.operation;
                 const normalizedSolutionOp = solutionCell.operation === '×' ? 'x' : solutionCell.operation;
                 if (normalizedUserOp !== normalizedSolutionOp) {
+                    console.log(solutionCell.operation);
                     console.log(userCell.operation);
                     return false;
                 }
@@ -421,6 +423,7 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
             
             // Check operand2
             if (userCell.operand2 !== null && userCell.operand2 !== solutionCell.operand2) {
+                console.log(solutionCell.operand2);
                 console.log(userCell.operand2);
                 return false;
             }
