@@ -648,9 +648,9 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     
     // Check user's solution
     if (checkUserSolution(solution)) {
-        showNotification('✓ All entered values are correct!');
+        showNotification('✓ All good.');
     } else {
-        showError('✗ Some entered values conflict with the solution.');
+        showError('Some of that does not match a solution.');
     }
 });
 
