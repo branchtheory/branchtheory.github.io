@@ -691,10 +691,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     if (solution === "invalid") {
         showError('There is no solution for this puzzle.');
         return;
-    }
-    
-    // Check for overall validity to show the correct notification
-    if (checkUserSolution(solution)) {
+    } else if (checkUserSolution(solution)) {
         showNotification('✓ All entered values are correct!');
     } else {
         showError('✗ Some entered values conflict with the solution.');
