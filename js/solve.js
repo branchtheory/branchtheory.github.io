@@ -119,8 +119,7 @@ function convertSolutionToOutput(solution) {
     return {
       operation: operationType,
       value: obj.primaryGridValue,
-      operand1: obj.operand1,
-      operand2: obj.operand2
+      operands: [obj.operand1, obj.operand2]
     };
   });
 
