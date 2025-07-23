@@ -572,6 +572,8 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     
     // Fill the bottom strip with solution values
     const bottomStripInputs = document.querySelectorAll('.bottom-strip input');
+    console.log(solution.lines);
+    console.log(solution.lines[0]);
     solution.lines[0].forEach((value, index) => {
         if (index < bottomStripInputs.length) {
             bottomStripInputs[index].value = value;
