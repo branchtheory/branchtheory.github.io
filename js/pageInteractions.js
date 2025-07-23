@@ -1,12 +1,12 @@
 import { getSolution } from './solve.js';
-// Store original data for restore functionality
 let originalGridData = [];
 let originalStripData = [];
 let originalDataSaved = false; 
 let isSolved = false;
 let isDemoMode = false;
-const GRID_PLACEHOLDERS = ['38', '500', '37', '28', '420', '50', '256', '40', '41', '264', '32', '336', '192', '52', '342', '60'];
-const STRIP_PLACEHOLDERS = ['', '6', '8', '', '', '', '18', '19', '', '21', '24', '', '', '', '', '50'];
+
+const GRID_PLACEHOLDERS = ['23', '23', '26', '27', '27', '28', '29', '31', '92', '120', '126', '130', '132', '168', '180', '198'];
+const STRIP_PLACEHOLDERS = ['', '', '6', '', '9', '9', '10', '', '', '','', '', '', '', '22', ''];
 const DEMO_GRID_DATA = GRID_PLACEHOLDERS.map(str => parseInt(str, 10));
 const DEMO_STRIP_DATA = STRIP_PLACEHOLDERS.map(str => str === '' ? 0 : parseInt(str, 10));
 
@@ -23,8 +23,18 @@ function showNotification(message) {
 }
 
 function isInDemoMode() {
-    const allInputs = document.querySelectorAll('.grid-input, .strip-input');
-    return Array.from(allInputs).every(input => !input.value.trim());
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
+    const smallInputs = document.querySelectorAll('.small-input');
+    const operationInputs = document.querySelectorAll('.operation-input');
+    
+    const mainInputsEmpty = Array.from(gridInputs).every(input => !input.value.trim()) &&
+                           Array.from(stripInputs).every(input => !input.value.trim());
+    
+    const smallOpInputsEmpty = Array.from(smallInputs).every(input => !input.value.trim()) &&
+                              Array.from(operationInputs).every(input => !input.value.trim());
+    
+    return mainInputsEmpty && smallOpInputsEmpty;
 }
 
 function collectGridData() {
@@ -66,16 +76,18 @@ function restoreOriginalData() {
         input.disabled = false;
     });
     
-    // Clear small cells
-    const smallCells = document.querySelectorAll('.small-cell');
-    smallCells.forEach(cell => {
-        cell.textContent = '';
+    // Clear small cell inputs (not the cells themselves)
+    const smallInputs = document.querySelectorAll('.small-input');
+    smallInputs.forEach(input => {
+        input.value = '';
+        input.disabled = false;
     });
 
-    // Clear operation cells too
-    const operationCells = document.querySelectorAll('.small-operation-cell');
-    operationCells.forEach(cell => {
-        cell.textContent = '';
+    // Clear operation inputs (not the cells themselves)
+    const operationInputs = document.querySelectorAll('.operation-input');
+    operationInputs.forEach(input => {
+        input.value = '';
+        input.disabled = false;
     });
 
     originalDataSaved = false;
@@ -134,6 +146,44 @@ function validateStripSequential() {
     return true;
 }
 
+function validateSmallInput(event) {
+    const input = event.target;
+    const value = input.value;
+    
+    // Clear all placeholders on first input to any field
+    if (value.length === 1) {
+        clearAllGridPlaceholders();
+        clearAllStripPlaceholders();
+    }
+    
+    // Remove any non-digit characters and limit to 2 digits
+    let cleanValue = value.replace(/\D/g, '');
+    if (cleanValue.length > 2) {
+        cleanValue = cleanValue.substring(0, 2);
+    }
+    
+    input.value = cleanValue;
+}
+
+function validateOperationInput(event) {
+    const input = event.target;
+    const value = input.value;
+    
+    // Clear all placeholders on first input to any field
+    if (value.length === 1) {
+        clearAllGridPlaceholders();
+        clearAllStripPlaceholders();
+    }
+    
+    // Only allow + and x, limit to 1 character
+    let cleanValue = value.replace(/[^+x]/g, '');
+    if (cleanValue.length > 1) {
+        cleanValue = cleanValue.substring(0, 1);
+    }
+    
+    input.value = cleanValue;
+}
+
 function getDemoOrUserData() {
     if (isInDemoMode()) {
         isDemoMode = true; // Lock into demo mode once detected
@@ -175,15 +225,17 @@ function clearAllData() {
         input.disabled = false;
     });
     
-    // Clear small cells and operation cells
-    const smallCells = document.querySelectorAll('.small-cell');
-    smallCells.forEach(cell => {
-        cell.textContent = '';
+    // Clear small cell inputs and operation inputs
+    const smallInputs = document.querySelectorAll('.small-input');
+    smallInputs.forEach(input => {
+        input.value = '';
+        input.disabled = false;
     });
-    
-    const operationCells = document.querySelectorAll('.small-operation-cell');
-    operationCells.forEach(cell => {
-        cell.textContent = '';
+
+    const operationInputs = document.querySelectorAll('.operation-input');
+    operationInputs.forEach(input => {
+        input.value = '';
+        input.disabled = false;
     });
     
     // Reset arrays
@@ -210,6 +262,7 @@ function clearAllGridPlaceholders() {
     gridInputs.forEach(input => {
         input.placeholder = '';
     });
+
 }
 
 function clearAllStripPlaceholders() {
@@ -270,6 +323,116 @@ function saveOriginalData() {
     originalStripData = Array.from(stripInputs).map(input => input.value);
     
     originalDataSaved = true;
+}
+
+function checkUserSolution(solution) {
+    // Collect user's input from small cells and operations
+    const userBottomStrip = collectUserBottomStrip();
+    const userGrid = collectUserGrid();
+    
+    // Check against each possible solution
+    for (let i = 0; i < solution.grids.length; i++) {
+        const solutionLine = solution.lines[i];
+        const solutionGrid = solution.grids[i];
+        
+        // Check if user input conflicts with this solution
+        if (checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, solutionGrid)) {
+            return true; // No conflicts found with this solution
+        }
+    }
+    
+    return false; // Conflicts found with all solutions
+}
+
+function collectUserBottomStrip() {
+    const stripInputs = document.querySelectorAll('.strip-input');
+    return Array.from(stripInputs).map(input => {
+        const value = input.value.trim();
+        return value === '' ? null : parseInt(value, 10);
+    });
+}
+
+function collectUserGrid() {
+    const smallInputs = document.querySelectorAll('.small-input');
+    const operationInputs = document.querySelectorAll('.operation-input');
+    
+    const userGrid = {};
+    
+    // Process each row (4 rows total)
+    for (let row = 1; row <= 4; row++) {
+        userGrid[row.toString()] = [];
+        
+        // Each row has 4 groups of (operand1, operation, operand2)
+        for (let col = 0; col < 4; col++) {
+            const baseIndex = (row - 1) * 12 + col * 3; // 12 cells per row, 3 cells per group
+            
+            const operand1Input = smallInputs[baseIndex];
+            const operationInput = operationInputs[(row - 1) * 4 + col]; // 4 operations per row
+            const operand2Input = smallInputs[baseIndex + 2];
+            
+            const operand1 = operand1Input?.value.trim();
+            const operation = operationInput?.value.trim();
+            const operand2 = operand2Input?.value.trim();
+            
+            userGrid[row.toString()].push({
+                operand1: operand1 === '' ? null : parseInt(operand1, 10),
+                operation: operation === '' ? null : operation,
+                operand2: operand2 === '' ? null : parseInt(operand2, 10)
+            });
+        }
+    }
+    
+    return userGrid;
+}
+
+function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, solutionGrid) {
+    // Check bottom strip
+    for (let i = 0; i < userBottomStrip.length; i++) {
+        if (userBottomStrip[i] !== null && userBottomStrip[i] !== solutionLine[i]) {
+            console.log("strip");
+            return false; // Conflict found
+        }
+    }
+    
+    // Check grid operations
+    for (let row = 1; row <= 4; row++) {
+        const rowKey = row.toString();
+        const userRow = userGrid[rowKey];
+        const solutionRow = solutionGrid[rowKey];
+        
+        for (let col = 0; col < 4; col++) {
+            const userCell = userRow[col];
+            const solutionCell = solutionRow[col];
+            
+            // Check operand1
+            if (userCell.operand1 !== null && userCell.operand1 !== solutionCell.operand1) {
+                console.log("op1");
+                console.log(userCell.operand1);
+                console.log(solutionCell.operand1);
+                return false;
+            }
+            
+            // Check operation (convert × to x for comparison)
+            if (userCell.operation !== null) {
+                const normalizedUserOp = userCell.operation === '×' ? 'x' : userCell.operation;
+                const normalizedSolutionOp = solutionCell.operation === '×' ? 'x' : solutionCell.operation;
+                if (normalizedUserOp !== normalizedSolutionOp) {
+                    console.log("operation");
+                    return false;
+                }
+            }
+            
+            // Check operand2
+            if (userCell.operand2 !== null && userCell.operand2 !== solutionCell.operand2) {
+                console.log(userCell.operand2);
+
+                console.log("op2");
+                return false;
+            }
+        }
+    }
+    
+    return true; // No conflicts found
 }
 
 function partialSolve() {
@@ -399,19 +562,25 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         return;
     }
 
-    if (solution.solutionCount && solution.solutionCount > 1) {
-        showNotification(`This puzzle has ${solution.solutionCount} solutions. Showing one of them.`);
+    if (solution.grids.length && solution.grids.length > 1) {
+        showNotification(`This puzzle has ${solution.grids.length} solutions. Showing one of them.`);
     }
     
-    // Make all inputs non-editable
-    const allInputs = document.querySelectorAll('input');
-    allInputs.forEach(input => {
+    // Make most inputs non-editable
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
+
+    gridInputs.forEach(input => {
+        input.disabled = true;
+    });
+
+    stripInputs.forEach(input => {
         input.disabled = true;
     });
     
     // Fill the bottom strip with solution values
     const bottomStripInputs = document.querySelectorAll('.bottom-strip input');
-    solution.line.forEach((value, index) => {
+    solution.lines[0].forEach((value, index) => {
         if (index < bottomStripInputs.length) {
             bottomStripInputs[index].value = value;
         }
@@ -426,13 +595,17 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         const gridRowNumber = rowIndex + 1; // Convert to 1,2,3,4
         const cells = row.querySelectorAll('td');
         
-        solution.grid[gridRowNumber.toString()].forEach((cellData, cellIndex) => {
+        solution.grids[0][gridRowNumber.toString()].forEach((cellData, cellIndex) => {
             const startIdx = cellIndex * 3; // Each group of 3 cells (operand1, operator, operand2)
             if (startIdx + 2 < cells.length) {
                 // Left cell: operand1, Middle cell: operation, Right cell: operand2
-                cells[startIdx].textContent = cellData.operand1;         // Left cell
-                cells[startIdx + 1].textContent = cellData.operation;    // Middle cell (operator)
-                cells[startIdx + 2].textContent = cellData.operand2;     // Right cell
+                const operand1Input = cells[startIdx].querySelector('input');
+                const operationInput = cells[startIdx + 1].querySelector('input');
+                const operand2Input = cells[startIdx + 2].querySelector('input');
+                
+                if (operand1Input) operand1Input.value = cellData.operand1;
+                if (operationInput) operationInput.value = cellData.operation;
+                if (operand2Input) operand2Input.value = cellData.operand2;
             }
         });
     });
@@ -445,7 +618,43 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     document.getElementById('partialSolveBtn').disabled = true; // Add this line
     document.getElementById('unsolveBtn').disabled = false;
     document.getElementById('resetBtn').disabled = false;
+    document.getElementById('checkBtn').disabled = true;
     isSolved = true;
+});
+
+// Add validation for new input types
+const smallInputs = document.querySelectorAll('.small-input');
+smallInputs.forEach(input => {
+    input.addEventListener('input', validateSmallInput);
+});
+
+const operationInputs = document.querySelectorAll('.operation-input');
+operationInputs.forEach(input => {
+    input.addEventListener('input', validateOperationInput);
+});
+
+document.getElementById('checkBtn').addEventListener('click', function() {
+    const dataResult = getDemoOrUserData();
+    
+    if (dataResult.error) {
+        showError(dataResult.error);
+        return;
+    }
+    
+    // Get solution data
+    const solution = getSolution(dataResult.gridData, dataResult.stripData);
+    
+    if (solution === "invalid") {
+        showError('There is no solution for this puzzle.');
+        return;
+    }
+    
+    // Check user's solution
+    if (checkUserSolution(solution)) {
+        showNotification('✓ All entered values are correct!');
+    } else {
+        showError('✗ Some entered values conflict with the solution.');
+    }
 });
 
 // Unsolve button event listener
@@ -458,6 +667,7 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
     // Update button states
     document.getElementById('solveBtn').disabled = false;
     document.getElementById('partialSolveBtn').disabled = false; // Add this line
+    document.getElementById('checkBtn').disabled = false;
     this.disabled = true;
     document.getElementById('resetBtn').disabled = false;
     isSolved = false;
@@ -474,6 +684,7 @@ document.getElementById('resetBtn').addEventListener('click', function() {
     document.getElementById('solveBtn').disabled = false;
     document.getElementById('partialSolveBtn').disabled = false; // Add this line
     document.getElementById('unsolveBtn').disabled = true;
+    document.getElementById('checkBtn').disabled = false;
     this.disabled = false;
     isSolved = false;
 });
