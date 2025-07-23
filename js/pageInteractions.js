@@ -634,10 +634,11 @@ operationInputs.forEach(input => {
     input.addEventListener('input', validateOperationInput);
 });
 
-document.getElementById('checkBtn').addEventListener('click', function() {
+document.getElementById('checkBtn').addEventListener('click', function() {  
     const dataResult = getDemoOrUserData();
     
     if (dataResult.error) {
+        document.getElementById('notificationMessage').style.display = 'none';
         showError(dataResult.error);
         return;
     }
@@ -652,6 +653,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     
     // Check user's solution
     if (checkUserSolution(solution)) {
+        document.getElementById('errorMessage').style.display = 'none';
         showNotification('✓ All good.');
     } else {
         showError('Some of that does not match a solution.');
