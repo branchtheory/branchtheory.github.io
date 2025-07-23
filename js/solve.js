@@ -98,8 +98,7 @@ function convertInitialExpansionToOutput(initialExpansion) {
         operation: operationType,
         primaryValue: obj.primaryGridValue,
         pairedValue: obj.pairedGridValue,
-        operand1: obj.operand1,
-        operand2: obj.operand2
+        operands: [obj.operand1, obj.operand2]
       };
     });
 
