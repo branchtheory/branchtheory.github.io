@@ -77,7 +77,6 @@ function buildSolutionObject(solutions, potentialQuads) {
     line: line16OfSolutions,
     crunchedNumbers: initialExpansion,
     grids: gridSolutions,
-    "solutionCount": gridSolutions.length
   }
 }
 
