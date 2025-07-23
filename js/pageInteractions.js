@@ -443,14 +443,32 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
             const userCell = userRow[col];
             const solutionCell = solutionRow[col];
             
-            // Check operand1
-            if (userCell.operand1 !== null && userCell.operand1 !== solutionCell.operand1) {
-                console.log(solutionCell.operand1);
-                console.log(userCell.operand1);
-                return false;
+            // Check operands - collect user operands and compare as sets
+            const userOperands = [];
+            if (userCell.operand1 !== null) userOperands.push(userCell.operand1);
+            if (userCell.operand2 !== null) userOperands.push(userCell.operand2);
+            
+            // If user has entered operands, they must match solution operands (ignoring order)
+            if (userOperands.length > 0) {
+                const sortedUserOperands = [...userOperands].sort();
+                const sortedSolutionOperands = [...solutionCell.operands].sort();
+                
+                // Check if partial match is valid (user may have only filled some operands)
+                for (let userOp of userOperands) {
+                    if (!solutionCell.operands.includes(userOp)) {
+                        return false;
+                    }
+                }
+                
+                // If user filled both operands, ensure no duplicates unless solution has duplicates
+                if (userOperands.length === 2) {
+                    if (JSON.stringify(sortedUserOperands) !== JSON.stringify(sortedSolutionOperands)) {
+                        return false;
+                    }
+                }
             }
             
-            // Check operation (convert × to x for comparison)
+            // Check operation
             if (userCell.operation !== null) {
                 const normalizeOp = (op) => {
                     if (op === '×' || op === '*' || op === 'x') return 'x';
@@ -461,21 +479,13 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
                 const normalizedSolutionOp = normalizeOp(solutionCell.operation);
             
                 if (normalizedUserOp !== normalizedSolutionOp) {
-                    console.log(solutionCell.operation);
-                    console.log(userCell.operation);
                     return false;
                 }
-            }
-            // Check operand2
-            if (userCell.operand2 !== null && userCell.operand2 !== solutionCell.operand2) {
-                console.log(solutionCell.operand2);
-                console.log(userCell.operand2);
-                return false;
             }
         }
     }
     
-    return true; // No conflicts found
+    return true;
 }
 
 function partialSolve() {
@@ -741,9 +751,39 @@ document.getElementById('checkBtn').addEventListener('click', function() {
                             const gridCellElements = userGridElements[row.toString()][col];
                             const solutionCell = solutionGrid[row.toString()][col];
 
-                            if (gridCellElements.operand1 === el && parseInt(el.value, 10) === solutionCell.operand1) isCorrectInThisSolution = true;
-                            if (gridCellElements.operand2 === el && parseInt(el.value, 10) === solutionCell.operand2) isCorrectInThisSolution = true;
-                            if (gridCellElements.operation === el && el.value.replace('×', 'x') === solutionCell.operation.replace('×', 'x')) isCorrectInThisSolution = true;
+                            const userOperands = [];
+                            const userElements = [];
+                            if (gridCellElements.operand1 && gridCellElements.operand1.value.trim()) {
+                                userOperands.push(parseInt(gridCellElements.operand1.value, 10));
+                                userElements.push(gridCellElements.operand1);
+                            }
+                            if (gridCellElements.operand2 && gridCellElements.operand2.value.trim()) {
+                                userOperands.push(parseInt(gridCellElements.operand2.value, 10));
+                                userElements.push(gridCellElements.operand2);
+                            }
+                            
+                            if (userOperands.length > 0) {
+                                const sortedUserOperands = [...userOperands].sort();
+                                const sortedSolutionOperands = [...solutionCell.operands].sort();
+                                
+                                let operandsMatch = true;
+                                for (let userOp of userOperands) {
+                                    if (!solutionCell.operands.includes(userOp)) {
+                                        operandsMatch = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if (userOperands.length === 2 && JSON.stringify(sortedUserOperands) !== JSON.stringify(sortedSolutionOperands)) {
+                                    operandsMatch = false;
+                                }
+                                
+                                if (operandsMatch) {
+                                    userElements.forEach(el => {
+                                        if (el === element) isCorrectInThisSolution = true;
+                                    });
+                                }
+                            }
                         }
                     }
                 }
