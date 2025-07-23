@@ -1,3 +1,10 @@
+import { BranchQueue } from './branchQueue.js';
+import { isPotentialSolution, isValidSolution } from './solutionChecker.js';
+import { deduceFromSingles, deduceAfterASplit } from './logicalDeductions.js';
+import { splitFirstBranch, deepCopyABranch } from './branchSplitter.js';
+import { isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } from './sharedValuesAndTools.js';
+import { findPotentialQuads } from './potentialQuadsFinder.js';
+
 export function getSolution(grid16original, line16original, ns) {
   const grid16 = [...grid16original];
   const line16 = [...line16original];
