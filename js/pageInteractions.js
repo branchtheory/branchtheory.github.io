@@ -389,7 +389,6 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
     // Check bottom strip
     for (let i = 0; i < userBottomStrip.length; i++) {
         if (userBottomStrip[i] !== null && userBottomStrip[i] !== solutionLine[i]) {
-            console.log("strip");
             return false; // Conflict found
         }
     }
@@ -406,9 +405,6 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
             
             // Check operand1
             if (userCell.operand1 !== null && userCell.operand1 !== solutionCell.operand1) {
-                console.log("op1");
-                console.log(userCell.operand1);
-                console.log(solutionCell.operand1);
                 return false;
             }
             
@@ -417,16 +413,12 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
                 const normalizedUserOp = userCell.operation === '×' ? 'x' : userCell.operation;
                 const normalizedSolutionOp = solutionCell.operation === '×' ? 'x' : solutionCell.operation;
                 if (normalizedUserOp !== normalizedSolutionOp) {
-                    console.log("operation");
                     return false;
                 }
             }
             
             // Check operand2
             if (userCell.operand2 !== null && userCell.operand2 !== solutionCell.operand2) {
-                console.log(userCell.operand2);
-
-                console.log("op2");
                 return false;
             }
         }
