@@ -550,7 +550,7 @@ function generatePartialResultsTable(partialSolveArray) {
     dataArray.forEach(item => {
       const operand1Cell = document.createElement('td');
       operand1Cell.className = 'operand-cell';
-      operand1Cell.textContent = item.operand1;
+      operand1Cell.textContent = item.operands[0];
       dataRow.appendChild(operand1Cell);
 
       const operationCell = document.createElement('td');
@@ -560,7 +560,7 @@ function generatePartialResultsTable(partialSolveArray) {
 
       const operand2Cell = document.createElement('td');
       operand2Cell.className = 'operand-cell';
-      operand2Cell.textContent = item.operand2;
+      operand2Cell.textContent = item.operands[1];
       dataRow.appendChild(operand2Cell);
     });
 
