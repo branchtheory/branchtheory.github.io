@@ -660,9 +660,9 @@ document.getElementById('solveBtn').addEventListener('click', function() {
                 const operationInput = cells[startIdx + 1].querySelector('input');
                 const operand2Input = cells[startIdx + 2].querySelector('input');
                 
-                if (operand1Input) operand1Input.value = cellData.operand1;
+                if (operand1Input) operand1Input.value = cellData.operands[0];
                 if (operationInput) operationInput.value = cellData.operation;
-                if (operand2Input) operand2Input.value = cellData.operand2;
+                if (operand2Input) operand2Input.value = cellData.operands[1];
             }
         });
     });
