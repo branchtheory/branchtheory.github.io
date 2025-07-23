@@ -348,6 +348,43 @@ function checkUserSolution(solution) {
     return false; // Conflicts found with all solutions
 }
 
+function clearAllHighlights() {
+    const allInputs = document.querySelectorAll('.grid-input, .strip-input, .small-input, .operation-input');
+    allInputs.forEach(input => {
+        input.classList.remove('conflict-cell');
+    });
+}
+
+function highlightConflicts(elements) {
+    elements.forEach(el => {
+        el.classList.add('conflict-cell');
+    });
+}
+
+function collectUserGridElements() {
+    const smallInputs = document.querySelectorAll('.small-input');
+    const operationInputs = document.querySelectorAll('.operation-input');
+    
+    const userGrid = {};
+    // Process each row (4 rows total)
+    for (let row = 1; row <= 4; row++) {
+        userGrid[row.toString()] = [];
+        // Each row has 4 groups of (operand1, operation, operand2)
+        for (let col = 0; col < 4; col++) {
+            const smallInputBaseIndex = (row - 1) * 8 + col * 2;
+            const operationIndex = (row - 1) * 4 + col;
+
+            userGrid[row.toString()].push({
+                operand1: smallInputs[smallInputBaseIndex],
+                operation: operationInputs[operationIndex],
+                operand2: smallInputs[smallInputBaseIndex + 1]
+            });
+        }
+    }
+    
+    return userGrid;
+}
+
 function collectUserBottomStrip() {
     const stripInputs = document.querySelectorAll('.strip-input');
     return Array.from(stripInputs).map(input => {
@@ -544,6 +581,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Solve button event listener
 document.getElementById('solveBtn').addEventListener('click', function() {
+    clearAllHighlights();
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
     
@@ -637,16 +675,15 @@ operationInputs.forEach(input => {
     input.addEventListener('input', validateOperationInput);
 });
 
-document.getElementById('checkBtn').addEventListener('click', function() {  
+document.getElementById('checkBtn').addEventListener('click', function() {
+    clearAllHighlights(); // Clear previous highlights first
     const dataResult = getDemoOrUserData();
     
     if (dataResult.error) {
-        document.getElementById('notificationMessage').style.display = 'none';
         showError(dataResult.error);
         return;
     }
     
-    // Get solution data
     const solution = getSolution(dataResult.gridData, dataResult.stripData);
     
     if (solution === "invalid") {
@@ -654,17 +691,76 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         return;
     }
     
-    // Check user's solution
+    // Check for overall validity to show the correct notification
     if (checkUserSolution(solution)) {
-        document.getElementById('errorMessage').style.display = 'none';
-        showNotification('✓ All good.');
+        showNotification('✓ All entered values are correct!');
     } else {
-        showError('Some of that does not match a solution.');
+        showError('✗ Some entered values conflict with the solution.');
     }
+
+    // --- New Logic to find and highlight conflicts ---
+
+    // Find cells that are wrong in ALL solutions
+    const findUniversalConflicts = () => {
+        const userGridElements = collectUserGridElements();
+        const userStripElements = document.querySelectorAll('.strip-input');
+        let universalConflicts = new Set();
+
+        // Initialize with all filled-in inputs as potential conflicts
+        const allUserInputElements = document.querySelectorAll('.strip-input, .small-input, .operation-input');
+        allUserInputElements.forEach(el => {
+            if (el.value.trim() !== '') {
+                universalConflicts.add(el);
+            }
+        });
+
+        // For each potential solution, remove any cells that are VALID in it.
+        // What remains after checking all solutions must be wrong in all of them.
+        for (let i = 0; i < solution.grids.length; i++) {
+            const solutionGrid = solution.grids[i];
+            const solutionLine = solution.lines[i];
+            const conflictsInThisIteration = new Set(universalConflicts);
+
+            conflictsInThisIteration.forEach(el => {
+                let isCorrectInThisSolution = false;
+                
+                // Check if the element is in the grid or strip and if it matches this solution
+                if (el.classList.contains('strip-input')) {
+                    const elIndex = Array.from(userStripElements).indexOf(el);
+                    if (parseInt(el.value, 10) === solutionLine[elIndex]) {
+                        isCorrectInThisSolution = true;
+                    }
+                } else { // It's a grid input
+                    // Find the element's position in the grid
+                    for (let row = 1; row <= 4; row++) {
+                        for (let col = 0; col < 4; col++) {
+                            const gridCellElements = userGridElements[row.toString()][col];
+                            const solutionCell = solutionGrid[row.toString()][col];
+
+                            if (gridCellElements.operand1 === el && parseInt(el.value, 10) === solutionCell.operand1) isCorrectInThisSolution = true;
+                            if (gridCellElements.operand2 === el && parseInt(el.value, 10) === solutionCell.operand2) isCorrectInThisSolution = true;
+                            if (gridCellElements.operation === el && el.value.replace('×', 'x') === solutionCell.operation.replace('×', 'x')) isCorrectInThisSolution = true;
+                        }
+                    }
+                }
+
+                // If this element's value is correct for this solution, it's not universally wrong.
+                // Remove it from the set for this iteration.
+                if (isCorrectInThisSolution) {
+                    universalConflicts.delete(el);
+                }
+            });
+        }
+        return Array.from(universalConflicts);
+    };
+
+    const conflictsToHighlight = findUniversalConflicts();
+    highlightConflicts(conflictsToHighlight);
 });
 
 // Unsolve button event listener
 document.getElementById('unsolveBtn').addEventListener('click', function() {
+    clearAllHighlights();
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('notificationMessage').style.display = 'none';
     
@@ -681,6 +777,7 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
 
 // Reset button event listener
 document.getElementById('resetBtn').addEventListener('click', function() {
+    clearAllHighlights();
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('notificationMessage').style.display = 'none';
     
@@ -697,6 +794,7 @@ document.getElementById('resetBtn').addEventListener('click', function() {
 
 // Partial Solve button event listener
 document.getElementById('partialSolveBtn').addEventListener('click', function() {
+    clearAllHighlights();
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
     partialSolve();
