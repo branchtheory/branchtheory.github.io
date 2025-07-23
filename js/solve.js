@@ -5,7 +5,7 @@ import { splitFirstBranch, deepCopyABranch } from './branchSplitter.js';
 import { isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } from './sharedValuesAndTools.js';
 import { findPotentialQuads } from './potentialQuadsFinder.js';
 
-export function getSolution(grid16original, line16original, ns) {
+export function getSolution(grid16original, line16original) {
   const grid16 = [...grid16original];
   const line16 = [...line16original];
 
@@ -19,18 +19,20 @@ export function getSolution(grid16original, line16original, ns) {
 
   if (isPotentialSolution(branchQueue.firstBranch)) {
     if (isValidSolution(branchQueue.firstBranch, line16)) {
-      return buildSolutionObject([branchQueue.firstBranch], potentialQuads, ns);
+      console.log(buildSolutionObject([branchQueue.firstBranch], potentialQuads));
+      return buildSolutionObject([branchQueue.firstBranch], potentialQuads);
     } else {
       return "invalid";
     }
   }
 
-  const solutions = loopBranchDeductions(branchQueue, grid16, line16, ns)
+  const solutions = loopBranchDeductions(branchQueue, grid16, line16)
 
   if (solutions.length === 0) {
     return "invalid";
   } else {
-    return buildSolutionObject(solutions, potentialQuads, ns);
+    console.log(buildSolutionObject(solutions, potentialQuads));
+    return buildSolutionObject(solutions, potentialQuads);
   }
 }
 
@@ -63,7 +65,7 @@ function loopBranchDeductions(branchQueue, grid16, line16,ns) {
   return solutions;
 }
 
-function buildSolutionObject(solutions, potentialQuads, ns) {
+function buildSolutionObject(solutions, potentialQuads) {
   let line16OfSolutions = [];
   let gridSolutions = [];
   for (let s of solutions) {
