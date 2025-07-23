@@ -707,9 +707,9 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         showError('There is no solution for this puzzle.');
         return;
     } else if (checkUserSolution(solution)) {
-        showNotification('✓ All entered values are correct!');
+        showNotification('All correct.');
     } else {
-        showError('✗ Some entered values conflict with the solution.');
+        showError('Some of that does not match any solution.');
     }
 
     // --- New Logic to find and highlight conflicts ---
