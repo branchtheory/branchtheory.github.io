@@ -544,6 +544,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Solve button event listener
 document.getElementById('solveBtn').addEventListener('click', function() {
+    document.getElementById('notificationMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+    
     const dataResult = getDemoOrUserData();
     
     if (dataResult.error) {
@@ -694,5 +697,7 @@ document.getElementById('resetBtn').addEventListener('click', function() {
 
 // Partial Solve button event listener
 document.getElementById('partialSolveBtn').addEventListener('click', function() {
+    document.getElementById('notificationMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
     partialSolve();
 });
