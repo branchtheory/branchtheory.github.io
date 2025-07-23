@@ -373,14 +373,18 @@ function collectUserGrid() {
             console.log("operand1 raw input: " + operand1Input);
             console.log("operation raw input: " + operationInput);
             console.log("operand2 raw input: " + operand2Input);
+
+            console.log("operand1 input untrimmed value: " + operand1Input?.value);
+            console.log("operation input untrimmed value: " + operationInput?.value);
+            console.log("operand2 input untrimmed value: " + operand2Input?.value);
             
             const operand1 = operand1Input?.value.trim();
             const operation = operationInput?.value.trim();
             const operand2 = operand2Input?.value.trim();
 
-            console.log("operand1 trimmed: " + operand1);
-            console.log("operation trimmed: " + operation);
-            console.log("operand2 trimmed: " + operand2);
+            console.log("operand1 trimmed value: " + operand1);
+            console.log("operation trimmed value: " + operation);
+            console.log("operand2 trimmed value: " + operand2);
             
             userGrid[row.toString()].push({
                 operand1: operand1 === '' ? null : parseInt(operand1, 10),
