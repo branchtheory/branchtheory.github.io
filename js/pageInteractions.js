@@ -677,6 +677,8 @@ operationInputs.forEach(input => {
 
 document.getElementById('checkBtn').addEventListener('click', function() {
     clearAllHighlights(); // Clear previous highlights first
+    document.getElementById('notificationMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
     const dataResult = getDemoOrUserData();
     
     if (dataResult.error) {
