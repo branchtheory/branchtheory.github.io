@@ -180,7 +180,7 @@ function validateOperationInput(event) {
     }
     
     // Only allow + and x, limit to 1 character
-    let cleanValue = value.replace(/[^+x]/g, '');
+    let cleanValue = value.replace(/[^+x*×]/g, '');
     if (cleanValue.length > 1) {
         cleanValue = cleanValue.substring(0, 1);
     }
@@ -452,15 +452,20 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
             
             // Check operation (convert × to x for comparison)
             if (userCell.operation !== null) {
-                const normalizedUserOp = userCell.operation === '×' ? 'x' : userCell.operation;
-                const normalizedSolutionOp = solutionCell.operation === '×' ? 'x' : solutionCell.operation;
+                const normalizeOp = (op) => {
+                    if (op === '×' || op === '*' || op === 'x') return 'x';
+                    return op;
+                };
+            
+                const normalizedUserOp = normalizeOp(userCell.operation);
+                const normalizedSolutionOp = normalizeOp(solutionCell.operation);
+            
                 if (normalizedUserOp !== normalizedSolutionOp) {
                     console.log(solutionCell.operation);
                     console.log(userCell.operation);
                     return false;
                 }
             }
-            
             // Check operand2
             if (userCell.operand2 !== null && userCell.operand2 !== solutionCell.operand2) {
                 console.log(solutionCell.operand2);
