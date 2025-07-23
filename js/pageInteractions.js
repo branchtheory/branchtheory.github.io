@@ -365,21 +365,21 @@ function collectUserGridElements() {
     const smallInputs = document.querySelectorAll('.small-input');
     const operationInputs = document.querySelectorAll('.operation-input');
     
-    const userGrid = {};
-    // Process each row (4 rows total)
-    for (let row = 1; row <= 4; row++) {
-        userGrid[row.toString()] = [];
-        // Each row has 4 groups of (operand1, operation, operand2)
-        for (let col = 0; col < 4; col++) {
-            const smallInputBaseIndex = (row - 1) * 8 + col * 2;
-            const operationIndex = (row - 1) * 4 + col;
+    const userGrid = [];
+    
+    // Process each of the 16 grid positions
+    for (let i = 0; i < 16; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        
+        const smallInputBaseIndex = row * 8 + col * 2;
+        const operationIndex = row * 4 + col;
 
-            userGrid[row.toString()].push({
-                operand1: smallInputs[smallInputBaseIndex],
-                operation: operationInputs[operationIndex],
-                operand2: smallInputs[smallInputBaseIndex + 1]
-            });
-        }
+        userGrid.push({
+            operand1: smallInputs[smallInputBaseIndex],
+            operation: operationInputs[operationIndex],
+            operand2: smallInputs[smallInputBaseIndex + 1]
+        });
     }
     
     return userGrid;
@@ -397,97 +397,90 @@ function collectUserGrid() {
     const smallInputs = document.querySelectorAll('.small-input');
     const operationInputs = document.querySelectorAll('.operation-input');
     
-    const userGrid = {};
-    // Process each row (4 rows total)
-    for (let row = 1; row <= 4; row++) {
-        userGrid[row.toString()] = [];
-        // Each row has 4 groups of (operand1, operation, operand2)
-        for (let col = 0; col < 4; col++) {
-            // Corrected indexing: There are 8 small inputs per row.
-            const smallInputBaseIndex = (row - 1) * 8 + col * 2;
-            const operationIndex = (row - 1) * 4 + col;
+    const userGrid = [];
+    
+    // Process each of the 16 grid positions
+    for (let i = 0; i < 16; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        
+        const smallInputBaseIndex = row * 8 + col * 2;
+        const operationIndex = row * 4 + col;
 
-            const operand1Input = smallInputs[smallInputBaseIndex];
-            const operationInput = operationInputs[operationIndex];
-            const operand2Input = smallInputs[smallInputBaseIndex + 1]; // Get the next small input
-            
-            const operand1 = operand1Input?.value.trim();
-            const operation = operationInput?.value.trim();
-            const operand2 = operand2Input?.value.trim();
+        const operand1Input = smallInputs[smallInputBaseIndex];
+        const operationInput = operationInputs[operationIndex];
+        const operand2Input = smallInputs[smallInputBaseIndex + 1];
+        
+        const operand1 = operand1Input?.value.trim();
+        const operation = operationInput?.value.trim();
+        const operand2 = operand2Input?.value.trim();
 
-            userGrid[row.toString()].push({
-                operand1: operand1 === '' ? null : parseInt(operand1, 10),
-                operation: operation === '' ? null : operation,
-                operand2: operand2 === '' ? null : parseInt(operand2, 10)
-            });
-        }
+        userGrid.push({
+            operand1: operand1 === '' ? null : parseInt(operand1, 10),
+            operation: operation === '' ? null : operation,
+            operand2: operand2 === '' ? null : parseInt(operand2, 10)
+        });
     }
     
     return userGrid;
 }
+
 function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, solutionGrid) {
     // Check bottom strip
     for (let i = 0; i < userBottomStrip.length; i++) {
         if (userBottomStrip[i] !== null && userBottomStrip[i] !== solutionLine[i]) {
-            return false; // Conflict found
+            return false;
         }
     }
     
-    // Check grid operations
-    for (let row = 1; row <= 4; row++) {
-        const rowKey = row.toString();
-        const userRow = userGrid[rowKey];
-        const solutionRow = solutionGrid[rowKey];
+    // Check grid operations (now flat array)
+    for (let i = 0; i < 16; i++) {
+        const userCell = userGrid[i];
+        const solutionCell = solutionGrid[i];
         
-        for (let col = 0; col < 4; col++) {
-            const userCell = userRow[col];
-            const solutionCell = solutionRow[col];
+        // Check operands - collect user operands and compare as sets
+        const userOperands = [];
+        if (userCell.operand1 !== null) userOperands.push(userCell.operand1);
+        if (userCell.operand2 !== null) userOperands.push(userCell.operand2);
+        
+        // If user has entered operands, they must match solution operands (ignoring order)
+        if (userOperands.length > 0) {
+            const sortedUserOperands = [...userOperands].sort();
+            const sortedSolutionOperands = [...solutionCell.operands].sort();
             
-            // Check operands - collect user operands and compare as sets
-            const userOperands = [];
-            if (userCell.operand1 !== null) userOperands.push(userCell.operand1);
-            if (userCell.operand2 !== null) userOperands.push(userCell.operand2);
-            
-            // If user has entered operands, they must match solution operands (ignoring order)
-            if (userOperands.length > 0) {
-                const sortedUserOperands = [...userOperands].sort();
-                const sortedSolutionOperands = [...solutionCell.operands].sort();
-                
-                // Check if partial match is valid (user may have only filled some operands)
-                for (let userOp of userOperands) {
-                    if (!solutionCell.operands.includes(userOp)) {
-                        return false;
-                    }
-                }
-                
-                // If user filled both operands, ensure no duplicates unless solution has duplicates
-                if (userOperands.length === 2) {
-                    if (JSON.stringify(sortedUserOperands) !== JSON.stringify(sortedSolutionOperands)) {
-                        return false;
-                    }
+            // Check if partial match is valid
+            for (let userOp of userOperands) {
+                if (!solutionCell.operands.includes(userOp)) {
+                    return false;
                 }
             }
             
-            // Check operation
-            if (userCell.operation !== null) {
-                const normalizeOp = (op) => {
-                    if (op === '×' || op === '*' || op === 'x') return 'x';
-                    return op;
-                };
-            
-                const normalizedUserOp = normalizeOp(userCell.operation);
-                const normalizedSolutionOp = normalizeOp(solutionCell.operation);
-            
-                if (normalizedUserOp !== normalizedSolutionOp) {
+            // If user filled both operands, ensure no duplicates unless solution has duplicates
+            if (userOperands.length === 2) {
+                if (JSON.stringify(sortedUserOperands) !== JSON.stringify(sortedSolutionOperands)) {
                     return false;
                 }
+            }
+        }
+        
+        // Check operation
+        if (userCell.operation !== null) {
+            const normalizeOp = (op) => {
+                if (op === '×' || op === '*' || op === 'x') return 'x';
+                return op;
+            };
+        
+            const normalizedUserOp = normalizeOp(userCell.operation);
+            const normalizedSolutionOp = normalizeOp(solutionCell.operation);
+        
+            if (normalizedUserOp !== normalizedSolutionOp) {
+                return false;
             }
         }
     }
     
     return true;
 }
-
 function partialSolve() {
     const dataResult = getDemoOrUserData();
     
@@ -649,13 +642,14 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     const smallCellRows = [mainGridRows[1], mainGridRows[3], mainGridRows[5], mainGridRows[7]];
 
     smallCellRows.forEach((row, rowIndex) => {
-        const gridRowNumber = rowIndex + 1; // Convert to 1,2,3,4
         const cells = row.querySelectorAll('td');
         
-        solution.grids[0][gridRowNumber.toString()].forEach((cellData, cellIndex) => {
-            const startIdx = cellIndex * 3; // Each group of 3 cells (operand1, operator, operand2)
+        for (let cellIndex = 0; cellIndex < 4; cellIndex++) {
+            const gridIndex = rowIndex * 4 + cellIndex; // Flat array index
+            const cellData = solution.grids[0][gridIndex];
+            const startIdx = cellIndex * 3;
+            
             if (startIdx + 2 < cells.length) {
-                // Left cell: operand1, Middle cell: operation, Right cell: operand2
                 const operand1Input = cells[startIdx].querySelector('input');
                 const operationInput = cells[startIdx + 1].querySelector('input');
                 const operand2Input = cells[startIdx + 2].querySelector('input');
@@ -664,7 +658,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
                 if (operationInput) operationInput.value = cellData.operation;
                 if (operand2Input) operand2Input.value = cellData.operands[1];
             }
-        });
+        }
     });
 
     generatePartialResultsTable(solution.crunchedNumbers);
