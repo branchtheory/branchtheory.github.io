@@ -44,11 +44,18 @@
         
         .button-container {
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .button-row {
+            display: flex;
             gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+                
         .main-grid {
             border: 1px solid #333;
             border-collapse: collapse;
@@ -266,11 +273,15 @@
         <div class="puzzle-container">
             <!-- Control Buttons -->
         <div class="button-container">
-            <button id="solveBtn" class="control-button solve-button">Solve</button>
-            <button id="partialSolveBtn" class="control-button solve-button">Crunch factors</button>
-            <button id="checkBtn" class="control-button solve-button">✔ Check</button>
-            <button id="unsolveBtn" class="control-button unsolve-button" disabled>Unsolve</button>
-            <button id="resetBtn" class="control-button reset-button">Reset</button>
+            <div class="button-row">
+                <button id="solveBtn" class="control-button solve-button">Solve</button>
+                <button id="partialSolveBtn" class="control-button solve-button">Crunch factors</button>
+                <button id="checkBtn" class="control-button solve-button">✔ Check</button>
+            </div>
+            <div class="button-row">
+                <button id="unsolveBtn" class="control-button unsolve-button" disabled>Unsolve</button>
+                <button id="resetBtn" class="control-button reset-button">Reset</button>
+            </div>
         </div>
             
             <!-- Error Message -->
