@@ -79,7 +79,7 @@
             padding: 0;
             margin: 0;
             border-radius: 0;   
-            outline: none;
+            outline: none
         }
         
         .big-number input:focus {
@@ -108,6 +108,30 @@
             color: #333;
             padding: 0;
         }
+
+        .small-input, .operation-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+            border-radius: 0;
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        .small-input:focus, .operation-input:focus {
+            background-color: #86BBD8;
+            outline: none;
+            border-radius: 0;
+        }
+
+        .operation-input {
+            font-size: 20px;
+        }
         
         .bottom-strip {
             border: 1px solid #333;
@@ -133,7 +157,7 @@
             box-sizing: border-box;
             text-align: center;
             font-size: 16px;
-            outline: none;
+            outline: none
         }
         
         .bottom-strip input:focus {
@@ -234,15 +258,16 @@
 <body>
     <div class="container">
         <h1>Tetonor solver</h1>
-        <p>Enter your puzzle below, or use the placeholders. You can find the code on <a href="https://github.com/branchtheory/branchtheory.github.io/tree/main">GitHub</a>.</p>
+        <p>Enter your puzzle or solution below. You can find the code on <a href="https://github.com/branchtheory/branchtheory.github.io/tree/main">GitHub</a>.</p>
         <div class="puzzle-container">
             <!-- Control Buttons -->
-            <div class="button-container">
-                <button id="solveBtn" class="control-button solve-button">Solve</button>
-                <button id="partialSolveBtn" class="control-button solve-button">Crunch factors</button>
-                <button id="unsolveBtn" class="control-button unsolve-button" disabled>Unsolve</button>
-                <button id="resetBtn" class="control-button reset-button">Reset</button>
-            </div>
+        <div class="button-container">
+            <button id="solveBtn" class="control-button solve-button">Solve</button>
+            <button id="partialSolveBtn" class="control-button solve-button">Crunch factors</button>
+            <button id="checkBtn" class="control-button solve-button">✔ Check</button>
+            <button id="unsolveBtn" class="control-button unsolve-button" disabled>Unsolve</button>
+            <button id="resetBtn" class="control-button reset-button">Reset</button>
+        </div>
             
             <!-- Error Message -->
             <div id="errorMessage" class="error-message"></div>
@@ -265,18 +290,18 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="big-number">
@@ -293,18 +318,18 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="big-number">
@@ -321,18 +346,18 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="big-number">
@@ -349,18 +374,18 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-cell"></td>
-                    <td class="small-operation-cell"></td>
-                    <td class="small-cell"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
+                    <td class="small-operation-cell"><input type="text" class="operation-input"></td>
+                    <td class="small-cell"><input type="text" class="small-input"></td>
                 </tr>
             </table>
             
