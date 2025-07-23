@@ -372,7 +372,7 @@ function collectUserGridElements() {
         const row = Math.floor(i / 4);
         const col = i % 4;
         
-        const smallInputBaseIndex = row * 8 + col * 2;
+        const smallInputBaseIndex = row * 8 + col * 2 + col;
         const operationIndex = row * 4 + col;
 
         userGrid.push({
@@ -740,47 +740,46 @@ document.getElementById('checkBtn').addEventListener('click', function() {
                     }
                 } else { // It's a grid input
                     // Find the element's position in the grid
-                    // Find the element's position in the grid
-                for (let i = 0; i < 16; i++) {
-                    const gridCellElements = userGridElements[i];
-                    const solutionCell = solutionGrid[i];
-                
-                    const userOperands = [];
-                    const userElements = [];
-                    if (gridCellElements.operand1 && gridCellElements.operand1.value.trim()) {
-                        userOperands.push(parseInt(gridCellElements.operand1.value, 10));
-                        userElements.push(gridCellElements.operand1);
-                    }
-                    if (gridCellElements.operand2 && gridCellElements.operand2.value.trim()) {
-                        userOperands.push(parseInt(gridCellElements.operand2.value, 10));
-                        userElements.push(gridCellElements.operand2);
-                    }
+                    for (let i = 0; i < 16; i++) {
+                        const gridCellElements = userGridElements[i];
+                        const solutionCell = solutionGrid[i];
                     
-                    if (userOperands.length > 0) {
-                        const sortedUserOperands = [...userOperands].sort();
-                        const sortedSolutionOperands = [...solutionCell.operands].sort();
+                        const userOperands = [];
+                        const userElements = [];
+                        if (gridCellElements.operand1 && gridCellElements.operand1.value.trim()) {
+                            userOperands.push(parseInt(gridCellElements.operand1.value, 10));
+                            userElements.push(gridCellElements.operand1);
+                        }
+                        if (gridCellElements.operand2 && gridCellElements.operand2.value.trim()) {
+                            userOperands.push(parseInt(gridCellElements.operand2.value, 10));
+                            userElements.push(gridCellElements.operand2);
+                        }
                         
-                        let operandsMatch = true;
-                        for (let userOp of userOperands) {
-                            if (!solutionCell.operands.includes(userOp)) {
+                        if (userOperands.length > 0) {
+                            const sortedUserOperands = [...userOperands].sort();
+                            const sortedSolutionOperands = [...solutionCell.operands].sort();
+                            
+                            let operandsMatch = true;
+                            for (let userOp of userOperands) {
+                                if (!solutionCell.operands.includes(userOp)) {
+                                    operandsMatch = false;
+                                    break;
+                                }
+                            }
+                            
+                            if (userOperands.length === 2 && JSON.stringify(sortedUserOperands) !== JSON.stringify(sortedSolutionOperands)) {
                                 operandsMatch = false;
-                                break;
+                            }
+                            
+                            if (operandsMatch) {
+                                userElements.forEach(userEl => {
+                                    if (userEl === el) isCorrectInThisSolution = true;
+                                });
                             }
                         }
-                        
-                        if (userOperands.length === 2 && JSON.stringify(sortedUserOperands) !== JSON.stringify(sortedSolutionOperands)) {
-                            operandsMatch = false;
-                        }
-                        
-                        if (operandsMatch) {
-                            userElements.forEach(userEl => {
-                                if (userEl === el) isCorrectInThisSolution = true;
-                            });
-                        }
+                    
+                        if (gridCellElements.operation === el && el.value.replace('×', 'x') === solutionCell.operation.replace('×', 'x')) isCorrectInThisSolution = true;
                     }
-                
-                    if (gridCellElements.operation === el && el.value.replace('×', 'x') === solutionCell.operation.replace('×', 'x')) isCorrectInThisSolution = true;
-                }
                 }
 
                 // If this element's value is correct for this solution, it's not universally wrong.
