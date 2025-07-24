@@ -180,7 +180,7 @@ function validateOperationInput(event) {
     }
     
     // Only allow + and x, limit to 1 character
-    let cleanValue = value.replace(/[^+x*×]/g, '');
+    let cleanValue = value.replace(/[^+x*X×]/g, '');
     if (cleanValue.length > 1) {
         cleanValue = cleanValue.substring(0, 1);
     }
@@ -466,7 +466,7 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
         // Check operation
         if (userCell.operation !== null) {
             const normalizeOp = (op) => {
-                if (op === '×' || op === '*' || op === 'x') return 'x';
+                if (op === '×' || op === '*' || op === 'X' || op === 'x') return 'x';
                 return op;
             };
         
@@ -702,6 +702,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         return;
     } else if (checkUserSolution(solution)) {
         showNotification('All correct.');
+        highlightConflicts(findUniversalConflicts());
     } else {
         showError('Some of that does not match any solution.');
     }
@@ -724,9 +725,9 @@ document.getElementById('checkBtn').addEventListener('click', function() {
 
         // For each potential solution, remove any cells that are VALID in it.
         // What remains after checking all solutions must be wrong in all of them.
-        for (let i = 0; i < solution.grids.length; i++) {
-            const solutionGrid = solution.grids[i];
-            const solutionLine = solution.lines[i];
+        for (let s = 0; s < solution.grids.length; s++) {
+            const solutionGrid = solution.grids[s];
+            const solutionLine = solution.lines[s];
             const conflictsInThisIteration = new Set(universalConflicts);
 
             conflictsInThisIteration.forEach(el => {
@@ -740,7 +741,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
                     }
                 } else { // It's a grid input
                     // Find the element's position in the grid
-                    for (let i = 0; i < 16; i++) {
+                    for (let i = 0; i < solution.grids[0].length; i++) {
                         const gridCellElements = userGridElements[i];
                         const solutionCell = solutionGrid[i];
                     
@@ -777,8 +778,16 @@ document.getElementById('checkBtn').addEventListener('click', function() {
                                 });
                             }
                         }
+
+                        const normalizeOp = (op) => {
+                            if (op === '×' || op === '*' || op === 'X' || op === 'x') return 'x';
+                            return op;
+                        };
+        
+                        const normalizedUserOp = normalizeOp(userCell.operation);
+                        const normalizedSolutionOp = normalizeOp(solutionCell.operation);
                     
-                        if (gridCellElements.operation === el && el.value.replace('×', 'x') === solutionCell.operation.replace('×', 'x')) isCorrectInThisSolution = true;
+                        if (gridCellElements.operation === el && normalizedUserOp === normalizedSolutionOp) isCorrectInThisSolution = true;
                     }
                 }
 
@@ -791,9 +800,6 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         }
         return Array.from(universalConflicts);
     };
-
-    const conflictsToHighlight = findUniversalConflicts();
-    highlightConflicts(conflictsToHighlight);
 });
 
 // Unsolve button event listener
