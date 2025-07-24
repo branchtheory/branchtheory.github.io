@@ -685,122 +685,108 @@ operationInputs.forEach(input => {
 });
 
 document.getElementById('checkBtn').addEventListener('click', function() {
-    clearAllHighlights(); // Clear previous highlights first
+    clearAllHighlights(); 
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
+
     const dataResult = getDemoOrUserData();
-    
     if (dataResult.error) {
-        showError(dataResult.error);
+        showError(dataResult.error); 
         return;
     }
-    
-    const solution = getSolution(dataResult.gridData, dataResult.stripData);
-    
+
+    const solution = getSolution(dataResult.gridData, dataResult.stripData); 
+
     if (solution === "invalid") {
         showError('There is no solution for this puzzle.');
         return;
-    } else if (checkUserSolution(solution)) {
-        showNotification('All correct.');
-        highlightConflicts(findUniversalConflicts());
-    } else {
-        showError('Some of that does not match any solution.');
     }
 
-    // --- New Logic to find and highlight conflicts ---
+    // First, check if the user's input combination is valid for ANY solution.
+    if (checkUserSolution(solution)) { /
+        showNotification('All correct. Your entries match a valid solution.');
+    } else {
+        // If the combination is not valid, show an error.
+        showError('Some of that does not match any solution.'); 
 
-    // Find cells that are wrong in ALL solutions
-    const findUniversalConflicts = () => {
-        const userGridElements = collectUserGridElements();
-        const userStripElements = document.querySelectorAll('.strip-input');
-        let universalConflicts = new Set();
-
-        // Initialize with all filled-in inputs as potential conflicts
-        const allUserInputElements = document.querySelectorAll('.strip-input, .small-input, .operation-input');
-        allUserInputElements.forEach(el => {
-            if (el.value.trim() !== '') {
-                universalConflicts.add(el);
-            }
-        });
-
-        // For each potential solution, remove any cells that are VALID in it.
-        // What remains after checking all solutions must be wrong in all of them.
-        for (let s = 0; s < solution.grids.length; s++) {
-            const solutionGrid = solution.grids[s];
-            const solutionLine = solution.lines[s];
-            const conflictsInThisIteration = new Set(universalConflicts);
-
-            conflictsInThisIteration.forEach(el => {
-                let isCorrectInThisSolution = false;
-                
-                // Check if the element is in the grid or strip and if it matches this solution
-                if (el.classList.contains('strip-input')) {
-                    const elIndex = Array.from(userStripElements).indexOf(el);
-                    if (parseInt(el.value, 10) === solutionLine[elIndex]) {
-                        isCorrectInThisSolution = true;
-                    }
-                } else { // It's a grid input
-                    // Find the element's position in the grid
-                    for (let i = 0; i < solution.grids[0].length; i++) {
-                        const gridCellElements = userGridElements[i];
-                        const solutionCell = solutionGrid[i];
-                    
-                        const userOperands = [];
-                        const userElements = [];
-                        if (gridCellElements.operand1 && gridCellElements.operand1.value.trim()) {
-                            userOperands.push(parseInt(gridCellElements.operand1.value, 10));
-                            userElements.push(gridCellElements.operand1);
-                        }
-                        if (gridCellElements.operand2 && gridCellElements.operand2.value.trim()) {
-                            userOperands.push(parseInt(gridCellElements.operand2.value, 10));
-                            userElements.push(gridCellElements.operand2);
-                        }
-                        
-                        if (userOperands.length > 0) {
-                            const sortedUserOperands = [...userOperands].sort();
-                            const sortedSolutionOperands = [...solutionCell.operands].sort();
-                            
-                            let operandsMatch = true;
-                            for (let userOp of userOperands) {
-                                if (!solutionCell.operands.includes(userOp)) {
-                                    operandsMatch = false;
-                                    break;
-                                }
-                            }
-                            
-                            if (userOperands.length === 2 && JSON.stringify(sortedUserOperands) !== JSON.stringify(sortedSolutionOperands)) {
-                                operandsMatch = false;
-                            }
-                            
-                            if (operandsMatch) {
-                                userElements.forEach(userEl => {
-                                    if (userEl === el) isCorrectInThisSolution = true;
-                                });
-                            }
-                        }
-
-                        const normalizeOp = (op) => {
-                            if (op === '×' || op === '*' || op === 'X' || op === 'x') return 'x';
-                            return op;
-                        };
-        
-                        const normalizedUserOp = normalizeOp(userCell.operation);
-                        const normalizedSolutionOp = normalizeOp(solutionCell.operation);
-                    
-                        if (gridCellElements.operation === el && normalizedUserOp === normalizedSolutionOp) isCorrectInThisSolution = true;
-                    }
-                }
-
-                // If this element's value is correct for this solution, it's not universally wrong.
-                // Remove it from the set for this iteration.
-                if (isCorrectInThisSolution) {
-                    universalConflicts.delete(el);
-                }
-            });
-        }
-        return Array.from(universalConflicts);
-    };
+        // THEN, find and highlight the specific cells that are wrong in ALL solutions.
+        const conflicts = findUniversalConflicts(solution);
+        highlightConflicts(conflicts); 
+    }
 });
+
+function isElementCorrectForSolution(element, solutionLine, solutionGrid, userGridElements) {
+    // Check if it's a bottom strip input
+    if (element.classList.contains('strip-input')) {
+        const stripInputs = Array.from(document.querySelectorAll('.strip-input'));
+        const elIndex = stripInputs.indexOf(element);
+        if (elIndex > -1 && parseInt(element.value, 10) === solutionLine[elIndex]) {
+            return true;
+        }
+    }
+
+    // Check if it's a grid input (operand or operation)
+    for (let i = 0; i < userGridElements.length; i++) {
+        const gridCellElements = userGridElements[i];
+        const solutionCell = solutionGrid[i];
+
+        // Check if the element is an operand in this grid cell
+        if (gridCellElements.operand1 === element || gridCellElements.operand2 === element) {
+            const userValue = parseInt(element.value, 10);
+            // Check if the user's number is one of the valid operands for this cell in this solution
+            if (solutionCell.operands.includes(userValue)) {
+                return true;
+            }
+        }
+
+        // Check if the element is the operation in this grid cell
+        if (gridCellElements.operation === element) {
+            const normalizeOp = (op) => (op === '×' || op === '*' || op === 'X' || op === 'x') ? 'x' : op; //
+            const normalizedUserOp = normalizeOp(element.value);
+            const normalizedSolutionOp = normalizeOp(solutionCell.operation);
+            if (normalizedUserOp === normalizedSolutionOp) {
+                return true;
+            }
+        }
+    }
+
+    return false; // The element's value was not correct for this specific solution
+}
+
+function findUniversalConflicts(solution) {
+    // Get all elements the user has typed a value into
+    const allUserInputElements = Array.from(document.querySelectorAll('.strip-input, .small-input, .operation-input'))
+        .filter(el => el.value.trim() !== '');
+
+    // Get the mapping of elements to their grid positions
+    const userGridElements = collectUserGridElements();
+    const universalConflicts = [];
+
+    // Check each user-filled element
+    for (const element of allUserInputElements) {
+        let isCorrectInAtLeastOneSolution = false;
+
+        // Loop through all possible solutions to see if this element is valid in any of them
+        for (let i = 0; i < solution.grids.length; i++) {
+            const solutionLine = solution.lines[i]; 
+            const solutionGrid = solution.grids[i];
+
+            // Use the helper to check against this specific solution
+            if (isElementCorrectForSolution(element, solutionLine, solutionGrid, userGridElements)) {
+                isCorrectInAtLeastOneSolution = true;
+                break; // It's valid in this solution, so it's not a universal conflict.
+                       // We can stop checking other solutions for this element.
+            }
+        }
+
+        // If, after checking all solutions, it was never correct, it's a universal conflict.
+        if (!isCorrectInAtLeastOneSolution) {
+            universalConflicts.push(element);
+        }
+    }
+
+    return universalConflicts;
+}
 
 // Unsolve button event listener
 document.getElementById('unsolveBtn').addEventListener('click', function() {
