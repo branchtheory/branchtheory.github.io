@@ -703,7 +703,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     }
 
     // First, check if the user's input combination is valid for ANY solution.
-    if (checkUserSolution(solution)) { /
+    if (checkUserSolution(solution)) {
         showNotification('All correct. Your entries match a valid solution.');
     } else {
         // If the combination is not valid, show an error.
