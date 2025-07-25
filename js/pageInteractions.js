@@ -732,10 +732,30 @@ function isElementCorrectForSolution(element, solutionLine, solutionGrid, userGr
 
         // Check if the element is an operand in this grid cell
         if (gridCellElements.operand1 === element || gridCellElements.operand2 === element) {
-            const userValue = parseInt(element.value, 10);
-            // Check if the user's number is one of the valid operands for this cell in this solution
-            if (solutionCell.operands.includes(userValue)) {
-                return true;
+            const operand1Value = gridCellElements.operand1.value.trim();
+            const operand2Value = gridCellElements.operand2.value.trim();
+
+            // If both operand fields are filled, they must be validated as a pair.
+            if (operand1Value && operand2Value) {
+                // Collect, parse, and sort the user's operands numerically.
+                const userOperands = [parseInt(operand1Value, 10), parseInt(operand2Value, 10)];
+                userOperands.sort((a, b) => a - b);
+
+                // Sort the solution's operands numerically.
+                const solutionOperands = [...solutionCell.operands];
+                solutionOperands.sort((a, b) => a - b);
+
+                // The sorted pairs must match exactly [cite: 178-181, 229-232].
+                if (JSON.stringify(userOperands) === JSON.stringify(solutionOperands)) {
+                    return true;
+                }
+            }
+            // If only one operand field is filled, check if it exists in the solution's operands.
+            else {
+                const userValue = parseInt(element.value, 10);
+                if (solutionCell.operands.includes(userValue)) {
+                    return true;
+                }
             }
         }
 
@@ -750,7 +770,7 @@ function isElementCorrectForSolution(element, solutionLine, solutionGrid, userGr
         }
     }
 
-    return false; // The element's value was not correct for this specific solution
+    return false; // The element's value was not correct for this specific solution.
 }
 
 function findUniversalConflicts(solution) {
