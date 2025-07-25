@@ -366,20 +366,20 @@ function collectUserGridElements() {
     const operationInputs = document.querySelectorAll('.operation-input');
     
     const userGrid = [];
-    
     // Process each of the 16 grid positions
     for (let i = 0; i < 16; i++) {
-        const row = Math.floor(i / 4);
-        const col = i % 4;
+        const row = Math.floor(i / 4); //
+        const col = i % 4; //
         
-        const smallInputBaseIndex = row * 8 + col * 2 + col;
-        const operationIndex = row * 4 + col;
+        // This line is now corrected to match the logic from collectUserGrid.
+        const smallInputBaseIndex = row * 8 + col * 2; 
+        const operationIndex = row * 4 + col; //
 
         userGrid.push({
             operand1: smallInputs[smallInputBaseIndex],
             operation: operationInputs[operationIndex],
             operand2: smallInputs[smallInputBaseIndex + 1]
-        });
+        }); //
     }
     
     return userGrid;
