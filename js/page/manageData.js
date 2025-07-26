@@ -12,7 +12,7 @@ export function getDemoOrUserData(demoModeState, gridInput, stripInput) {
     }
     
     // Normal mode validation
-    if (!validateAllFieldsFilled(gridInput) {
+    if (!validateAllFieldsFilled(gridInput)) {
         return { error: 'Fill in the grid first.' };
     }
     
