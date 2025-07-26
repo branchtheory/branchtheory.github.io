@@ -1,6 +1,6 @@
 import { validateAllFieldsFilled, 
         validateStripSequential
-} from './page/validateInput.js';
+} from './validateInput.js';
 
 export function getDemoOrUserData(demoModeState, gridInput, stripInput) {
     if (demoModeState) {
