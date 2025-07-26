@@ -350,6 +350,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     
     // Make most inputs non-editable
     const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
 
     gridInputs.forEach(input => {
         input.disabled = true;
@@ -360,7 +361,6 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     });
     
     // Fill the bottom strip with solution values
-    const stripInputs = document.querySelectorAll('.bottom-strip input');
     solution.lines[0].forEach((value, index) => {
         if (index < stripInputs.length) {
             stripInputs[index].value = value;
