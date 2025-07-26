@@ -1,4 +1,4 @@
-import { getSolution } from './solve.js';
+import { getSolution } from './solve/solve.js';
 import { validateAllFieldsFilled, 
         validateStripSequential, 
         validateGridInput, 
