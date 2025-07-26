@@ -279,7 +279,7 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
 function partialSolve() {
     const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
     const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
-    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
+    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
     
     if (dataResult.error) {
         showError(dataResult.error);
@@ -385,7 +385,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
 
     const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
     const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
-    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
+    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
     
     if (dataResult.error) {
         showError(dataResult.error);
@@ -469,12 +469,16 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     clearAllHighlights(); 
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
+    const gridInput = document.querySelectorAll('.grid-input');
+    const stripInput = document.querySelectorAll('.strip-input');
+    const smallInput = document.querySelectorAll('.small-input');
+    const operationInput = document.querySelectorAll('.operation-input');
 
-    const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
-    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
+    const demoModeState = isInDemoMode(gridInput, stripInput, smallInput, operationInput)
+    const dataResult = getDemoOrUserData(demoModeState, gridInput, stripInput);
+    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
         
-    if (dataResult.error) {
+    if (Object.hasOwn(dataResult, 'error')) {
         showError(dataResult.error); 
         return;
     }
@@ -488,7 +492,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
 
     // First, check if the user's input combination is valid for ANY solution.
     if (checkUserSolution(solution)) {
-        showNotification('All correct. Your entries match a valid solution.');
+        showNotification('All correct. That matches a solution.');
     } else {
         // If the combination is not valid, show an error.
         showError('Some of that does not match any solution.'); 
