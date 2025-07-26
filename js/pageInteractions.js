@@ -4,7 +4,7 @@ import {
         GRID_PLACEHOLDERS, 
         STRIP_PLACEHOLDERS,
         isInDemoMode
-} from './page/demoData.js';
+} from './page/demoData.js';f
 import { 
     getDemoOrUserPuzzle,
     collectUserGridData, 
@@ -161,8 +161,8 @@ function highlightConflicts(elements) {
 
 function checkAgainstSingleSolution(userStrip, userGrid, solutionLine, solutionGrid) {
     // Check bottom strip
-    for (let i = 0; i < userstrip.length; i++) {
-        if (userstrip[i] !== null && userstrip[i] !== solutionLine[i]) {
+    for (let i = 0; i < userStrip.length; i++) {
+        if (userStrip[i] !== null && userStrip[i] !== solutionLine[i]) {
             return false;
         }
     }
