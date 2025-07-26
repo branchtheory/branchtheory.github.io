@@ -5,7 +5,7 @@ import { validateAllFieldsFilled,
         validateStripInput, 
         validateSmallInput, 
         validateOperationInput 
-} from './validateInput.js';
+} from './page/validateInput.js';
 
 let originalGridData = [];
 let originalStripData = [];
