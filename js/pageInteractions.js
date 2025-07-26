@@ -4,7 +4,7 @@ import {
         GRID_PLACEHOLDERS, 
         STRIP_PLACEHOLDERS,
         isInDemoMode
-} from './page/demoData.js';f
+} from './page/demoData.js';
 import { 
     getDemoOrUserPuzzle,
     collectUserGridData, 
