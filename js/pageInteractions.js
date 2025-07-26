@@ -386,7 +386,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     document.getElementById('errorMessage').style.display = 'none';
 
     const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input')), document.querySelectorAll('.strip-input')));
+    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
     
     if (dataResult.error) {
@@ -473,7 +473,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     document.getElementById('errorMessage').style.display = 'none';
 
     const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input')), document.querySelectorAll('.strip-input')));
+    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
         
     if (dataResult.error) {
