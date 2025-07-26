@@ -350,7 +350,6 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     
     // Make most inputs non-editable
     const gridInputs = document.querySelectorAll('.grid-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
 
     gridInputs.forEach(input => {
         input.disabled = true;
