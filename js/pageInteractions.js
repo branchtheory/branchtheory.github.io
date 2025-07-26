@@ -9,7 +9,7 @@ import {
     getDemoOrUserPuzzle,
     collectUserGridData, 
     collectUserStrip 
-} from './getData.js';
+} from './page/getData.js';
         
 let originalGridData = [];
 let originalStripData = [];
