@@ -2,7 +2,7 @@ import { validateAllFieldsFilled,
         validateStripSequential
 } from './page/validateInput.js';
 
-function getDemoOrUserData(demoModeState, gridInput, stripInput) {
+export function getDemoOrUserData(demoModeState, gridInput, stripInput) {
     if (demoModeState) {
         return {
             isDemo: true,
