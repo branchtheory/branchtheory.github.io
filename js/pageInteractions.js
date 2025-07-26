@@ -5,9 +5,6 @@ import {
         STRIP_PLACEHOLDERS,
         isInDemoMode
 } from './page/demoData.js';
-import {
-        
-} from './page/manageData.js';
 import { 
     getDemoOrUserPuzzle,
     collectUserGridData, 
