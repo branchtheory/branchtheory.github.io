@@ -1,6 +1,12 @@
-import { validateAllFieldsFilled, 
+import { 
+        validateAllFieldsFilled, 
         validateStripSequential
 } from './validateInput.js';
+import { 
+        DEMO_GRID_DATA, 
+        DEMO_STRIP_DATA,
+        validateStripSequential 
+} from './demoData.js';
 
 export function getDemoOrUserData(demoModeState, gridInput, stripInput) {
     if (demoModeState) {
