@@ -81,7 +81,7 @@ export function validateSmallInput(event) {
     input.value = cleanValue;
 }
 
-function validateOperationInput(event, gridInput, stripInput)) {
+function validateOperationInput(event, gridInput, stripInput) {
     const input = event.target;
     const value = input.value;
     
