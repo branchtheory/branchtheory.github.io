@@ -6,8 +6,13 @@ import {
         isInDemoMode
 } from './page/demoData.js';
 import {
-        getDemoOrUserData,
+        
 } from './page/manageData.js';
+import { 
+    getDemoOrUserPuzzle,
+    collectUserGridData, 
+    collectUserStrip 
+} from './getData.js';
         
 let originalGridData = [];
 let originalStripData = [];
@@ -127,7 +132,7 @@ function saveOriginalData() {
 
 function checkUserSolution(solution) {
     // Collect user's input from small cells and operations
-    const userBottomStrip = collectUserBottomStrip();
+    const userStrip = collectUserStrip();
     const userGrid = collectUserGridData();
     
     // Check against each possible solution
@@ -136,7 +141,7 @@ function checkUserSolution(solution) {
         const solutionGrid = solution.grids[i];
         
         // Check if user input conflicts with this solution
-        if (checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, solutionGrid)) {
+        if (checkAgainstSingleSolution(userStrip, userGrid, solutionLine, solutionGrid)) {
             return true; // No conflicts found with this solution
         }
     }
@@ -157,72 +162,10 @@ function highlightConflicts(elements) {
     });
 }
 
-function getGridCellElements() {
-    const smallInputs = document.querySelectorAll('.small-input');
-    const operationInputs = document.querySelectorAll('.operation-input');
-    
-    const gridCells = [];
-    
-    // Process each of the 16 grid positions
-    for (let i = 0; i < 16; i++) {
-        const row = Math.floor(i / 4);
-        const col = i % 4;
-        
-        const smallInputBaseIndex = row * 8 + col * 2;
-        const operationIndex = row * 4 + col;
-
-        const operand1Element = smallInputs[smallInputBaseIndex];
-        const operationElement = operationInputs[operationIndex];
-        const operand2Element = smallInputs[smallInputBaseIndex + 1];
-        
-        gridCells.push({
-            operand1Element,
-            operationElement,
-            operand2Element
-        });
-    }
-    
-    return gridCells;
-}
-
-function collectUserGridData(returnElements = false) {
-    const gridCells = getGridCellElements();
-    
-    return gridCells.map(cell => {
-        if (returnElements) {
-            // Return DOM elements
-            return {
-                operand1: cell.operand1Element,
-                operation: cell.operationElement,
-                operand2: cell.operand2Element
-            };
-        } else {
-            // Return parsed values
-            const operand1 = cell.operand1Element?.value.trim();
-            const operation = cell.operationElement?.value.trim();
-            const operand2 = cell.operand2Element?.value.trim();
-
-            return {
-                operand1: operand1 === '' ? null : parseInt(operand1, 10),
-                operation: operation === '' ? null : operation,
-                operand2: operand2 === '' ? null : parseInt(operand2, 10)
-            };
-        }
-    });
-}
-
-function collectUserBottomStrip() {
-    const stripInputs = document.querySelectorAll('.strip-input');
-    return Array.from(stripInputs).map(input => {
-        const value = input.value.trim();
-        return value === '' ? null : parseInt(value, 10);
-    });
-}
-
-function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, solutionGrid) {
+function checkAgainstSingleSolution(userStrip, userGrid, solutionLine, solutionGrid) {
     // Check bottom strip
-    for (let i = 0; i < userBottomStrip.length; i++) {
-        if (userBottomStrip[i] !== null && userBottomStrip[i] !== solutionLine[i]) {
+    for (let i = 0; i < userstrip.length; i++) {
+        if (userstrip[i] !== null && userstrip[i] !== solutionLine[i]) {
             return false;
         }
     }
@@ -278,7 +221,7 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
 
 function partialSolve() {
     const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
+    const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
     
     if (dataResult.error) {
@@ -384,7 +327,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     document.getElementById('errorMessage').style.display = 'none';
 
     const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
+    const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
     
     if (dataResult.error) {
@@ -421,10 +364,10 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     });
     
     // Fill the bottom strip with solution values
-    const bottomStripInputs = document.querySelectorAll('.bottom-strip input');
+    const stripInputs = document.querySelectorAll('.bottom-strip input');
     solution.lines[0].forEach((value, index) => {
-        if (index < bottomStripInputs.length) {
-            bottomStripInputs[index].value = value;
+        if (index < stripInputs.length) {
+            stripInputs[index].value = value;
         }
     });
     
@@ -475,7 +418,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     const operationInput = document.querySelectorAll('.operation-input');
 
     const demoModeState = isInDemoMode(gridInput, stripInput, smallInput, operationInput)
-    const dataResult = getDemoOrUserData(demoModeState, gridInput, stripInput);
+    const dataResult = getDemoOrUserPuzzle(demoModeState, gridInput, stripInput);
     if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
         
     if (Object.hasOwn(dataResult, 'error')) {
