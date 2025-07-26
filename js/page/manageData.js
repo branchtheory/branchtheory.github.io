@@ -5,7 +5,6 @@ import {
 import { 
         DEMO_GRID_DATA, 
         DEMO_STRIP_DATA,
-        validateStripSequential 
 } from './demoData.js';
 
 export function getDemoOrUserData(demoModeState, gridInput, stripInput) {
