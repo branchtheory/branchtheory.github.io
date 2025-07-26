@@ -16,7 +16,7 @@ export function getDemoOrUserData(demoModeState, gridInput, stripInput) {
         return { error: 'Fill in the grid first.' };
     }
     
-    if (!validateStripSequential(stripInput) {
+    if (!validateStripSequential(stripInput)) {
         return { error: 'Numbers in the bottom strip must be in ascending order from left to right.' };
     }
     
