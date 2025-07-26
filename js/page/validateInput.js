@@ -47,15 +47,30 @@ export function validateStripSequential(stripInputs) {
     return true;
 }
 
+export function setUpInputValidation() {
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
+    
+    // Helper function to add validation to a set of inputs
+    function addValidationTo(selector, validationFn) {
+        document.querySelectorAll(selector).forEach(input => {
+            input.addEventListener('input', (event) => {
+                clearAllPlaceholdersOnFirstInput(event) 
+                validationFn(event);
+            });
+        });
+    }
+    
+    // Apply to different input types
+    addValidationTo('.small-input', validateSmallInput);
+    addValidationTo('.operation-input', validateOperationInput);
+    addValidationTo('.grid-input', validateGridInput);
+    addValidationTo('.strip-input', validateStripInput);
+}
+
 export function validateSmallInput(event) {
     const input = event.target;
     const value = input.value;
-    
-    // Clear all placeholders on first input to any field
-    if (value.length === 1) {
-        clearAllGridPlaceholders();
-        clearAllStripPlaceholders();
-    }
     
     // Remove any non-digit characters and limit to 2 digits
     let cleanValue = value.replace(/\D/g, '');
@@ -66,15 +81,9 @@ export function validateSmallInput(event) {
     input.value = cleanValue;
 }
 
-export function validateOperationInput(event) {
+function validateOperationInput(event, gridInput, stripInput)) {
     const input = event.target;
     const value = input.value;
-    
-    // Clear all placeholders on first input to any field
-    if (value.length === 1) {
-        clearAllGridPlaceholders();
-        clearAllStripPlaceholders();
-    }
     
     // Only allow + and x, limit to 1 character
     let cleanValue = value.replace(/[^+x*X×]/g, '');
@@ -85,15 +94,9 @@ export function validateOperationInput(event) {
     input.value = cleanValue;
 }
 
-export function validateGridInput(event) {
+function validateGridInput(event, gridInput, stripInput) {
     const input = event.target;
     const value = input.value;
-    
-    // Clear all placeholders on first input to any field
-    if (value.length === 1) {
-        clearAllGridPlaceholders();
-        clearAllStripPlaceholders();
-    }
     
     // Remove any non-digit characters and limit to 3 digits
     let cleanValue = value.replace(/\D/g, '');
@@ -104,15 +107,9 @@ export function validateGridInput(event) {
     input.value = cleanValue;
 }
 
-export function validateStripInput(event) {
+function validateStripInput(event, gridInput, stripInput) {
     const input = event.target;
     const value = input.value;
-    
-    // Clear all placeholders on first input to any field
-    if (value.length === 1) {
-        clearAllGridPlaceholders();
-        clearAllStripPlaceholders();
-    }
     
     // Remove any non-digit characters and limit to 2 digits
     let cleanValue = value.replace(/\D/g, '');
@@ -123,3 +120,17 @@ export function validateStripInput(event) {
     input.value = cleanValue;
 }
 
+function clearAllPlaceholders(inputs) {
+    inputs.forEach(input => {
+        input.placeholder = '';
+    });
+}
+
+function clearAllPlaceholdersOnFirstInput(event) {
+    if (event.target.value.length === 1) {
+        const gridInputs = document.querySelectorAll('.grid-input');
+        const stripInputs = document.querySelectorAll('.strip-input');
+        clearAllPlaceholders(gridInputs);
+        clearAllPlaceholders(stripInputs);
+    }
+}
