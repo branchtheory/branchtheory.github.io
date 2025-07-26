@@ -2,9 +2,7 @@ import { getSolution } from './solve/solve.js';
 import { setUpInputValidation } from './page/validateInput.js';
 import {
         GRID_PLACEHOLDERS, 
-        STRIP_PLACEHOLDERS, 
-        DEMO_GRID_DATA,
-        DEMO_STRIP_DATA,
+        STRIP_PLACEHOLDERS,
         isInDemoMode
 } from './page/demoData.js';
 import {
