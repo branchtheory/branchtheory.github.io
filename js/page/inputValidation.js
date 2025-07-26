@@ -1,5 +1,4 @@
-export function validateAllFieldsFilled() {
-    const gridInputs = document.querySelectorAll('.grid-input');
+export function validateAllFieldsFilled(gridInputs) {
     for (let input of gridInputs) {
         if (!input.value.trim()) {
             return false;
@@ -8,8 +7,7 @@ export function validateAllFieldsFilled() {
     return true;
 }
 
-export function validateStripSequential() {
-    const stripInputs = document.querySelectorAll('.strip-input');
+export function validateStripSequential(stripInputs) {
     const values = [];
     
     // Collect all non-empty values with their positions
