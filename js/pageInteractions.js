@@ -1,11 +1,5 @@
 import { getSolution } from './solve/solve.js';
-import { validateAllFieldsFilled, 
-        validateStripSequential, 
-        validateGridInput, 
-        validateStripInput, 
-        validateSmallInput, 
-        validateOperationInput 
-} from './page/validateInput.js';
+import { setUpInputValidation } from './page/validateInput.js';
 import {
         GRID_PLACEHOLDERS, 
         STRIP_PLACEHOLDERS, 
@@ -13,8 +7,10 @@ import {
         DEMO_STRIP_DATA,
         isInDemoMode
 } from './page/demoData.js';
+import {
+        getDemoOrUserData,
+} from './page/manageData.js';
         
-
 let originalGridData = [];
 let originalStripData = [];
 let originalDataSaved = false; 
@@ -35,30 +31,6 @@ function showNotification(message) {
     const notificationDiv = document.getElementById('notificationMessage');
     notificationDiv.textContent = message;
     notificationDiv.style.display = 'block';
-}
-
-function collectGridData() {
-    const gridInputs = document.querySelectorAll('.grid-input');
-    const gridData = [];
-    
-    gridInputs.forEach(input => {
-        const value = input.value.trim();
-        gridData.push(value === '' ? '0' : value);
-    });
-    
-    return gridData;
-}
-
-function collectStripData() {
-    const stripInputs = document.querySelectorAll('.strip-input');
-    const stripData = [];
-    
-    stripInputs.forEach(input => {
-        const value = input.value.trim();
-        stripData.push(value === '' ? '0' : value);
-    });
-    
-    return stripData;
 }
 
 function restoreOriginalData() {
@@ -93,32 +65,6 @@ function restoreOriginalData() {
     originalDataSaved = false;
 
     document.getElementById('partialResultsTable').style.display = 'none';
-}
-
-function getDemoOrUserData() {
-    if (isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))) {
-        isDemoMode = true; // Lock into demo mode once detected
-        return {
-            isDemo: true,
-            gridData: DEMO_GRID_DATA,
-            stripData: DEMO_STRIP_DATA
-        };
-    }
-    
-    // Normal mode validation
-    if (!validateAllFieldsFilled(document.querySelectorAll('.grid-input'))) {
-        return { error: 'Fill in the grid first.' };
-    }
-    
-    if (!validateStripSequential(document.querySelectorAll('.strip-input'))) {
-        return { error: 'Numbers in the bottom strip must be in ascending order from left to right.' };
-    }
-    
-    return {
-        isDemo: false,
-        gridData: collectGridData().map(str => parseInt(str, 10)),
-        stripData: collectStripData().map(str => parseInt(str, 10))
-    };
 }
 
 function clearAllData() {
@@ -166,24 +112,6 @@ function clearAllData() {
 
     document.getElementById('partialResultsTable').style.display = 'none';
 }
-
-// Placeholder management
-function clearAllGridPlaceholders() {
-    const gridInputs = document.querySelectorAll('.grid-input');
-    gridInputs.forEach(input => {
-        input.placeholder = '';
-    });
-
-}
-
-function clearAllStripPlaceholders() {
-    const stripInputs = document.querySelectorAll('.strip-input');
-    stripInputs.forEach(input => {
-        input.placeholder = '';
-    });
-}
-
-// Input validation functions
 
 function saveOriginalData() {
     if (originalDataSaved) return; // Don't overwrite already saved data
@@ -349,8 +277,11 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
     
     return true;
 }
+
 function partialSolve() {
-    const dataResult = getDemoOrUserData();
+    const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
+    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input')), document.querySelectorAll('.strip-input')));
+    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
     
     if (dataResult.error) {
         showError(dataResult.error);
@@ -444,15 +375,8 @@ document.addEventListener('DOMContentLoaded', function() {
     stripInputs.forEach((input, index) => {
         input.placeholder = STRIP_PLACEHOLDERS[index] || '';
     });
-    
-    // Existing validation event listeners...
-    gridInputs.forEach(input => {
-        input.addEventListener('input', validateGridInput);
-    });
-    
-    stripInputs.forEach(input => {
-        input.addEventListener('input', validateStripInput);
-    });
+
+   setUpInputValidation()
 });
 
 // Solve button event listener
@@ -460,8 +384,10 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     clearAllHighlights();
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
-    
-    const dataResult = getDemoOrUserData();
+
+    const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
+    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input')), document.querySelectorAll('.strip-input')));
+    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
     
     if (dataResult.error) {
         showError(dataResult.error);
@@ -541,23 +467,15 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     isSolved = true;
 });
 
-// Add validation for new input types
-const smallInputs = document.querySelectorAll('.small-input');
-smallInputs.forEach(input => {
-    input.addEventListener('input', validateSmallInput);
-});
-
-const operationInputs = document.querySelectorAll('.operation-input');
-operationInputs.forEach(input => {
-    input.addEventListener('input', validateOperationInput);
-});
-
 document.getElementById('checkBtn').addEventListener('click', function() {
     clearAllHighlights(); 
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
 
-    const dataResult = getDemoOrUserData();
+    const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
+    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input')), document.querySelectorAll('.strip-input')));
+    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
+        
     if (dataResult.error) {
         showError(dataResult.error); 
         return;
