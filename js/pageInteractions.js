@@ -6,17 +6,20 @@ import { validateAllFieldsFilled,
         validateSmallInput, 
         validateOperationInput 
 } from './page/validateInput.js';
+import {
+        GRID_PLACEHOLDERS, 
+        STRIP_PLACEHOLDERS, 
+        DEMO_GRID_DATA,
+        DEMO_STRIP_DATA,
+        isInDemoMode
+} from './page/demoData.js';
+        
 
 let originalGridData = [];
 let originalStripData = [];
 let originalDataSaved = false; 
 let isSolved = false;
 let isDemoMode = false;
-
-const GRID_PLACEHOLDERS = ['23', '23', '26', '27', '27', '28', '29', '31', '92', '120', '126', '130', '132', '168', '180', '198'];
-const STRIP_PLACEHOLDERS = ['', '', '6', '', '9', '9', '10', '', '', '','', '', '', '', '22', ''];
-const DEMO_GRID_DATA = GRID_PLACEHOLDERS.map(str => parseInt(str, 10));
-const DEMO_STRIP_DATA = STRIP_PLACEHOLDERS.map(str => str === '' ? 0 : parseInt(str, 10));
 
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
@@ -32,21 +35,6 @@ function showNotification(message) {
     const notificationDiv = document.getElementById('notificationMessage');
     notificationDiv.textContent = message;
     notificationDiv.style.display = 'block';
-}
-
-function isInDemoMode() {
-    const gridInputs = document.querySelectorAll('.grid-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
-    const smallInputs = document.querySelectorAll('.small-input');
-    const operationInputs = document.querySelectorAll('.operation-input');
-    
-    const mainInputsEmpty = Array.from(gridInputs).every(input => !input.value.trim()) &&
-                           Array.from(stripInputs).every(input => !input.value.trim());
-    
-    const smallOpInputsEmpty = Array.from(smallInputs).every(input => !input.value.trim()) &&
-                              Array.from(operationInputs).every(input => !input.value.trim());
-    
-    return mainInputsEmpty && smallOpInputsEmpty;
 }
 
 function collectGridData() {
@@ -108,7 +96,7 @@ function restoreOriginalData() {
 }
 
 function getDemoOrUserData() {
-    if (isInDemoMode()) {
+    if (isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))) {
         isDemoMode = true; // Lock into demo mode once detected
         return {
             isDemo: true,
@@ -118,11 +106,11 @@ function getDemoOrUserData() {
     }
     
     // Normal mode validation
-    if (!validateAllFieldsFilled()) {
+    if (!validateAllFieldsFilled(document.querySelectorAll('.grid-input'))) {
         return { error: 'Fill in the grid first.' };
     }
     
-    if (!validateStripSequential()) {
+    if (!validateStripSequential(document.querySelectorAll('.strip-input'))) {
         return { error: 'Numbers in the bottom strip must be in ascending order from left to right.' };
     }
     
