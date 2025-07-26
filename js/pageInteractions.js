@@ -280,7 +280,7 @@ function checkAgainstSingleSolution(userBottomStrip, userGrid, solutionLine, sol
 
 function partialSolve() {
     const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input')), document.querySelectorAll('.strip-input')));
+    const dataResult = getDemoOrUserData(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = demoInfo.isDemo; }
     
     if (dataResult.error) {
