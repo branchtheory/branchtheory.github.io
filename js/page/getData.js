@@ -1,3 +1,12 @@
+import { 
+        validateAllFieldsFilled, 
+        validateStripSequential
+} from './validateInput.js';
+import { 
+        DEMO_GRID_DATA, 
+        DEMO_STRIP_DATA,
+} from './demoData.js';
+
 export function collectUserGridData(returnElements = false) {
     const gridCells = getGridCellElements();
     
@@ -59,3 +68,54 @@ function getGridCellElements() {
     
     return gridCells;
 }
+
+export function getDemoOrUserPuzzle(demoModeState, gridInput, stripInput) {
+    if (demoModeState) {
+        return {
+            isDemo: true,
+            gridData: DEMO_GRID_DATA,
+            stripData: DEMO_STRIP_DATA
+        };
+    }
+    
+    // Normal mode validation
+    if (!validateAllFieldsFilled(gridInput)) {
+        return { error: 'Fill in the grid first.' };
+    }
+    
+    if (!validateStripSequential(stripInput)) {
+        return { error: 'Numbers in the bottom strip must be in ascending order from left to right.' };
+    }
+    
+    return {
+        isDemo: false,
+        gridData: collectGridData().map(str => parseInt(str, 10)),
+        stripData: collectStripData().map(str => parseInt(str, 10))
+    };
+}
+
+function collectGridData() {
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const gridData = [];
+
+    gridInputs.forEach(input => {
+        const value = input.value.trim();
+        gridData.push(value === '' ? '0' : value);
+    });
+
+    return gridData;
+}
+
+function collectStripData() {
+    const stripInputs = document.querySelectorAll('.strip-input');
+    const stripData = [];
+
+    stripInputs.forEach(input => {
+        const value = input.value.trim();
+        stripData.push(value === '' ? '0' : value);
+    });
+
+    return stripData;
+}
+
+
