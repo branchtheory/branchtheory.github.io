@@ -6,6 +6,10 @@ import {
         STRIP_PLACEHOLDERS,
         isInDemoMode
 } from './page/demoData.js';
+import {
+        showError,
+        showNotification
+} from './page/notify.js';
 import { 
     getDemoOrUserPuzzle,
     collectUserGridData, 
@@ -17,22 +21,6 @@ let originalStripData = [];
 let originalDataSaved = false; 
 let isSolved = false;
 let isDemoMode = false;
-
-function showError(message) {
-    const errorDiv = document.getElementById('errorMessage');
-    errorDiv.textContent = message;
-    errorDiv.style.display = 'block';
-
-    setTimeout(() => {
-        errorDiv.style.display = 'none';
-    }, 5000);
-}
-
-function showNotification(message) {
-    const notificationDiv = document.getElementById('notificationMessage');
-    notificationDiv.textContent = message;
-    notificationDiv.style.display = 'block';
-}
 
 function restoreOriginalData() {
     // Restore grid data
