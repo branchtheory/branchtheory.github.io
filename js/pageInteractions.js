@@ -4,8 +4,12 @@ import { generatePartialSolutionTable } from './page/partialSolve.js';
 import {
         GRID_PLACEHOLDERS, 
         STRIP_PLACEHOLDERS,
-        isInDemoMode
-} from './page/demoData.js';
+        getIsDemoMode,
+        setIsDemoMode,
+        saveOriginalData,
+        restoreOriginalData,
+        clearAllData
+} from './state/dataState.js';
 import {
         showError,
         showNotification
@@ -16,110 +20,12 @@ import {
     collectUserStrip 
 } from './page/getData.js';
         
-let originalGridData = [];
-let originalStripData = [];
-let originalDataSaved = false; 
-let isSolved = false;
-let isDemoMode = false;
 
-function restoreOriginalData() {
-    // Restore grid data
-    const gridInputs = document.querySelectorAll('.grid-input');
-    gridInputs.forEach((input, index) => {
-        input.value = originalGridData[index] || '';
-        input.disabled = false;
-    });
-    
-    // Restore strip data
-    const stripInputs = document.querySelectorAll('.strip-input');
-    stripInputs.forEach((input, index) => {
-        input.value = originalStripData[index] || '';
-        input.disabled = false;
-    });
-    
-    // Clear small cell inputs (not the cells themselves)
-    const smallInputs = document.querySelectorAll('.small-input');
-    smallInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-
-    // Clear operation inputs (not the cells themselves)
-    const operationInputs = document.querySelectorAll('.operation-input');
-    operationInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-
-    originalDataSaved = false;
-
-    document.getElementById('partialSolutionTable').style.display = 'none';
-}
-
-function clearAllData() {
-    // Clear grid inputs
-    const gridInputs = document.querySelectorAll('.grid-input');
-    gridInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-    
-    // Clear strip inputs
-    const stripInputs = document.querySelectorAll('.strip-input');
-    stripInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-    
-    // Clear small cell inputs and operation inputs
-    const smallInputs = document.querySelectorAll('.small-input');
-    smallInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-
-    const operationInputs = document.querySelectorAll('.operation-input');
-    operationInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-    
-    // Reset arrays
-    originalGridData = [];
-    originalStripData = [];
-
-    gridInputs.forEach((input, index) => {
-    input.placeholder = GRID_PLACEHOLDERS[index] || '';
-    });
-    
-    stripInputs.forEach((input, index) => {
-        input.placeholder = STRIP_PLACEHOLDERS[index] || '';
-    });
-
-    isDemoMode = false;
-    originalDataSaved = false; 
-
-    document.getElementById('partialSolutionTable').style.display = 'none';
-}
-
-function saveOriginalData() {
-    if (originalDataSaved) return; // Don't overwrite already saved data
-    
-    // Save grid data
-    const gridInputs = document.querySelectorAll('.grid-input');
-    originalGridData = Array.from(gridInputs).map(input => input.value);
-    
-    // Save strip data
-    const stripInputs = document.querySelectorAll('.strip-input');
-    originalStripData = Array.from(stripInputs).map(input => input.value);
-    
-    originalDataSaved = true;
-}
 
 function partialSolve() {
-    const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
+    const demoModeState = getIsDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
     const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
-    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
+    if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo); }
 
     if (dataResult.error) {
         showError(dataResult.error);
@@ -260,9 +166,9 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
 
-    const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
+    const demoModeState = getIsDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
     const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
-    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
+    if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo) }
     
     if (dataResult.error) {
         showError(dataResult.error);
@@ -338,7 +244,6 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     document.getElementById('unsolveBtn').disabled = false;
     document.getElementById('resetBtn').disabled = false;
     document.getElementById('checkBtn').disabled = true;
-    isSolved = true;
 });
 
 document.getElementById('checkBtn').addEventListener('click', function() {
@@ -350,9 +255,9 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     const smallInput = document.querySelectorAll('.small-input');
     const operationInput = document.querySelectorAll('.operation-input');
 
-    const demoModeState = isInDemoMode(gridInput, stripInput, smallInput, operationInput)
+    const demoModeState = getIsDemoMode(gridInput, stripInput, smallInput, operationInput)
     const dataResult = getDemoOrUserPuzzle(demoModeState, gridInput, stripInput);
-    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
+    if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo) }
         
     if (Object.hasOwn(dataResult, 'error')) {
         showError(dataResult.error); 
@@ -486,7 +391,6 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
     document.getElementById('checkBtn').disabled = false;
     this.disabled = true;
     document.getElementById('resetBtn').disabled = false;
-    isSolved = false;
 });
 
 // Reset button event listener
@@ -503,7 +407,6 @@ document.getElementById('resetBtn').addEventListener('click', function() {
     document.getElementById('unsolveBtn').disabled = true;
     document.getElementById('checkBtn').disabled = false;
     this.disabled = false;
-    isSolved = false;
 });
 
 // Partial Solve button event listener
