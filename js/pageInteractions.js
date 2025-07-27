@@ -10,7 +10,7 @@ import {
         saveOriginalData,
         restoreOriginalData,
         clearAllData
-} from './page/saveAndDemoData.js.js';
+} from './page/saveAndDemoData.js';
 import {
         showError,
         showNotification
