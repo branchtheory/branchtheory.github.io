@@ -1,6 +1,9 @@
 import { getSolution } from './solve/solve.js';
 import { setUpInputValidation } from './page/validateInput.js';
-import { generatePartialSolutionTable } from './page/partialSolve.js';
+import { 
+        partialSolve,
+        generatePartialSolutionTable 
+} from './page/partialSolve.js';
 import {
         GRID_PLACEHOLDERS, 
         STRIP_PLACEHOLDERS,
