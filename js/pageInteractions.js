@@ -137,7 +137,7 @@ function partialSolve() {
     saveOriginalData();
 
     // Generate the partial results table
-    generatePartialSolveTable(solution.partialSolve);
+    generatePartialSolutionTable(solution.partialSolution);
 
     document.getElementById('unsolveBtn').disabled = false;
 
