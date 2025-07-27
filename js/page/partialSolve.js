@@ -13,7 +13,7 @@ import {
 } from './getData.js';
 
 export function generatePartialSolutionTable(partialSolveArray) {
-  const table = document.getElementById('partialSolveTable');
+  const table = document.getElementById('partialSolutionTable');
   table.innerHTML = ''; // Clear existing content
 
   for (let i = 0; i < partialSolveArray.length; i++) {
@@ -90,7 +90,7 @@ export function partialSolve() {
     document.getElementById('unsolveBtn').disabled = false;
 
     setTimeout(() => {
-        document.getElementById('partialSolveTable').scrollIntoView({
+        document.getElementById('partialSolutionTable').scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
