@@ -1,3 +1,17 @@
+import { getSolution } from '../solve/solve.js';
+import {
+        getIsDemoMode,
+        setIsDemoMode,
+        saveOriginalData
+} from './page/dataState.js';
+import {
+        showError,
+        showNotification
+} from './page/notify.js';
+import { 
+    getDemoOrUserPuzzle,
+} from './page/getData.js';
+
 export function generatePartialSolutionTable(partialSolveArray) {
   const table = document.getElementById('partialSolveTable');
   table.innerHTML = ''; // Clear existing content
@@ -48,4 +62,37 @@ export function generatePartialSolutionTable(partialSolveArray) {
 
   // Show the table
   table.style.display = 'table';
+}
+
+function partialSolve() {
+    const demoModeState = getIsDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
+    const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
+    if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo); }
+
+    if (dataResult.error) {
+        showError(dataResult.error);
+        return;
+    }
+
+    // Get solution data
+    const solution = getSolution(dataResult.gridData, dataResult.stripData);
+
+    if (solution === "invalid") {
+        showError('There is no solution for this puzzle.');
+        return;
+    }
+
+    saveOriginalData();
+
+    // Generate the partial results table
+    generatePartialSolutionTable(solution.partialSolution);
+
+    document.getElementById('unsolveBtn').disabled = false;
+
+    setTimeout(() => {
+        document.getElementById('partialSolveTable').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }, 100);
 }
