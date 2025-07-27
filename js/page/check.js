@@ -1,7 +1,7 @@
 import { 
     collectUserGridData, 
     collectUserStrip 
-} from './page/getData.js';
+} from './getData.js';
 
 export function findUniversalConflicts(solution) {
     // Get all elements the user has typed a value into
