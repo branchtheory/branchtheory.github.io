@@ -1,5 +1,6 @@
 import { getSolution } from './solve/solve.js';
 import { setUpInputValidation } from './page/validateInput.js';
+import { generatePartialSolutionTable } from './page/generatePartialSolution.js';
 import {
         GRID_PLACEHOLDERS, 
         STRIP_PLACEHOLDERS,
@@ -64,7 +65,7 @@ function restoreOriginalData() {
 
     originalDataSaved = false;
 
-    document.getElementById('partialSolveTable').style.display = 'none';
+    document.getElementById('partialSolutionTable').style.display = 'none';
 }
 
 function clearAllData() {
@@ -110,7 +111,7 @@ function clearAllData() {
     isDemoMode = false;
     originalDataSaved = false; 
 
-    document.getElementById('partialSolveTable').style.display = 'none';
+    document.getElementById('partialSolutionTable').style.display = 'none';
 }
 
 function saveOriginalData() {
@@ -237,20 +238,20 @@ function partialSolve() {
     saveOriginalData();
     
     // Generate the partial results table
-    generatePartialSolveTable(solution.partialSolve);
+    generatePartialSolutionTable(solution.partialSolution);
 
     document.getElementById('unsolveBtn').disabled = false;
 
     setTimeout(() => {
-        document.getElementById('partialSolveTable').scrollIntoView({
+        document.getElementById('partialSolutionTable').scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
     }, 100);
 }
 
-function generatePartialSolveTable(partialSolveArray) {
-  const table = document.getElementById('partialSolveTable');
+function generatePartialSolutionTable(partialSolveArray) {
+  const table = document.getElementById('partialSolutionTable');
   table.innerHTML = ''; // Clear existing content
 
   for (let i = 0; i < partialSolveArray.length; i++) {
@@ -392,8 +393,8 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         }
     });
 
-    generatePartialSolveTable(solution.partialSolve);
-    document.getElementById('partialSolveTable').style.display = 'table';
+    generatePartialSolutionTable(solution.partialSolution);
+    document.getElementById('partialSolutionTable').style.display = 'table';
                 
     // Update button states
     this.disabled = true;
