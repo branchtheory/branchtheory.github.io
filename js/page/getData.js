@@ -5,7 +5,7 @@ import {
 import { 
         DEMO_GRID_DATA, 
         DEMO_STRIP_DATA,
-} from './demoData.js';
+} from './dataState.js';
 
 export function collectUserGridData(returnElements = false) {
     const gridCells = getGridCellElements();
