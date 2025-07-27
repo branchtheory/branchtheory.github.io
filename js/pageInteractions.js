@@ -128,6 +128,39 @@ function saveOriginalData() {
     originalDataSaved = true;
 }
 
+function partialSolve() {
+    const demoModeState = isInDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
+    const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
+    if (Object.hasOwn(dataResult, 'isDemo')) { isDemoMode = dataResult.isDemo; }
+
+    if (dataResult.error) {
+        showError(dataResult.error);
+        return;
+    }
+
+    // Get solution data
+    const solution = getSolution(dataResult.gridData, dataResult.stripData);
+
+    if (solution === "invalid") {
+        showError('There is no solution for this puzzle.');
+        return;
+    }
+
+    saveOriginalData();
+
+    // Generate the partial results table
+    generatePartialSolveTable(solution.partialSolve);
+
+    document.getElementById('unsolveBtn').disabled = false;
+
+    setTimeout(() => {
+        document.getElementById('partialSolveTable').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }, 100);
+}
+
 function checkUserSolution(solution) {
     // Collect user's input from small cells and operations
     const userStrip = collectUserStrip();
