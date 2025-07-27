@@ -74,7 +74,7 @@ function buildSolutionObject(solutions, potentialQuads) {
   const initialExpansion = convertInitialExpansionToOutput(potentialQuads);
   return {
     lines: line16OfSolutions,
-    crunchedNumbers: initialExpansion,
+    partialSolve: initialExpansion,
     grids: gridSolutions,
   }
 }
