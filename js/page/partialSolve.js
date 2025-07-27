@@ -64,7 +64,7 @@ export function generatePartialSolutionTable(partialSolveArray) {
   table.style.display = 'table';
 }
 
-function partialSolve() {
+export function partialSolve() {
     const demoModeState = getIsDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
     const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo); }
