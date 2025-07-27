@@ -7,7 +7,7 @@ import {
         DEMO_STRIP_DATA,
         getIsDemoMode,
         setIsDemoMode
-} from './saveAndDemoData.js.js';
+} from './saveAndDemoData.js';
 
 export function collectUserGridData(returnElements = false) {
     const gridCells = getGridCellElements();
