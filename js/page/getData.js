@@ -5,6 +5,8 @@ import {
 import { 
         DEMO_GRID_DATA, 
         DEMO_STRIP_DATA,
+        getIsDemoMode,
+        setIsDemoMode
 } from './dataState.js';
 
 export function collectUserGridData(returnElements = false) {
@@ -69,10 +71,15 @@ function getGridCellElements() {
     return gridCells;
 }
 
-export function getDemoOrUserPuzzle(demoModeState, gridInput, stripInput) {
-    if (demoModeState) {
+export function getDemoOrUserPuzzle() {
+    const demoState = getIsDemoMode();
+    setIsDemoMode(demoState);
+        
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
+
+    if (demoState) {
         return {
-            isDemo: true,
             gridData: DEMO_GRID_DATA,
             stripData: DEMO_STRIP_DATA
         };
@@ -88,7 +95,6 @@ export function getDemoOrUserPuzzle(demoModeState, gridInput, stripInput) {
     }
     
     return {
-        isDemo: false,
         gridData: collectGridData().map(str => parseInt(str, 10)),
         stripData: collectStripData().map(str => parseInt(str, 10))
     };
@@ -117,5 +123,3 @@ function collectStripData() {
 
     return stripData;
 }
-
-
