@@ -233,14 +233,14 @@
             display: none;
         }
         
-        .partial-results {
+        .partial-solve {
             border: 1px solid #333;
             border-collapse: collapse;
             margin-top: 20px;
             display: none;
         }
 
-        .partial-results td {
+        .partial-solve td {
             border: 1px solid #333;
             text-align: center;
             vertical-align: middle;
@@ -248,20 +248,20 @@
             font-size: 16px;
         }
 
-        .partial-results .key-cell {
+        .partial-solve .key-cell {
             background-color: #f0f0f0;
             font-size: 24px;
         }
 
-        .partial-results .paired-value-header {
+        .partial-solve .paired-value-header {
             background-color: #f0f0f0;
         }
 
-        .partial-results .operand-cell {
+        .partial-solve .operand-cell {
             background-color: #fff;
         }
 
-        .partial-results .operation-cell {
+        .partial-solve .operation-cell {
             background-color: #fff;
         }
     </style>
@@ -275,7 +275,7 @@
         <div class="button-container">
             <div class="button-row">
                 <button id="solveBtn" class="control-button solve-button">Solve</button>
-                <button id="partialResultsBtn" class="control-button solve-button">Crunch factors</button>
+                <button id="partialSolveBtn" class="control-button solve-button">Crunch factors</button>
                 <button id="checkBtn" class="control-button solve-button">✔ Check</button>
             </div>
             <div class="button-row">
@@ -426,7 +426,7 @@
                 </tr>
             </table>
             <!-- Partial Results Table -->
-            <table id="partialResultsTable" class="partial-results">
+            <table id="partialSolveTable" class="partial-solve">
                 <!-- Table will be generated dynamically -->
             </table>
         </div>
