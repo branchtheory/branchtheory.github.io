@@ -64,7 +64,7 @@ function restoreOriginalData() {
 
     originalDataSaved = false;
 
-    document.getElementById('partialResultsTable').style.display = 'none';
+    document.getElementById('partialSolveTable').style.display = 'none';
 }
 
 function clearAllData() {
@@ -110,7 +110,7 @@ function clearAllData() {
     isDemoMode = false;
     originalDataSaved = false; 
 
-    document.getElementById('partialResultsTable').style.display = 'none';
+    document.getElementById('partialSolveTable').style.display = 'none';
 }
 
 function saveOriginalData() {
@@ -237,20 +237,20 @@ function partialSolve() {
     saveOriginalData();
     
     // Generate the partial results table
-    generatePartialResultsTable(solution.crunchedNumbers);
+    generatePartialSolveTable(solution.partialSolve);
 
     document.getElementById('unsolveBtn').disabled = false;
 
     setTimeout(() => {
-        document.getElementById('partialResultsTable').scrollIntoView({
+        document.getElementById('partialSolveTable').scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
     }, 100);
 }
 
-function generatePartialResultsTable(partialSolveArray) {
-  const table = document.getElementById('partialResultsTable');
+function generatePartialSolveTable(partialSolveArray) {
+  const table = document.getElementById('partialSolveTable');
   table.innerHTML = ''; // Clear existing content
 
   for (let i = 0; i < partialSolveArray.length; i++) {
@@ -392,8 +392,8 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         }
     });
 
-    generatePartialResultsTable(solution.crunchedNumbers);
-    document.getElementById('partialResultsTable').style.display = 'table';
+    generatePartialSolveTable(solution.partialSolve);
+    document.getElementById('partialSolveTable').style.display = 'table';
                 
     // Update button states
     this.disabled = true;
