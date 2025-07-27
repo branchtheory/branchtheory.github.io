@@ -3,14 +3,14 @@ import {
         getIsDemoMode,
         setIsDemoMode,
         saveOriginalData
-} from './page/dataState.js';
+} from './dataState.js';
 import {
         showError,
         showNotification
-} from './page/notify.js';
+} from './notify.js';
 import { 
     getDemoOrUserPuzzle,
-} from './page/getData.js';
+} from './getData.js';
 
 export function generatePartialSolutionTable(partialSolveArray) {
   const table = document.getElementById('partialSolveTable');
