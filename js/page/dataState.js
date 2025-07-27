@@ -7,7 +7,12 @@ let originalStripData = [];
 let originalDataSaved = false; 
 let isDemoMode = false;
 
-export function getIsDemoMode(gridInputs, stripInputs, smallInputs, operationInputs) {
+export function getIsDemoMode() {
+    const gridInputs = document.querySelectorAll('.grid-input');
+    const stripInputs = document.querySelectorAll('.strip-input');
+    const smallInputs = document.querySelectorAll('.small-input');
+    const operationInputs = document.querySelectorAll('.operation-input'));
+
     const mainInputsEmpty = Array.from(gridInputs).every(input => !input.value.trim()) &&
                            Array.from(stripInputs).every(input => !input.value.trim());
     
