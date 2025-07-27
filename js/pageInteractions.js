@@ -19,41 +19,6 @@ import {
     collectUserGridData, 
     collectUserStrip 
 } from './page/getData.js';
-        
-
-
-function partialSolve() {
-    const demoModeState = getIsDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
-    if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo); }
-
-    if (dataResult.error) {
-        showError(dataResult.error);
-        return;
-    }
-
-    // Get solution data
-    const solution = getSolution(dataResult.gridData, dataResult.stripData);
-
-    if (solution === "invalid") {
-        showError('There is no solution for this puzzle.');
-        return;
-    }
-
-    saveOriginalData();
-
-    // Generate the partial results table
-    generatePartialSolutionTable(solution.partialSolution);
-
-    document.getElementById('unsolveBtn').disabled = false;
-
-    setTimeout(() => {
-        document.getElementById('partialSolveTable').scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    }, 100);
-}
 
 function checkUserSolution(solution) {
     // Collect user's input from small cells and operations
