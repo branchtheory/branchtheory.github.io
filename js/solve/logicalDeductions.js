@@ -1,3 +1,7 @@
+// rather than removing bad quads, mark their status as "rejected"
+// move splitter to be the last port of call, and to be a part of logical deductions? -- it's bifurcation, and it's often a valid (and sometimes the only) way of moving forward
+// 
+
 import {
   PRODUCT_SIGNIFIER,
   SUM_SIGNIFIER,
