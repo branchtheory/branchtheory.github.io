@@ -2,6 +2,7 @@ export const PRODUCT_SIGNIFIER = "product";
 export const SUM_SIGNIFIER = "sum";
 export const UNUSED = "unused";
 export const DONE = "done";
+export const REJECTED = "rejected";
 
 export const BLANK_LINE_ITEM = 0;
 
