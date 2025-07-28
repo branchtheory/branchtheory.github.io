@@ -6,7 +6,8 @@ import {
   PRODUCT_SIGNIFIER,
   SUM_SIGNIFIER,
   UNUSED,
-  DONE,
+  SELECTED,
+  REJECTED,
   NOT_FOUND,
   BROKEN_BRANCH
 } from './sharedValuesAndTools.js';
@@ -91,7 +92,7 @@ function getCorrespondingItemGridItemValue(firstBranch, singleQuadItemGrid16Inde
 }
 
 function removeQuadsInTheCorrespondingGridItemExceptTheOneThatLinksWithTheSingle(firstBranch, singleQuadItemGrid16Index, correspondingItemGrid16Index) {
-  firstBranch[singleQuadItemGrid16Index][0].status = DONE;
+  firstBranch[singleQuadItemGrid16Index][0].status = SELECTED;
   
   // Copy the quad object and flip the operation type
   const linkedQuad = { ...firstBranch[singleQuadItemGrid16Index][0] };
