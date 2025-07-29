@@ -26,7 +26,7 @@ export function deduceFromSingles(branch, grid16) {
 }
 
 export function deduceAfterASplit(branch, grid16) {
-  const singleQuadItemGrid16Index = getTheIndexOfTheGridItemContainingTheSingleQuad(branch, grid16);
+  const singleQuadLoc = getTheLocationOfTheSingleQuad(branch, grid16);
   const singleQuadItemGrid16Value = grid16[singleQuadItemGrid16Index];
 
   const correspondingItemGrid16Value = getCorrespondingItemGridItemValue(branch, singleQuadItemGrid16Index, singleQuadItemGrid16Value);
@@ -44,18 +44,19 @@ export function deduceAfterASplit(branch, grid16) {
 }
 
 function deduceFromGridItemsWithASingleQuad(branch, grid16) {
-  const singleQuadItemGrid16Index = getTheIndexOfTheGridItemContainingTheSingleQuad(branch, grid16);
-
-  if (singleQuadItemGrid16Index === NOT_FOUND) {
+  const singleQuadLoc = getTheLocationOfTheSingleQuad(branch, grid16);
+  
+  if (singleQuadLoc === NOT_FOUND) {
     return { branch: branch, furtherDeductions: false };
   }
 
-  const singleQuadItemGrid16Value = grid16[singleQuadItemGrid16Index];
+  branch[singleQuadLoc.gridIndex][singleQuadLoc.quadIndex].status = SELECTED;
+  const singleQuadItemGrid16Value = grid16[singleQuadLoc.gridIndex];
 
-  const correspondingItemGrid16Value = getCorrespondingItemGridItemValue(branch, singleQuadItemGrid16Index, singleQuadItemGrid16Value);
-  const correspondingItemGrid16Index = getCorrespondingGridItemIndex(branch, singleQuadItemGrid16Index, correspondingItemGrid16Value, grid16);
+  const correspondingItemGrid16Value = branch[singleQuadLoc.gridIndex][singleQuadLoc.quadIndex].pairedGridValue;
+  const correspondingItemGrid16Loc = getCorrespondingGridItemIndex(branch, singleQuadLoc, singleQuadItemGrid16Value, correspondingItemGrid16Value, grid16);
 
-  if (correspondingItemGrid16Index === NOT_FOUND) {
+  if (correspondingItemGrid16Loc === NOT_FOUND) {
     return { branch: BROKEN_BRANCH, furtherDeductions: false };
   }
 
@@ -65,36 +66,35 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
   return { branch: branch, furtherDeductions: true };
 }
 
-function getTheIndexOfTheGridItemContainingTheSingleQuad(branch, grid16) {
-  for (let gridItem = 0; gridItem < grid16.length; gridItem++) {
-    const items = branch[gridItem];
+function getTheLocationOfTheSingleQuad(branch, grid16) {
+  for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
+    const items = branch[gridIndex];
 
     const unused = items.filter(item => item.status === UNUSED);
     const hasSelected = items.some(item => item.status === SELECTED);
 
     if (unused.length === 1 && !hasSelected) {
-      return gridItem;
+      const quadIndex = items.findIndex(item => item.status === UNUSED);
+      return { gridIndex, quadIndex };
     }
   }
 
   return NOT_FOUND;
 }
 
-function getCorrespondingGridItemIndex(branch, singleQuadItemGrid16Index, correspondingItemGrid16Value, grid16) {
-  for (let gridItem = 0; gridItem < grid16.length; gridItem++) {
-    if (grid16[gridItem] === correspondingItemGrid16Value &&
-        branch[gridItem].length > 0 &&
-        branch[gridItem][0].status === UNUSED &&
-        branch[singleQuadItemGrid16Index] !== branch[gridItem]) {
-      return gridItem;
+function getCorrespondingGridItemIndex(branch, singleQuadLoc, singleQuadItemGrid16Value, correspondingItemGrid16Value, grid16) {
+  for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
+    if (grid16[gridIndex] === correspondingItemGrid16Value &&
+        branch[gridIndex].length > 0 &&
+        items.some(item => item.status === UNUSED && item.pairedGridValue === singleQuadItemGrid16Value && 
+            item.operationType !== branch[singleQuadLoc.gridIndex][singleQuadLoc.quadIndex].operationType) &&
+        singleQuadLoc.gridIndex !== gridIndex) {
+      const quadIndex = items.findIndex(item => item.status === UNUSED && item.pairedGridValue === singleQuadItemGrid16Value && 
+            item.operationType !==  branch[singleQuadLoc.gridIndex][singleQuadLoc.quadIndex].operationType);
+      return { gridIndex, quadIndex };
     }
   }
   return NOT_FOUND;
-}
-
-function getCorrespondingItemGridItemValue(branch, singleQuadItemGrid16Index, singleQuadItemGrid16Value) {
-  const quad = branch[singleQuadItemGrid16Index][0];
-  return singleQuadItemGrid16Value === quad.primaryGridValue ? quad.pairedGridValue : quad.primaryGridValue;
 }
 
 function removeQuadsInTheCorrespondingGridItemExceptTheOneThatLinksWithTheSingle(branch, singleQuadItemGrid16Index, correspondingItemGrid16Index) {
