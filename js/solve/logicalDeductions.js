@@ -67,10 +67,16 @@ function deduceFromGridItemsWithASingleQuad(firstBranch, grid16) {
 
 function getTheIndexOfTheGridItemContainingTheSingleQuad(firstBranch, grid16) {
   for (let gridItem = 0; gridItem < grid16.length; gridItem++) {
-    if (firstBranch[gridItem].length === 1 && firstBranch[gridItem][0].status === UNUSED) {
+    const items = firstBranch[gridItem];
+
+    const unused = items.filter(item => item.status === UNUSED);
+    const hasSelected = items.some(item => item.status === SELECTED);
+
+    if (unused.length === 1 && !hasSelected) {
       return gridItem;
     }
   }
+
   return NOT_FOUND;
 }
 
@@ -92,7 +98,9 @@ function getCorrespondingItemGridItemValue(firstBranch, singleQuadItemGrid16Inde
 }
 
 function removeQuadsInTheCorrespondingGridItemExceptTheOneThatLinksWithTheSingle(firstBranch, singleQuadItemGrid16Index, correspondingItemGrid16Index) {
-  firstBranch[singleQuadItemGrid16Index][0].status = SELECTED;
+
+  //// const unused = items.filter(item => item.status === UNUSED);
+
   
   // Copy the quad object and flip the operation type
   const linkedQuad = { ...firstBranch[singleQuadItemGrid16Index][0] };
