@@ -35,7 +35,7 @@ export function deduceAfterASplit(branch, grid16) {
     return BROKEN_BRANCH;
   }
 
-  setStatusesInCorrespondingItem(branch, singleQuadItemGrid16Index, correspondingItemGrid16Index);
+  setStatusesInCorrespondingItem(branch, correspondingItemGrid16Index);
   rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
   rejectOtherLinkedQuads(branch, singleQuadItemGrid16Index, singleGrid16Value, grid16);
 
@@ -50,7 +50,7 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
   }
 
   branch[singleLocation.grid][singleLocation.quad].status = SELECTED;
-  const singleGrid16Value = grid16[singleLocation.gridIndex];
+  const singleGrid16Value = grid16[singleLocation.grid];
 
   const correspondingItemGrid16Value = branch[singleLocation.grid][singleLocation.quad].pairedGridValue;
   const correspondingItemLocation = getCorrespondingItemLocation(branch, singleLocation, singleGrid16Value, correspondingItemGrid16Value, grid16);
@@ -60,7 +60,9 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
   }
 
   setStatusesInCorrespondingItem(branch, branch[singleLocation.grid][singleLocation.quad], correspondingItemLocation);
-  rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
+  if (isLastIncompleteOccurrenceOfGridValue(branch, singleLocation.grid, singleGrid16Value)) {
+    rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
+  }
 
   return { branch: branch, furtherDeductions: true };
 }
@@ -96,7 +98,7 @@ function getCorrespondingItemLocation(branch, singleLocation, singleGrid16Value,
   return NOT_FOUND;
 }
 
-function setStatusesInCorrespondingItem(branch, singleQuad, correspondingItemLocation) {
+function setStatusesInCorrespondingItem(branch, correspondingItemLocation) {
   for (let quad = 0; quad < branch[correspondingItemLocation.grid].length; quad++) {
     if (quad !== correspondingItemLocation.quad) {
       branch[correspondingItemLocation.grid][quad].status = REJECTED;
@@ -107,26 +109,24 @@ function setStatusesInCorrespondingItem(branch, singleQuad, correspondingItemLoc
 }
 
 function rejectOtherLinkedQuads(branch, itemIndex, grid16Value, grid16) {
-  if (isLastOccurrenceOfGridValue(branch, itemIndex, grid16Value)) {
-    for (let gridItemIndex = 0; gridItemIndex < grid16.length; gridItemIndex++) {
-      // Filter out quads that link to this grid item value
-      branch[gridItemIndex] = branch[gridItemIndex].filter(quad => {
-        if (quad.status === UNUSED) {
-          const shouldKeep = !(quad.primaryGridValue === grid16Value || quad.pairedGridValue === grid16Value);
-          return shouldKeep;
-        }
-        return true;
-      });
-    }
+  for (let gridItemIndex = 0; gridItemIndex < grid16.length; gridItemIndex++) {
+    // Filter out quads that link to this grid item value
+    branch[gridItemIndex] = branch[gridItemIndex].filter(quad => {
+      if (quad.status === UNUSED) {
+        const shouldKeep = !(quad.primaryGridValue === grid16Value || quad.pairedGridValue === grid16Value);
+        return shouldKeep;
+      }
+      return true;
+    });
   }
 }
 
-function isLastOccurrenceOfGridValue(branch, itemIndex, grid16Value) {
+function isLastIncompleteOccurrenceOfGridValue(branch, singleIndex, singleGrid16Value) {
   for (let index = 0; index < branch.length; index++) {
-    if (index !== itemIndex && 
+    if (index !== singleIndex && 
         branch[index].length > 0 && //Error handling
-        branch[index][0].primaryGridValue === grid16Value && 
-        branch[index][0].status === UNUSED) {
+        branch[index][0].primaryGridValue === singleGrid16Value && 
+        branch[index].some(quad => quad.status === UNUSED) {
       return false;
     }
   }
