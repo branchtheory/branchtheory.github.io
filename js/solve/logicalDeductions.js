@@ -25,57 +25,58 @@ export function deduceFromSingles(branch, grid16) {
 }
 
 export function deduceAfterASplit(branch, grid16) {
-  const singleLocation = getTheLocationOfTheSingleQuad(branch, grid16);
+  const singleQuadLocation = getSingleQuadLocation(branch, grid16);
   const singleGrid16Value = grid16[singleQuadItemGrid16Index];
 
-  const correspondingItemGrid16Value = getCorrespondingItemGridItemValue(branch, singleQuadItemGrid16Index, singleGrid16Value);
-  const correspondingItemGrid16Index = getCorrespondingItemLocation(branch, singleQuadItemGrid16Index, correspondingItemGrid16Value, grid16);
+  const correspondingQuadGrid16Value = getCorrespondingItemGridItemValue(branch, singleQuadItemGrid16Index, singleGrid16Value);
+  const correspondingItemGrid16Index = getCorrespondingQuadLocation(branch, singleQuadItemGrid16Index, correspondingQuadGrid16Value, grid16);
 
   if (correspondingItemGrid16Index === NOT_FOUND) {
     return BROKEN_BRANCH;
   }
 
   setStatusesInCorrespondingItem(branch, correspondingItemGrid16Index);
-  rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
+  rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingQuadGrid16Value, grid16);
   rejectOtherLinkedQuads(branch, singleQuadItemGrid16Index, singleGrid16Value, grid16);
 
   return branch;
 }
 
 function deduceFromGridItemsWithASingleQuad(branch, grid16) {
-  const singleLocation = getTheLocationOfTheSingleQuad(branch, grid16);
+  const singleQuadLocation = getSingleQuadLocation(branch, grid16);
   
-  if (singleLocation === NOT_FOUND) {
+  if (singleQuadLocation === NOT_FOUND) {
     return { branch: branch, furtherDeductions: false };
   }
 
-  const singleQuad = branch[singleLocation.grid][singleLocation.quad];
+  const singleQuad = branch[singleQuadLocation.grid][singleQuadLocation.quad];
   singleQuad.status = SELECTED;
-  
-  const correspondingItemGrid16Value = singleQuad.pairedGridValue;
-  const correspondingItemLocation = getCorrespondingItemLocation(branch, singleLocation, singleQuad, grid16);
 
-  if (correspondingItemLocation === NOT_FOUND) {
+  const correspondingQuadLocation = getCorrespondingQuadLocation(branch, singleQuadLocation, singleQuad, grid16);
+
+  if (correspondingQuadLocation === NOT_FOUND) {
     return { branch: BROKEN_BRANCH, furtherDeductions: false };
   }
 
-  setStatusesInCorrespondingItem(branch, singleQuad, correspondingItemLocation);
-  if (isLastIncompleteOccurrenceOfGridValue(branch, singleLocation.grid, singleQuad.primaryGridValue)) {
-    rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
+  const correspondingQuad = branch[correspondingQuadLocation.grid][correspondingQuadLocation.quad];
+  
+  setStatusesInCorrespondingItem(branch, singleQuad, correspondingQuadLocation);
+  if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) {
+    rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, singleQuad, grid16);
   }
 
   return { branch: branch, furtherDeductions: true };
 }
 
-function getTheLocationOfTheSingleQuad(branch, grid16) {
+function getSingleQuadLocation(branch, grid16) {
   for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
-    const items = branch[gridIndex];
+    const quads = branch[gridIndex];
 
-    const unused = items.filter(item => item.status === UNUSED);
-    const hasSelected = items.some(item => item.status === SELECTED);
+    const unused = quads.filter(quad => quad.status === UNUSED);
+    const hasSelected = quads.some(quad => quad.status === SELECTED);
 
     if (unused.length === 1 && !hasSelected) {
-      const quadIndex = items.findIndex(item => item.status === UNUSED);
+      const quadIndex = quads.findIndex(quad => quad.status === UNUSED);
       return { grid: gridIndex, quad: quadIndex };
     }
   }
@@ -83,20 +84,20 @@ function getTheLocationOfTheSingleQuad(branch, grid16) {
   return NOT_FOUND;
 }
 
-function getCorrespondingItemLocation(branch, singleLocation, singleQuad, grid16) {
+function getCorrespondingQuadLocation(branch, singleQuadLocation, singleQuad, grid16) {
   for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
-    let items = branch[gridIndex];
+    let quads = branch[gridIndex];
     let quadIndex;
     if (grid16[gridIndex] === singleQuad.pairedGridValue
-        && singleLocation.gridIndex !== gridIndex
-        && items.length > 0 
-        && items.some(item => item.status === UNUSED  
-          && singleQuad.primaryGridValue === item.pairedGridValue
-          && singleQuad.operationType !== item.operationType) 
+        && singleQuadLocation.gridIndex !== gridIndex
+        && quads.length > 0 
+        && quads.some(quad => quad.status === UNUSED  
+          && singleQuad.primaryGridValue === quad.pairedGridValue
+          && singleQuad.operationType !== quad.operationType) 
         ) {
-        quadIndex = items.findIndex(item => item.status === UNUSED 
-          && item.pairedGridValue === singleQuad.primaryGridValue 
-          && item.operationType !==  singleQuad.operationType
+        quadIndex = quads.findIndex(quad => quad.status === UNUSED 
+          && quad.pairedGridValue === singleQuad.primaryGridValue 
+          && quad.operationType !==  singleQuad.operationType
         );
       return { grid: gridIndex, quad: quadIndex };
     }
@@ -104,26 +105,25 @@ function getCorrespondingItemLocation(branch, singleLocation, singleQuad, grid16
   return NOT_FOUND;
 }
 
-function setStatusesInCorrespondingItem(branch, correspondingItemLocation) {
-  for (let quad = 0; quad < branch[correspondingItemLocation.grid].length; quad++) {
-    if (quad !== correspondingItemLocation.quad) {
-      branch[correspondingItemLocation.grid][quad].status = REJECTED;
+function setStatusesInCorrespondingItem(branch, correspondingQuadLocation) {
+  for (let quad = 0; quad < branch[correspondingQuadLocation.grid].length; quad++) {
+    if (quad !== correspondingQuadLocation.quad) {
+      branch[correspondingQuadLocation.grid][quad].status = REJECTED;
     } else {
-      branch[correspondingItemLocation.grid][quad].status = SELECTED;
+      branch[correspondingQuadLocation.grid][quad].status = SELECTED;
     }
   }
 }
 
-function rejectOtherLinkedQuads(branch, itemIndex, grid16Value, grid16) {
+function rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, singleQuad, grid16) {
   for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
-    // Filter out quads that link to this grid item value
-    branch[gridIndex] = branch[gridIndex].filter(quad => {
-      if (quad.status === UNUSED) {
-        const shouldKeep = !(quad.primaryGridValue === grid16Value || quad.pairedGridValue === grid16Value);
-        return shouldKeep;
+    if (gridIndex !== singleQuadLocation.grid || gridIndex !== correspondingQuadLocation.grid) {
+      for (let quad of branch[gridIndex]) {
+        if (quad.pairedGridValue === singleQuad.primaryGridValue) {
+          quad.status = REJECTED;
+        }
       }
-      return true;
-    });
+    }
   }
 }
 
