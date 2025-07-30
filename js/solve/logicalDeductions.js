@@ -36,8 +36,8 @@ export function deduceAfterASplit(branch, grid16) {
   }
 
   setStatusesInCorrespondingItem(branch, singleQuadItemGrid16Index, correspondingItemGrid16Index);
-  removeOtherQuadsThatLinkToAGridItem(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
-  removeOtherQuadsThatLinkToAGridItem(branch, singleQuadItemGrid16Index, singleGrid16Value, grid16);
+  rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
+  rejectOtherLinkedQuads(branch, singleQuadItemGrid16Index, singleGrid16Value, grid16);
 
   return branch;
 }
@@ -60,7 +60,7 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
   }
 
   setStatusesInCorrespondingItem(branch, branch[singleLocation.grid][singleLocation.quad], correspondingItemLocation);
-  removeOtherQuadsThatLinkToAGridItem(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
+  rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingItemGrid16Value, grid16);
 
   return { branch: branch, furtherDeductions: true };
 }
@@ -106,7 +106,7 @@ function setStatusesInCorrespondingItem(branch, singleQuad, correspondingItemLoc
   }
 }
 
-function removeOtherQuadsThatLinkToAGridItem(branch, itemIndex, grid16Value, grid16) {
+function rejectOtherLinkedQuads(branch, itemIndex, grid16Value, grid16) {
   if (isLastOccurrenceOfGridValue(branch, itemIndex, grid16Value)) {
     for (let gridItemIndex = 0; gridItemIndex < grid16.length; gridItemIndex++) {
       // Filter out quads that link to this grid item value
