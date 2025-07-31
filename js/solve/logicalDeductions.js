@@ -9,7 +9,7 @@ import {
   isBrokenBranch
 } from './sharedValuesAndTools.js';
 
-export function deduce(branch, grid16) {
+export function deduce(branch, grid16, line16) {
   let thereMayBeFurtherDeductions = true;
   
   while (thereMayBeFurtherDeductions && !isBrokenBranch(branch)) {
@@ -113,6 +113,21 @@ function rejectOtherLinkedQuads(branch, excludeItem1, excludeItem2, valuesToReje
       }
     }
   }
+}
+
+function deduceFromLine16(branch, line16) {
+  const workingLine = [...line16];
+  fillLineWithSelectedQuads(branch, line16);
+  /*
+  for (unused quads in branch) {
+    if (!linePairsCanFitInTheLine16) {
+      reject them;
+  }
+  */
+}
+
+function fillLineWithSelectedQuads(branch, line16) {
+  
 }
 
 function linePairsCanFitInTheLine16(linePair1, linePair2, line16original) {
