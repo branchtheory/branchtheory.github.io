@@ -14,7 +14,7 @@ export function splitFirstBranch(branchQueue) {
 
 function getIndexOfGridItemToSplit(firstBranch) {
   for (let gridItemIndex = 0; gridItemIndex < NUMBER_OF_GRID_ITEMS; gridItemIndex++) {
-    if (firstBranch[gridItemIndex].length > 0 && firstBranch[gridItemIndex].some(quad => quad.status === UNUSED) {
+    if (firstBranch[gridItemIndex].length > 0 && firstBranch[gridItemIndex].some(quad => quad.status === UNUSED)) {
       return gridItemIndex;
     }
   }
