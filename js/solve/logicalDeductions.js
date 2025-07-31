@@ -1,6 +1,3 @@
-// move splitter to be the last port of call, and to be a part of logical deductions? -- it's bifurcation, and it's often a valid (and sometimes the only) way of moving forward
-// 
-
 import {
   PRODUCT_SIGNIFIER,
   SUM_SIGNIFIER,
@@ -60,7 +57,7 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
 
   const correspondingQuad = branch[correspondingQuadLocation.grid][correspondingQuadLocation.quad];
   
-  setStatusesInCorrespondingItem(branch, singleQuad, correspondingQuadLocation);
+  setStatusesInCorrespondingItem(branch, correspondingQuadLocation);
   if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) {
     rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, singleQuad, grid16);
   }
@@ -92,19 +89,18 @@ function getCorrespondingQuadLocation(branch, singleQuadLocation, singleQuad, gr
     let quads = branch[gridIndex];
     let quadIndex;
     if (grid16[gridIndex] === singleQuad.pairedGridValue
-        && singleQuadLocation.gridIndex !== gridIndex
-        && quads.length > 0 
-        && quads.some(quad => quad.status === UNUSED  
-          && singleQuad.primaryGridValue === quad.pairedGridValue
-          && singleQuad.operationType !== quad.operationType) 
-        ) {
+        && singleQuadLocation.grid !== gridIndex
+        && quads.length > 0) {
+        
         quadIndex = quads.findIndex(quad => quad.status === UNUSED 
           && quad.pairedGridValue === singleQuad.primaryGridValue 
-          && quad.operationType !==  singleQuad.operationType
+          && quad.operationType !== singleQuad.operationType
         );
-      return { grid: gridIndex, quad: quadIndex };
+        
+        if (quadIndex !== -1) {
+          return { grid: gridIndex, quad: quadIndex };
+        }
     }
-  }
   return NOT_FOUND;
 }
 
@@ -120,7 +116,7 @@ function setStatusesInCorrespondingItem(branch, correspondingQuadLocation) {
 
 function rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, comparisonQuad, grid16) {
   for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
-    if (gridIndex !== singleQuadLocation.grid || gridIndex !== correspondingQuadLocation.grid) {
+    if (gridIndex !== singleQuadLocation.grid && gridIndex !== correspondingQuadLocation.grid) {
       for (let quad of branch[gridIndex]) {
         if (quad.pairedGridValue === comparisonQuad.primaryGridValue) {
           quad.status = REJECTED;
