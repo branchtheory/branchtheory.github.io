@@ -101,6 +101,7 @@ function getCorrespondingQuadLocation(branch, singleQuadLocation, singleQuad, gr
           return { grid: gridIndex, quad: quadIndex };
         }
     }
+  }
   return NOT_FOUND;
 }
 
