@@ -41,33 +41,24 @@ export function deduceAfterASplit(branch, grid16) {
 
 function deduceFromGridItemsWithASingleQuad(branch, grid16) {
   const singleQuadLocation = getSingleQuadLocation(branch, grid16);
-  
-  if (singleQuadLocation === NOT_FOUND) {
-    return { branch: branch, furtherDeductions: false };
-  }
+  if (singleQuadLocation === NOT_FOUND) { return { branch: branch, furtherDeductions: false }; }
 
   const singleQuad = branch[singleQuadLocation.grid][singleQuadLocation.quad];
   singleQuad.status = SELECTED;
 
   const correspondingQuadLocation = getCorrespondingQuadLocation(branch, singleQuadLocation, singleQuad, grid16);
-
-  if (correspondingQuadLocation === NOT_FOUND) {
-    return { branch: BROKEN_BRANCH, furtherDeductions: false };
-  }
+  if (correspondingQuadLocation === NOT_FOUND) { return { branch: BROKEN_BRANCH, furtherDeductions: false }; }
 
   const correspondingQuad = branch[correspondingQuadLocation.grid][correspondingQuadLocation.quad];
-  
   setStatusesInCorrespondingItem(branch, correspondingQuadLocation);
 
   const valuesToReject = [];
-
   if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) {
     valuesToReject.push(singleQuad.primaryGridValue);
   }
   if (isLastIncompleteOccurrenceOfGridValue(branch, correspondingQuadLocation.grid, correspondingQuad.primaryGridValue)) {
     valuesToReject.push(correspondingQuad.primaryGridValue);
   }
-
   rejectOtherLinkedQuads(branch, singleQuadLocation.grid, correspondingQuadLocation.grid, valuesToReject);
 
   return { branch: branch, furtherDeductions: true };
