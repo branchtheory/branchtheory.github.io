@@ -127,7 +127,25 @@ function deduceFromLine16(branch, line16) {
 }
 
 function fillLineWithSelectedQuads(branch, line16) {
-  
+  let operands = getOperandsOfSelected(branch);
+  if (operands.length === 0) return;
+  for (let op of operands) {
+    
+  }
+}
+
+function getOperandsOfSelected(branch) {
+  let operands = [];
+  for (let item of branch) {
+    for (let quad of item) {
+      if (quad.status === SELECTED) {
+        operands.push(quad.operand1);
+        operands.push(quad.operand2);
+      }
+    }
+  }
+  operands.sort((a, b) => a - b);
+  return operands.filter((_, i) => i % 2 === 0); //deduplicates
 }
 
 function linePairsCanFitInTheLine16(linePair1, linePair2, line16original) {
