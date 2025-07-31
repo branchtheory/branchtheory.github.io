@@ -94,7 +94,7 @@ function isLastIncompleteOccurrenceOfGridValue(branch, gridIndex, gridValue) {
     if (index !== gridIndex && 
         branch[index].length > 0 && //Error handling
         branch[index][0].primaryGridValue === gridValue &&
-        branch[index].some(quad => quad.status === UNUSED) {
+        branch[index].some(quad => quad.status === UNUSED)) {
       return false;
     }
   }
