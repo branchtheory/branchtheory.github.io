@@ -145,7 +145,7 @@ function getOperandsOfSelected(branch) {
     }
   }
   operands.sort((a, b) => a - b);
-  return operands.filter((_, i) => i % 2 === 0); //deduplicates
+  return operands.filter((_, i) => i % 2 === 0); //deduplicate
 }
 
 function linePairsCanFitInTheLine16(linePair1, linePair2, line16original) {
@@ -196,5 +196,38 @@ function fitInAGap(linePair, line16) {
     return { "line16": line16, ok: true }
   }
 
+  return { "line16": line16, ok: false }
+}
+
+function fitInAGapV2(operand, line16) {
+  // Check if it's smaller than the first item or bigger than the last
+  const firstLineItem = line16[0];
+  const lastLineItem = line16[line16.length - 1];
+  if (firstLineItem > operand 
+     || (lastLineItem !== BLANK_LINE_ITEM 
+        && lastLineItem < operand) {
+    return { BROKEN_BRANCH }
+  }
+
+  // Check if there's a gap before values that equal the linePair, or before the first one that's greater than it
+  for (let index = 1; index < line16.length; index++) {
+    if (linePair <= line16[index]) {
+      if (line16[index - 1] === BLANK_LINE_ITEM) {
+        line16.splice(index - 1, 1);
+        return { "line16": line16, ok: true }
+      }
+      if (linePair < line16[index]) {
+        break;
+      }
+    }
+  }
+
+  // Check if there's a gap at the end of the array
+  if (line16[line16.length - 1] === BLANK_LINE_ITEM) {
+    line16.splice(line16.length - 1, 1);
+    return { "line16": line16, ok: true }
+  }
+
+    
   return { "line16": line16, ok: false }
 }
