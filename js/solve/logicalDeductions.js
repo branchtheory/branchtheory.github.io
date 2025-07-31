@@ -5,41 +5,23 @@ import {
   SELECTED,
   REJECTED,
   NOT_FOUND,
-  BROKEN_BRANCH
+  BROKEN_BRANCH,
+  isBrokenBranch
 } from './sharedValuesAndTools.js';
 
-export function deduceFromSingles(branch, grid16) {
+export function deduce(branch, grid16) {
   let thereMayBeFurtherLogicalDeductionsToMake;
-  let workingBranch = [...branch];
   
   do {
-    const result = deduceFromGridItemsWithASingleQuad(workingBranch, grid16);
-    workingBranch = result.branch;
+    const result = deduceFromSingleQuads(branch, grid16);
+    branch = result.branch;
     thereMayBeFurtherLogicalDeductionsToMake = result.furtherDeductions;
-  } while (thereMayBeFurtherLogicalDeductionsToMake);
-
-  return workingBranch;
-}
-
-export function deduceAfterASplit(branch, grid16) {
-  const singleQuadLocation = getSingleQuadLocation(branch, grid16);
-  const singleGrid16Value = grid16[singleQuadItemGrid16Index];
-
-  const correspondingQuadGrid16Value = getCorrespondingItemGridItemValue(branch, singleQuadItemGrid16Index, singleGrid16Value);
-  const correspondingItemGrid16Index = getCorrespondingQuadLocation(branch, singleQuadItemGrid16Index, correspondingQuadGrid16Value, grid16);
-
-  if (correspondingItemGrid16Index === NOT_FOUND) {
-    return BROKEN_BRANCH;
-  }
-
-  setStatusesInCorrespondingItem(branch, correspondingItemGrid16Index);
-  rejectOtherLinkedQuads(branch, correspondingItemGrid16Index, correspondingQuadGrid16Value, grid16);
-  rejectOtherLinkedQuads(branch, singleQuadItemGrid16Index, singleGrid16Value, grid16);
+  } while (thereMayBeFurtherLogicalDeductionsToMake && !isBrokenBranch(branch));
 
   return branch;
 }
 
-function deduceFromGridItemsWithASingleQuad(branch, grid16) {
+function deduceFromSingleQuads(branch, grid16) {
   const singleQuadLocation = getSingleQuadLocation(branch, grid16);
   if (singleQuadLocation === NOT_FOUND) { return { branch: branch, furtherDeductions: false }; }
 
