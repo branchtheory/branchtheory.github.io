@@ -8,7 +8,7 @@ import {
 
 export function isPotentialSolution(branch) {
   for (let gridItem of branch) {
-    if (gridItem.length === 0 || gridItem.some(quad => quad.status === UNUSED) {
+    if (gridItem.length === 0 || gridItem.some(quad => quad.status === UNUSED)) {
       return false;
     }
   }
