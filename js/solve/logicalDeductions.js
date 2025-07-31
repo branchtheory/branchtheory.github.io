@@ -68,7 +68,7 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
     valuesToReject.push(correspondingQuad.primaryGridValue);
   }
 
-  rejectOtherLinkedQuads(branch, singleQuadLocation.grid, correspondingQuadLocation.grid, singleQuad, valuesToReject);
+  rejectOtherLinkedQuads(branch, singleQuadLocation.grid, correspondingQuadLocation.grid, valuesToReject);
 
   return { branch: branch, furtherDeductions: true };
 }
