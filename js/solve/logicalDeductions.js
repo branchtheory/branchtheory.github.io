@@ -64,6 +64,9 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
   if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) {
     rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, singleQuad, grid16);
   }
+  if (isLastIncompleteOccurrenceOfGridValue(branch, correspondingQuadLocation.grid, correspondingQuad.primaryGridValue)) {
+    rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, correspondingQuad, grid16);
+  }
 
   return { branch: branch, furtherDeductions: true };
 }
@@ -115,11 +118,11 @@ function setStatusesInCorrespondingItem(branch, correspondingQuadLocation) {
   }
 }
 
-function rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, singleQuad, grid16) {
+function rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, comparisonQuad, grid16) {
   for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
     if (gridIndex !== singleQuadLocation.grid || gridIndex !== correspondingQuadLocation.grid) {
       for (let quad of branch[gridIndex]) {
-        if (quad.pairedGridValue === singleQuad.primaryGridValue) {
+        if (quad.pairedGridValue === comparisonQuad.primaryGridValue) {
           quad.status = REJECTED;
         }
       }
@@ -127,11 +130,11 @@ function rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLoc
   }
 }
 
-function isLastIncompleteOccurrenceOfGridValue(branch, singleIndex, singleGrid16Value) {
+function isLastIncompleteOccurrenceOfGridValue(branch, gridIndex, gridValue) {
   for (let index = 0; index < branch.length; index++) {
-    if (index !== singleIndex && 
+    if (index !== gridIndex && 
         branch[index].length > 0 && //Error handling
-        branch[index][0].primaryGridValue === singleGrid16Value && 
+        branch[index][0].primaryGridValue === gridValue &&
         branch[index].some(quad => quad.status === UNUSED) {
       return false;
     }
