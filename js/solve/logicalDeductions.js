@@ -89,6 +89,18 @@ function setStatusesInCorrespondingItem(branch, correspondingQuadLocation) {
   }
 }
 
+function isLastIncompleteOccurrenceOfGridValue(branch, gridIndex, gridValue) {
+  for (let index = 0; index < branch.length; index++) {
+    if (index !== gridIndex && 
+        branch[index].length > 0 && //Error handling
+        branch[index][0].primaryGridValue === gridValue &&
+        branch[index].some(quad => quad.status === UNUSED) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function rejectOtherLinkedQuads(branch, excludeItem1, excludeItem2, valuesToReject) {
   if (valuesToReject.length === 0) return;
   
@@ -101,18 +113,6 @@ function rejectOtherLinkedQuads(branch, excludeItem1, excludeItem2, valuesToReje
       }
     }
   }
-}
-
-function isLastIncompleteOccurrenceOfGridValue(branch, gridIndex, gridValue) {
-  for (let index = 0; index < branch.length; index++) {
-    if (index !== gridIndex && 
-        branch[index].length > 0 && //Error handling
-        branch[index][0].primaryGridValue === gridValue &&
-        branch[index].some(quad => quad.status === UNUSED) {
-      return false;
-    }
-  }
-  return true;
 }
 
 function linePairsCanFitInTheLine16(linePair1, linePair2, line16original) {
