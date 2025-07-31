@@ -58,12 +58,17 @@ function deduceFromGridItemsWithASingleQuad(branch, grid16) {
   const correspondingQuad = branch[correspondingQuadLocation.grid][correspondingQuadLocation.quad];
   
   setStatusesInCorrespondingItem(branch, correspondingQuadLocation);
+
+  const valuesToReject = [];
+
   if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) {
-    rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, singleQuad, grid16);
+    valuesToReject.push(singleQuad.primaryGridValue);
   }
   if (isLastIncompleteOccurrenceOfGridValue(branch, correspondingQuadLocation.grid, correspondingQuad.primaryGridValue)) {
-    rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, correspondingQuad, grid16);
+    valuesToReject.push(correspondingQuad.primaryGridValue);
   }
+
+  rejectOtherLinkedQuads(branch, singleQuadLocation.grid, correspondingQuadLocation.grid, singleQuad, valuesToReject);
 
   return { branch: branch, furtherDeductions: true };
 }
@@ -115,11 +120,13 @@ function setStatusesInCorrespondingItem(branch, correspondingQuadLocation) {
   }
 }
 
-function rejectOtherLinkedQuads(branch, singleQuadLocation, correspondingQuadLocation, comparisonQuad, grid16) {
-  for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
-    if (gridIndex !== singleQuadLocation.grid && gridIndex !== correspondingQuadLocation.grid) {
+function rejectOtherLinkedQuads(branch, excludeItem1, excludeItem2, valuesToReject) {
+  if (valuesToReject.length === 0) return;
+  
+  for (let gridIndex = 0; gridIndex < branch.length; gridIndex++) {
+    if (gridIndex !== excludeItem1 && gridIndex !== excludeItem2) {
       for (let quad of branch[gridIndex]) {
-        if (quad.pairedGridValue === comparisonQuad.primaryGridValue) {
+        if (valuesToReject.includes(quad.pairedGridValue)) {
           quad.status = REJECTED;
         }
       }
