@@ -10,13 +10,13 @@ import {
 } from './sharedValuesAndTools.js';
 
 export function deduce(branch, grid16) {
-  let thereMayBeFurtherLogicalDeductionsToMake;
+  let thereMayBeFurtherLogicalDeductionsToMake = true;
   
-  do {
+  while (thereMayBeFurtherLogicalDeductionsToMake && !isBrokenBranch(branch)) {
     const result = deduceFromSingleQuads(branch, grid16);
     branch = result.branch;
     thereMayBeFurtherLogicalDeductionsToMake = result.furtherDeductions;
-  } while (thereMayBeFurtherLogicalDeductionsToMake && !isBrokenBranch(branch));
+  } 
 
   return branch;
 }
@@ -35,12 +35,8 @@ function deduceFromSingleQuads(branch, grid16) {
   setStatusesInCorrespondingItem(branch, correspondingQuadLocation);
 
   const valuesToReject = [];
-  if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) {
-    valuesToReject.push(singleQuad.primaryGridValue);
-  }
-  if (isLastIncompleteOccurrenceOfGridValue(branch, correspondingQuadLocation.grid, correspondingQuad.primaryGridValue)) {
-    valuesToReject.push(correspondingQuad.primaryGridValue);
-  }
+  if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) { valuesToReject.push(singleQuad.primaryGridValue); }
+  if (isLastIncompleteOccurrenceOfGridValue(branch, correspondingQuadLocation.grid, correspondingQuad.primaryGridValue)) { valuesToReject.push(correspondingQuad.primaryGridValue); }
   rejectOtherLinkedQuads(branch, singleQuadLocation.grid, correspondingQuadLocation.grid, valuesToReject);
 
   return { branch: branch, furtherDeductions: true };
