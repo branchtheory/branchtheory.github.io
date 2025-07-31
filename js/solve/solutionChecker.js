@@ -1,13 +1,14 @@
 import {
   NUMBER_OF_GRID_ITEMS,
   BLANK_LINE_ITEM,
+  SELECTED,
   UNUSED,
   SUM_SIGNIFIER,
 } from './sharedValuesAndTools.js';
 
 export function isPotentialSolution(branch) {
-  for (let gridItemQuads of branch) {
-    if (gridItemQuads.length === 0 || gridItemQuads[0].status === UNUSED) {
+  for (let gridItem of branch) {
+    if (gridItem.length === 0 || gridItem.some(quad => quad.status === UNUSED) {
       return false;
     }
   }
@@ -32,11 +33,12 @@ function isLine16Valid(line16FromSolution, line16) {
 function getSolutionsLine16(branch) {
   const line16FromSolution = [];
   
-  for (let gridItemIndex = 0; gridItemIndex < NUMBER_OF_GRID_ITEMS; gridItemIndex++) {
-    const quad = branch[gridItemIndex][0];
-    if (quad.operationType === SUM_SIGNIFIER) {
-      line16FromSolution.push(quad.operand1);
-      line16FromSolution.push(quad.operand2);
+  for (let gridItem of branch) {
+    for (let quad of gridItem) {
+      if (quad.operationType === SUM_SIGNIFIER && quad.status === SELECTED) {
+        line16FromSolution.push(quad.operand1);
+        line16FromSolution.push(quad.operand2);
+      }
     }
   }
   
