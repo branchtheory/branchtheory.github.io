@@ -10,12 +10,12 @@ import {
 } from './sharedValuesAndTools.js';
 
 export function deduce(branch, grid16) {
-  let thereMayBeFurtherLogicalDeductionsToMake = true;
+  let thereMayBeFurtherDeductions = true;
   
-  while (thereMayBeFurtherLogicalDeductionsToMake && !isBrokenBranch(branch)) {
+  while (thereMayBeFurtherDeductions && !isBrokenBranch(branch)) {
     const result = deduceFromSingleQuads(branch, grid16);
     branch = result.branch;
-    thereMayBeFurtherLogicalDeductionsToMake = result.furtherDeductions;
+    thereMayBeFurtherDeductions = result.furtherDeductions;
   } 
 
   return branch;
