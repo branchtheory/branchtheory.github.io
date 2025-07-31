@@ -1,6 +1,6 @@
 import { BranchQueue } from './branchQueue.js';
 import { isPotentialSolution, isValidSolution } from './solutionChecker.js';
-import { deduceFromSingles, deduceAfterASplit } from './logicalDeductions.js';
+import { deduce } from './logicalDeductions.js';
 import { splitFirstBranch, deepCopyABranch } from './branchSplitter.js';
 import { isBrokenBranch, NUMBER_OF_GRID_ITEMS, SUM_SIGNIFIER } from './sharedValuesAndTools.js';
 import { findPotentialQuads } from './potentialQuadsFinder.js';
@@ -42,12 +42,8 @@ function loopBranchDeductions(branchQueue, grid16, line16,ns) {
 
   while (!branchQueue.isEmpty()) {
     branchQueue.setFirstBranch();
-
-    branchQueue.firstBranch = deduceAfterASplit(branchQueue.firstBranch, grid16);
-
-    if (!isBrokenBranch(branchQueue.firstBranch)) {
-      branchQueue.firstBranch = deduceFromSingles(branchQueue.firstBranch, grid16);
-    }
+    
+    branchQueue.firstBranch = deduce(branchQueue.firstBranch, grid16);
 
     if (isBrokenBranch(branchQueue.firstBranch)) {
       branchQueue.removeFirstBranch();
