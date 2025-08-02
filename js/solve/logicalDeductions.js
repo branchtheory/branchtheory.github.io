@@ -1,13 +1,8 @@
-// rather than removing bad quads, mark their status as "rejected"
-// move splitter to be the last port of call, and to be a part of logical deductions? -- it's bifurcation, and it's often a valid (and sometimes the only) way of moving forward
-// 
-
 import {
   PRODUCT_SIGNIFIER,
   SUM_SIGNIFIER,
   UNUSED,
-  SELECTED,
-  REJECTED,
+  DONE,
   NOT_FOUND,
   BROKEN_BRANCH
 } from './sharedValuesAndTools.js';
@@ -15,7 +10,7 @@ import {
 export function deduceFromSingles(firstBranch, grid16) {
   let thereMayBeFurtherLogicalDeductionsToMake;
   let workingBranch = [...firstBranch];
-  
+
   do {
     const result = deduceFromGridItemsWithASingleQuad(workingBranch, grid16);
     workingBranch = result.branch;
@@ -92,8 +87,8 @@ function getCorrespondingItemGridItemValue(firstBranch, singleQuadItemGrid16Inde
 }
 
 function removeQuadsInTheCorrespondingGridItemExceptTheOneThatLinksWithTheSingle(firstBranch, singleQuadItemGrid16Index, correspondingItemGrid16Index) {
-  firstBranch[singleQuadItemGrid16Index][0].status = SELECTED;
-  
+  firstBranch[singleQuadItemGrid16Index][0].status = DONE;
+
   // Copy the quad object and flip the operation type
   const linkedQuad = { ...firstBranch[singleQuadItemGrid16Index][0] };
   linkedQuad.operationType = linkedQuad.operationType === SUM_SIGNIFIER ? PRODUCT_SIGNIFIER : SUM_SIGNIFIER;
@@ -101,7 +96,7 @@ function removeQuadsInTheCorrespondingGridItemExceptTheOneThatLinksWithTheSingle
   const tempValue = linkedQuad.primaryGridValue;
   linkedQuad.primaryGridValue = linkedQuad.pairedGridValue;
   linkedQuad.pairedGridValue = tempValue;
-  
+
   // Replace the entire array with just the linked quad
   firstBranch[correspondingItemGrid16Index] = [linkedQuad];
 }
@@ -131,55 +126,4 @@ function isLastOccurrenceOfGridValue(firstBranch, itemIndex, grid16Value) {
     }
   }
   return true;
-}
-
-function linePairsCanFitInTheLine16(linePair1, linePair2, line16original) {
-  let line16 = [...line16original];
-  let linePair1OK = false;
-  let linePair2OK = false;
-  let gapAttempt1;
-
-  if (line16.includes(linePair1)) {
-    linePair1OK = true;
-  } else {
-    gapAttempt1 = fitInAGap(linePair1, line16);
-    line16 = gapAttempt1.line16;
-    linePair1OK = gapAttempt1.ok;
-  }
-
-  if (line16.includes(linePair2)) {
-    linePair2OK = true;
-  } else {
-    linePair2OK = fitInAGap(linePair2, line16).ok;
-  }
-
-  return linePair1OK && linePair2OK;
-}
-
-function fitInAGap(linePair, line16) {
-  // Check if it's smaller than the first item
-  if (line16[0] > linePair) {
-    return { "line16": line16, ok: false }
-  }
-
-  // Check if there's a gap before values that equal the linePair, or before the first one that's greater than it
-  for (let index = 1; index < line16.length; index++) {
-    if (linePair <= line16[index]) {
-      if (line16[index - 1] === BLANK_LINE_ITEM) {
-        line16.splice(index - 1, 1);
-        return { "line16": line16, ok: true }
-      }
-      if (linePair < line16[index]) {
-        break;
-      }
-    }
-  }
-
-  // Check if there's a gap at the end of the array
-  if (line16[line16.length - 1] === BLANK_LINE_ITEM) {
-    line16.splice(line16.length - 1, 1);
-    return { "line16": line16, ok: true }
-  }
-
-  return { "line16": line16, ok: false }
 }
