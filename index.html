@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5XRVFTD9');</script>
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-5XRVFTD9');</script>
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,14 +21,14 @@
             background: white;
             height: 100%;
         }
-        
+
         .container {
             padding: 30px;
             border-radius: 0px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             background-color: #f7f7f7fc;
         }
-        
+
         h1 {
             text-align: center;
             color: #333;
@@ -41,46 +41,46 @@
             color: #333;
             margin-bottom: 30px;
         }
-        
+
         .puzzle-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 30px;
         }
-        
+
         .button-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
         }
-        
+
         .button-row {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
         }
-                
+
         .main-grid {
             border: 1px solid #333;
             border-collapse: collapse;
         }
-        
+
         .main-grid td {
             border: 1px solid #333;
             text-align: center;
             vertical-align: middle;
         }
-        
+
         .big-number {
             height: 60px;
             background-color: rgb(240, 240, 240);
             border-radius: 0;
             font-size: 48px;
         }
-        
+
         .big-number input {
             width: 100%;
             height: 100%;
@@ -95,14 +95,14 @@
             border-radius: 0;   
             outline: none
         }
-        
+
         .big-number input:focus {
             outline: none;
             border-radius: 0;
             box-sizing: border-box;
             background-color: #86BBD8;
         }
-        
+
         .small-cell {
             width: 30px;
             height: 30px;
@@ -146,13 +146,13 @@
         .operation-input {
             font-size: 20px;
         }
-        
+
         .bottom-strip {
             border: 1px solid #333;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        
+
         .bottom-strip td {
             width: 30px;
             height: 30px;
@@ -161,7 +161,7 @@
             vertical-align: middle;
             background-color: white;
         }
-        
+
         .bottom-strip input {
             width: 100%;
             height: 100%;
@@ -173,7 +173,7 @@
             font-size: 16px;
             outline: none
         }
-        
+
         .bottom-strip input:focus {
             border-radius: 0;
             outline: none;
@@ -184,7 +184,7 @@
         .conflict-cell {
             background-color: #ffcccc !important;
         }
-        
+
         .control-button {
             color: white;
             border: none;
@@ -194,36 +194,36 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        
+
         .solve-button {
             background-color: #008000;
         }
-        
+
         .solve-button:hover:not(:disabled) {
             background-color: #096b09;
         }
-        
+
         .unsolve-button {
             background-color: #fc8c03;
         }
-        
+
         .unsolve-button:hover:not(:disabled) {
             background-color: #d67600;
         }
-        
+
         .reset-button {
             background-color: rgb(255, 44, 44);
         }
-        
+
         .reset-button:hover:not(:disabled) {
             background-color: rgb(237, 33, 0);
         }
-        
+
         .control-button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
-        
+
         .error-message {
             color: #666666;
             background-color: #ffdcb0;
@@ -239,7 +239,7 @@
             margin: 10px;
             display: none;
         }
-        
+
         .partial-solve {
             border: 1px solid #333;
             border-collapse: collapse;
@@ -289,7 +289,7 @@
     <!-- End Google Tag Manager (noscript) -->
     <div class="container">
         <h1>Tetonor solver</h1>
-        <p>Enter your puzzle or solution below. You can find the code on <a href="https://github.com/branchtheory/branchtheory.github.io/tree/main">GitHub</a>. I'm still adding new features every few weeks.</p>
+        <p>Enter your puzzle or solution below. You can find the code on <a href="https://github.com/branchtheory/branchtheory.github.io/tree/main">GitHub</a>.</p>
         <div class="puzzle-container">
             <!-- Control Buttons -->
         <div class="button-container">
@@ -303,11 +303,11 @@
                 <button id="resetBtn" class="control-button reset-button">Reset</button>
             </div>
         </div>
-            
+
             <!-- Error Message -->
             <div id="errorMessage" class="error-message"></div>
             <div id="notificationMessage" class="notification-message"></div>
-            
+
             <!-- Main grid with single table structure -->
             <table class="main-grid">
                 <tr>
@@ -423,7 +423,7 @@
                     <td class="small-cell"><input type="text" class="small-input"></td>
                 </tr>
             </table>
-            
+
             <!-- Bottom strip -->
             <table class="bottom-strip">
                 <tr>
