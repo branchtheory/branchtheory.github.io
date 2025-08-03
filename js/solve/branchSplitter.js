@@ -1,45 +1,51 @@
 import {
   NUMBER_OF_GRID_ITEMS,
+  SELECTED,
+  REJECTED,
   UNUSED,
   NOT_FOUND,
 } from './sharedValuesAndTools.js';
 
-export function splitFirstBranch(branchQueue, ns) {
+export function splitFirstBranch(branchQueue) {
   const indexOfGridItemToSplit = getIndexOfGridItemToSplit(branchQueue.firstBranch);
   if (indexOfGridItemToSplit === NOT_FOUND) return;
 
-  createANewBranchForEachQuad(branchQueue, indexOfGridItemToSplit, ns);
+  createANewBranchForEachQuad(branchQueue, indexOfGridItemToSplit);
   branchQueue.removeFirstBranch();
 }
 
-function getIndexOfGridItemToSplit(firstBranch) {
+function getIndexOfGridItemToSplit(branch) {
   for (let gridItemIndex = 0; gridItemIndex < NUMBER_OF_GRID_ITEMS; gridItemIndex++) {
-    if (firstBranch[gridItemIndex].length > 0 && firstBranch[gridItemIndex][0].status === UNUSED) {
+    if (branch[gridItemIndex].some(quad => quad.status === SELECTED)) {
+      continue;
+    }
+    if (branch[gridItemIndex].filter(quad => quad.status === UNUSED).length >= 2) {
       return gridItemIndex;
     }
   }
   return NOT_FOUND;
 }
 
-function createANewBranchForEachQuad(branchQueue, indexOfGridItemToSplit, ns) {
-  let quadIndex = 0;
+function createANewBranchForEachQuad(branchQueue, indexOfGridItemToSplit) {
+  const gridItem = branchQueue.firstBranch[indexOfGridItemToSplit];
 
-  while (quadIndex < branchQueue.firstBranch[indexOfGridItemToSplit].length) {
-    const branchCopy = deepCopyABranch(branchQueue.firstBranch);
-    setThisQuadToBeTheOnlyQuadInThisGridItem(branchCopy, indexOfGridItemToSplit, quadIndex);
-    branchQueue.createNewBranch(branchCopy, ns);
-    quadIndex++;
-  }
+  gridItem.forEach((quad, quadIndex) => {
+    if (quad.status === UNUSED) {
+      const branchCopy = deepCopyABranch(branchQueue.firstBranch);
+      const copiedGridItem = branchCopy[indexOfGridItemToSplit];
+
+      copiedGridItem.forEach((copiedQuad, i) => {
+        copiedQuad.status = (i === quadIndex) ? UNUSED : REJECTED;
+      });
+
+      branchQueue.createNewBranch(branchCopy);
+    }
+  });
 }
 
-export function deepCopyABranch(firstBranch) {
+export function deepCopyABranch(branch) {
   const branchCopy = Array(NUMBER_OF_GRID_ITEMS).fill(null).map((_, gridItemIndex) =>
-    firstBranch[gridItemIndex].map(quad => ({ ...quad }))
+    branch[gridItemIndex].map(quad => ({ ...quad }))
   );
   return branchCopy;
-}
-
-function setThisQuadToBeTheOnlyQuadInThisGridItem(branchCopy, indexOfGridItemToSplit, quadIndex) {
-  const selectedQuad = branchCopy[indexOfGridItemToSplit][quadIndex];
-  branchCopy[indexOfGridItemToSplit] = [{ ...selectedQuad }];
 }

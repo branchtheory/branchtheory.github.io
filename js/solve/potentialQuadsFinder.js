@@ -1,6 +1,5 @@
 import {
   NUMBER_OF_GRID_ITEMS,
-  BLANK_LINE_ITEM,
   PRODUCT_SIGNIFIER,
   SUM_SIGNIFIER,
   UNUSED,
@@ -31,7 +30,6 @@ function getQuadsWhereThisGridItemIsTheProductOfTwoNumbers(gridItemValue, gridIt
     const gridPairValue = linePair1 + linePair2;
 
     if (linePair2IsAWholeNumber(linePair1, gridItemValue)
-      //&& linePairsCanFitInTheLine16(linePair1, linePair2, line16)
       && gridPairExistsInGrid16(gridItemIndex, gridPairValue, grid16)) {
       quads.push(buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, PRODUCT_SIGNIFIER));
     }
@@ -48,9 +46,7 @@ function getQuadsWhereThisGridItemIsTheSumOfTwoNumbers(gridItemValue, gridItemIn
     const linePair2 = gridItemValue - linePair1;
     const gridPairValue = linePair1 * linePair2;
 
-    if (gridPairExistsInGrid16(gridItemIndex, gridPairValue, grid16)
-      //&& linePairsCanFitInTheLine16(linePair1, linePair2, line16)
-      ) {
+    if (gridPairExistsInGrid16(gridItemIndex, gridPairValue, grid16)) {
       quads.push(buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, SUM_SIGNIFIER));
     }
   }
@@ -61,64 +57,12 @@ function linePair2IsAWholeNumber(linePair1, gridItemValue) {
   return gridItemValue % linePair1 === 0;
 }
 
-function linePairsCanFitInTheLine16(linePair1, linePair2, line16original) {
-  let line16 = [...line16original];
-  let linePair1OK = false;
-  let linePair2OK = false;
-  let gapAttempt1;
-
-  if (line16.includes(linePair1)) {
-    linePair1OK = true;
-  } else {
-    gapAttempt1 = fitInAGap(linePair1, line16);
-    line16 = gapAttempt1.line16;
-    linePair1OK = gapAttempt1.ok;
-  }
-
-  if (line16.includes(linePair2)) {
-    linePair2OK = true;
-  } else {
-    linePair2OK = fitInAGap(linePair2, line16).ok;
-  }
-
-  return linePair1OK && linePair2OK;
-}
-
-function fitInAGap(linePair, line16) {
-  // Check if it's smaller than the first item
-  if (line16[0] > linePair) {
-    return { "line16": line16, ok: false }
-  }
-
-  // Check if there's a gap before values that equal the linePair, or before the first one that's greater than it
-  for (let index = 1; index < line16.length; index++) {
-    if (linePair <= line16[index]) {
-      if (line16[index - 1] === BLANK_LINE_ITEM) {
-        line16.splice(index - 1, 1);
-        return { "line16": line16, ok: true }
-      }
-      if (linePair < line16[index]) {
-        break;
-      }
-    }
-  }
-
-  // Check if there's a gap at the end of the array
-  if (line16[line16.length - 1] === BLANK_LINE_ITEM) {
-    line16.splice(line16.length - 1, 1);
-    return { "line16": line16, ok: true }
-  }
-
-  return { "line16": line16, ok: false }
-}
-
-function buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, mathematicalFunction) {
+function buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, operation) {
   return {
-    operationType: mathematicalFunction,
-    primaryGridValue: gridItemValue,
-    pairedGridValue: gridPairValue,
-    operand1: linePair1,
-    operand2: linePair2,
+    operation,
+    value: gridItemValue,
+    pairedValue: gridPairValue,
+    operands: [linePair1, linePair2],
     status: UNUSED
   };
 }
