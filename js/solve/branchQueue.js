@@ -12,7 +12,7 @@ export class BranchQueue {
     this.branchesQueue.delete(this.firstBranchKey);
   }
 
-  createNewBranch(newBranch, ns) {
+  createNewBranch(newBranch) {
     this.branchesQueue.set(this.newBranchKey, newBranch);
     this.newBranchKey++;
   }
