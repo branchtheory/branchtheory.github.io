@@ -75,8 +75,8 @@ export function getDemoOrUserPuzzle() {
     const demoState = getIsDemoMode();
     setIsDemoMode(demoState);
         
-    const gridInputs = document.querySelectorAll('.grid-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
+    const gridInput = document.querySelectorAll('.grid-input');
+    const stripInput = document.querySelectorAll('.strip-input');
 
     if (demoState) {
         return {
