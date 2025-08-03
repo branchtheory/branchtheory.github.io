@@ -1,6 +1,4 @@
 import {
-  PRODUCT_SIGNIFIER,
-  SUM_SIGNIFIER,
   UNUSED,
   SELECTED,
   REJECTED,
@@ -35,9 +33,10 @@ function deduceFromSingleQuads(branch, grid16) {
   setStatusesInCorrespondingItem(branch, correspondingQuadLocation);
 
   const valuesToReject = [];
-  if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.primaryGridValue)) { valuesToReject.push(singleQuad.primaryGridValue); }
-  if (isLastIncompleteOccurrenceOfGridValue(branch, correspondingQuadLocation.grid, correspondingQuad.primaryGridValue)) { valuesToReject.push(correspondingQuad.primaryGridValue); }
+  if (isLastIncompleteOccurrenceOfGridValue(branch, singleQuadLocation.grid, singleQuad.value)) { valuesToReject.push(singleQuad.value); }
+  if (isLastIncompleteOccurrenceOfGridValue(branch, correspondingQuadLocation.grid, correspondingQuad.value)) { valuesToReject.push(correspondingQuad.value); }
   rejectOtherLinkedQuads(branch, singleQuadLocation.grid, correspondingQuadLocation.grid, valuesToReject);
+  if (isBrokenBranch(branch)) { return { branch: BROKEN_BRANCH, furtherDeductions: false }; }
 
   return { branch: branch, furtherDeductions: true };
 }
@@ -62,13 +61,13 @@ function getCorrespondingQuadLocation(branch, singleQuadLocation, singleQuad, gr
   for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
     let quads = branch[gridIndex];
     let quadIndex;
-    if (grid16[gridIndex] === singleQuad.pairedGridValue
+    if (grid16[gridIndex] === singleQuad.pairedValue
         && singleQuadLocation.grid !== gridIndex
         && quads.length > 0) {
         
         quadIndex = quads.findIndex(quad => quad.status === UNUSED 
-          && quad.pairedGridValue === singleQuad.primaryGridValue 
-          && quad.operationType !== singleQuad.operationType
+          && quad.pairedValue === singleQuad.value 
+          && quad.operation !== singleQuad.operation
         );
         
         if (quadIndex !== -1) {
@@ -92,8 +91,7 @@ function setStatusesInCorrespondingItem(branch, correspondingQuadLocation) {
 function isLastIncompleteOccurrenceOfGridValue(branch, gridIndex, gridValue) {
   for (let index = 0; index < branch.length; index++) {
     if (index !== gridIndex && 
-        branch[index].length > 0 && //Error handling
-        branch[index][0].primaryGridValue === gridValue &&
+        branch[index][0].value === gridValue &&
         branch[index].some(quad => quad.status === UNUSED)) {
       return false;
     }
@@ -107,127 +105,10 @@ function rejectOtherLinkedQuads(branch, excludeItem1, excludeItem2, valuesToReje
   for (let gridIndex = 0; gridIndex < branch.length; gridIndex++) {
     if (gridIndex !== excludeItem1 && gridIndex !== excludeItem2) {
       for (let quad of branch[gridIndex]) {
-        if (valuesToReject.includes(quad.pairedGridValue)) {
+        if (valuesToReject.includes(quad.pairedValue) && quad.status === UNUSED) {
           quad.status = REJECTED;
         }
       }
     }
   }
-}
-
-function deduceFromLine16(branch, line16) {
-  const workingLine = [...line16];
-  fillLineWithSelectedQuads(branch, line16);
-  /*
-  for (unused quads in branch) {
-    if (!linePairsCanFitInTheLine16) {
-      reject them;
-  }
-  */
-}
-
-function fillLineWithSelectedQuads(branch, line16) {
-  let operands = getOperandsOfSelected(branch);
-  if (operands.length === 0) return;
-  for (let op of operands) {
-    
-  }
-}
-
-function getOperandsOfSelected(branch) {
-  let operands = [];
-  for (let item of branch) {
-    for (let quad of item) {
-      if (quad.status === SELECTED) {
-        operands.push(quad.operand1);
-        operands.push(quad.operand2);
-      }
-    }
-  }
-  operands.sort((a, b) => a - b);
-  return operands.filter((_, i) => i % 2 === 0); //deduplicate
-}
-
-function linePairsCanFitInTheLine16(linePair1, linePair2, line16original) {
-  let line16 = [...line16original];
-  let linePair1OK = false;
-  let linePair2OK = false;
-  let gapAttempt1;
-
-  if (line16.includes(linePair1)) {
-    linePair1OK = true;
-  } else {
-    gapAttempt1 = fitInAGap(linePair1, line16);
-    line16 = gapAttempt1.line16;
-    linePair1OK = gapAttempt1.ok;
-  }
-
-  if (line16.includes(linePair2)) {
-    linePair2OK = true;
-  } else {
-    linePair2OK = fitInAGap(linePair2, line16).ok;
-  }
-
-  return linePair1OK && linePair2OK;
-}
-
-function fitInAGap(linePair, line16) {
-  // Check if it's smaller than the first item
-  if (line16[0] > linePair) {
-    return { "line16": line16, ok: false }
-  }
-
-  // Check if there's a gap before values that equal the linePair, or before the first one that's greater than it
-  for (let index = 1; index < line16.length; index++) {
-    if (linePair <= line16[index]) {
-      if (line16[index - 1] === BLANK_LINE_ITEM) {
-        line16.splice(index - 1, 1);
-        return { "line16": line16, ok: true }
-      }
-      if (linePair < line16[index]) {
-        break;
-      }
-    }
-  }
-
-  // Check if there's a gap at the end of the array
-  if (line16[line16.length - 1] === BLANK_LINE_ITEM) {
-    line16.splice(line16.length - 1, 1);
-    return { "line16": line16, ok: true }
-  }
-
-  return { "line16": line16, ok: false }
-}
-
-function fitInAGapV2(operand, line16) {
-  // Check if it's smaller than the first item or bigger than the last
-  const firstLineItem = line16[0];
-  const lastLineItem = line16[line16.length - 1];
-  if (firstLineItem > operand 
-     || (lastLineItem !== BLANK_LINE_ITEM 
-        && lastLineItem < operand) {
-    return { BROKEN_BRANCH }
-  }
-
-  // Check if there's a gap before values that equal the linePair, or before the first one that's greater than it
-  for (let index = 1; index < line16.length; index++) {
-    if (linePair <= line16[index]) {
-      if (line16[index - 1] === BLANK_LINE_ITEM) {
-        line16.splice(index - 1, 1);
-        return { "line16": line16, ok: true }
-      }
-      if (linePair < line16[index]) {
-        break;
-      }
-    }
-  }
-
-  // Check if there's a gap at the end of the array
-  if (line16[line16.length - 1] === BLANK_LINE_ITEM) {
-    line16.splice(line16.length - 1, 1);
-    return { "line16": line16, ok: true }
-  }
-
-    
-  return { "line16": line16, ok: false }
 }
