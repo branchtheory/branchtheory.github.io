@@ -1,6 +1,5 @@
 import {
   NUMBER_OF_GRID_ITEMS,
-  BLANK_LINE_ITEM,
   PRODUCT_SIGNIFIER,
   SUM_SIGNIFIER,
   UNUSED,
@@ -58,13 +57,12 @@ function linePair2IsAWholeNumber(linePair1, gridItemValue) {
   return gridItemValue % linePair1 === 0;
 }
 
-function buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, mathematicalFunction) {
+function buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, operation) {
   return {
-    operationType: mathematicalFunction,
-    primaryGridValue: gridItemValue,
-    pairedGridValue: gridPairValue,
-    operand1: linePair1,
-    operand2: linePair2,
+    operation,
+    value: gridItemValue,
+    pairedValue: gridPairValue,
+    operands: [linePair1, linePair2],
     status: UNUSED
   };
 }
