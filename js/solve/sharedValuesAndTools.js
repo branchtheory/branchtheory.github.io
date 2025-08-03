@@ -1,8 +1,8 @@
 export const PRODUCT_SIGNIFIER = "×";
 export const SUM_SIGNIFIER = "+";
 export const UNUSED = "unused";
-export const DONE = "done";
-
+export const SELECTED = "selected";
+export const REJECTED = "rejected";
 
 export const BLANK_LINE_ITEM = 0;
 
