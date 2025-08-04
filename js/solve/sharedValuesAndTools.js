@@ -12,7 +12,7 @@ export const BROKEN_BRANCH = "BROKEN BRANCH";
 
 export const NOT_FOUND = -1;
 
-export function isBrokenBranch(branch, ns) {
+export function isBrokenBranch(branch) {
   if (Array.isArray(branch)) {
     return aGridItemIsWhollyRejected(branch) || aGridItemIsEmpty(branch) || aDoubleSelection(branch) || !(branch.length === NUMBER_OF_GRID_ITEMS);
   } else {
@@ -60,3 +60,4 @@ export function getLine16FromFinishedBranch(branch) {
 
   return line16FromSolution.sort((a, b) => a - b);
 }
+
