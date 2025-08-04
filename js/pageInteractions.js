@@ -25,6 +25,12 @@ import {
         collectUserGridData, 
         collectUserStrip 
 } from './page/getData.js';
+import { 
+    clearAllHighlights,
+    highlightSolutionPairs,
+    highlightPartialSolution,
+    debugSolutionStructure 
+} from './page/highlightPairs.js';
 
 function clearAllHighlights() {
         const allInputs = document.querySelectorAll('.grid-input, .strip-input, .small-input, .operation-input');
@@ -155,10 +161,16 @@ document.getElementById('solveBtn').addEventListener('click', function() {
 
     generatePartialSolutionTable(solution.partialSolution);
     document.getElementById('partialSolutionTable').style.display = 'table';
+    
+    // ADD THIS: Debug solution structure (remove in production)
+    debugSolutionStructure(solution);
+    
+    // ADD THIS: Apply highlighting to show paired relationships
+    highlightSolutionPairs(solution);
                 
     // Update button states
     this.disabled = true;
-    document.getElementById('partialSolveBtn').disabled = true; // Add this line
+    document.getElementById('partialSolveBtn').disabled = true;
     document.getElementById('unsolveBtn').disabled = false;
     document.getElementById('resetBtn').disabled = false;
     document.getElementById('checkBtn').disabled = true;
@@ -199,6 +211,3 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
-
-
-
