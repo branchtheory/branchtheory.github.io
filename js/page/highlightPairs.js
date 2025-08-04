@@ -1,12 +1,12 @@
 export const HIGHLIGHT_COLORS = [
-    '#b40093',
-    '#00a46f', 
-    '#3f5fe7',
-    '#e3c448',
-    '#68b0ff',
-    '#336400',
-    '#ff7177',
-    '#6d4c22'
+    '#ffadad',
+    '#ffd6a5', 
+    '#fdffb6',
+    '#caffbf',
+    '#9bf6ff',
+    '#a0c4ff',
+    '#bdb2ff',
+    '#ffc6ff'
 ];
 
 export function clearAllPairHighlighting() {
