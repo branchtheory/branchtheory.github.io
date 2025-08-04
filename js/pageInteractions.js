@@ -161,10 +161,6 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     generatePartialSolutionTable(solution.partialSolution);
     document.getElementById('partialSolutionTable').style.display = 'table';
     
-    // ADD THIS: Debug solution structure (remove in production)
-    debugSolutionStructure(solution);
-    
-    // ADD THIS: Apply highlighting to show paired relationships
     highlightSolutionPairs(solution);
                 
     // Update button states
@@ -210,5 +206,6 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
 
 
