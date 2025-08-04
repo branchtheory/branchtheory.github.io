@@ -15,15 +15,19 @@ export function splitFirstBranch(branchQueue) {
 }
 
 function getIndexOfGridItemToSplit(branch) {
+  let minUnused = Infinity;
+  let index = NOT_FOUND;
   for (let gridItemIndex = 0; gridItemIndex < NUMBER_OF_GRID_ITEMS; gridItemIndex++) {
     if (branch[gridItemIndex].some(quad => quad.status === SELECTED)) {
       continue;
     }
-    if (branch[gridItemIndex].filter(quad => quad.status === UNUSED).length >= 2) {
-      return gridItemIndex;
+    let unusedCount = branch[gridItemIndex].filter(quad => quad.status === UNUSED).length;
+    if (unusedCount < minUnused) {
+      minUnused = unusedCount;
+      index = gridItemIndex;
     }
   }
-  return NOT_FOUND;
+  return index;
 }
 
 function createANewBranchForEachQuad(branchQueue, indexOfGridItemToSplit) {
