@@ -7,10 +7,10 @@ import {
   isBrokenBranch
 } from './sharedValuesAndTools.js';
 
-export function deduceFromSingleQuads(branch, grid16) {
-  const singleQuadLocation = getSingleQuadLocation(branch, grid16);
-  if (singleQuadLocation === NOT_FOUND) { return { branch: branch, furtherDeductions: false }; }
-
+export function deduceFromSingleQuads(branch, grid16, optionalSingleLocation) {
+  const singleQuadLocation = optionalSingleLocation ?? getSingleQuadLocation(branch, grid16);
+  if (singleQuadLocation === NOT_FOUND) { return { branch: branch, furtherDeductions: false } }
+  
   const singleQuad = branch[singleQuadLocation.grid][singleQuadLocation.quad];
   singleQuad.status = SELECTED;
 
