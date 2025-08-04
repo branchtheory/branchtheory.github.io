@@ -62,6 +62,7 @@ function buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, operat
     operation,
     value: gridItemValue,
     pairedValue: gridPairValue,
+    pairIndex: "",
     operands: [linePair1, linePair2],
     status: UNUSED
   };
