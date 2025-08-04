@@ -102,6 +102,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
 
     // Get solution data
     const solution = getSolution(dataResult.gridData, dataResult.stripData);
+        console.log(solution);
     
     // Check if solution is invalid
     if (solution === "invalid") {
@@ -203,3 +204,4 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
