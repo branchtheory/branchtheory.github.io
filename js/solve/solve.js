@@ -7,7 +7,7 @@ import { findPotentialQuads } from './potentialQuadsFinder.js';
 
 export function getSolution(grid16original, line16original) {
   const grid16 = [...grid16original];
-  const line16 = [...line16original];
+  const line16 = fillZerosBetweenLine16Duplicates([...line16original]);
 
   const potentialQuads = findPotentialQuads(grid16, line16);
   if (isBrokenBranch(potentialQuads)) {
@@ -36,7 +36,6 @@ export function getSolution(grid16original, line16original) {
 
 function loopBranchDeductions(branchQueue, grid16, line16) {
   let solutions = [];
-
   splitFirstBranch(branchQueue);
 
   while (!branchQueue.isEmpty()) {
@@ -55,7 +54,6 @@ function loopBranchDeductions(branchQueue, grid16, line16) {
       splitFirstBranch(branchQueue);
     }
   }
-
   return solutions;
 }
 
