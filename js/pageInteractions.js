@@ -97,14 +97,10 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         return;
     }
     
-    // Save original data
     saveOriginalData();
 
-    // Get solution data
     const solution = getSolution(dataResult.gridData, dataResult.stripData);
-        console.log(solution);
     
-    // Check if solution is invalid
     if (solution === "invalid") {
         showError('There is no solution for this puzzle.');
         return;
@@ -114,7 +110,6 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         showNotification(`This puzzle has ${solution.grids.length} solutions. Showing one of them.`);
     }
     
-    // Make most inputs non-editable
     const gridInputs = document.querySelectorAll('.grid-input');
     const stripInputs = document.querySelectorAll('.strip-input');
 
@@ -204,5 +199,6 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
 
 
