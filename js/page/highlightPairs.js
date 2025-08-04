@@ -9,7 +9,7 @@ export const HIGHLIGHT_COLORS = [
     '#6d4c22'
 ];
 
-export function clearAllHighlights() {
+export function clearAllPairHighlighting() {
     const allInputs = document.querySelectorAll('.grid-input, .strip-input, .small-input, .operation-input');
     allInputs.forEach(input => {
         input.classList.remove('conflict-cell');
