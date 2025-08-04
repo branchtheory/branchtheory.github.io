@@ -28,8 +28,7 @@ import {
 import { 
     clearAllPairHighlighting,
     highlightSolutionPairs,
-    highlightPartialSolution,
-    debugSolutionStructure 
+    highlightPartialSolution
 } from './page/highlightPairs.js';
 
 function clearAllHighlights() {
@@ -211,4 +210,5 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
 
