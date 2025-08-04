@@ -143,7 +143,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         
         for (let cellIndex = 0; cellIndex < 4; cellIndex++) {
             const gridIndex = rowIndex * 4 + cellIndex; // Flat array index
-            const cellData = solution.grids[0][gridIndex];
+            const cellData = solution.grids[0][gridIndex].find(cell => cell.status === 'selected');
             const startIdx = cellIndex * 3;
             
             if (startIdx + 2 < cells.length) {
@@ -204,4 +204,5 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
 
