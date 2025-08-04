@@ -39,7 +39,7 @@ export function highlightStripInputs(stripIndices, color) {
 }
 
 export function highlightSolutionPairs(solution) {
-    clearAllHighlights();
+    clearAllPairHighlighting();
     
     if (!solution || !solution.grids || !solution.grids[0] || !solution.lines || !solution.lines[0]) {
         console.warn('Invalid solution data for highlighting');
@@ -109,7 +109,7 @@ export function highlightSolutionPairs(solution) {
 }
 
 export function highlightPartialSolution(partialSolution) {
-    clearAllHighlights();
+    clearAllPairHighlighting();
     
     if (!partialSolution) {
         console.warn('No partial solution data provided');
