@@ -75,3 +75,42 @@ function prepBranchQueue(initialQuads, branchQueue, grid16, line16) {
   branchQueue.setFirstBranch();
   branchQueue.firstBranch = deduce(branchQueue.firstBranch, grid16, line16);
 }
+
+function fillZerosBetweenLine16Duplicates(line16) {
+  const result = [...line16];
+
+  // Map to track positions of each non-zero value
+  const valuePositions = {};
+
+  // Collect all positions for each non-zero value
+  line16.forEach((value, index) => {
+    if (value !== 0) {
+      if (!valuePositions[value]) {
+        valuePositions[value] = [];
+      }
+      valuePositions[value].push(index);
+    }
+  });
+
+  // Iterate over each value with multiple occurrences
+  for (const [valueString, positions] of Object.entries(valuePositions)) {
+    const value = Number(valueString);
+
+    if (positions.length < 2) continue;
+
+    for (let i = 0; i < positions.length - 1; i++) {
+      const start = positions[i];
+      const end = positions[i + 1];
+
+      const between = line16.slice(start + 1, end);
+      if (between.every(v => v === BLANK_LINE_ITEM)) {
+        // Fill in between with value
+        for (let j = start + 1; j < end; j++) {
+          result[j] = value;
+        }
+      }
+    }
+  }
+
+  return result;
+}
