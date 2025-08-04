@@ -103,6 +103,18 @@
             background-color: #86BBD8;
         }
 
+        .big-number input:focus {
+            outline: 3px solid #333 !important;
+            outline-offset: -3px;
+            background-color: rgba(134, 187, 216, 0.8) !important;
+            border-radius: 0;
+            box-sizing: border-box;
+        }
+
+        .big-number[style*="background-color"] {
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
         .small-cell {
             width: 30px;
             height: 30px;
@@ -179,6 +191,10 @@
             outline: none;
             box-sizing: border-box;
             background-color: #86BBD8;
+        }
+
+        .bottom-strip td[style*="background-color"] {
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
         }
 
         .conflict-cell {
