@@ -26,7 +26,7 @@ import {
         collectUserStrip 
 } from './page/getData.js';
 import { 
-    clearAllHighlights,
+    clearAllPairHighlighting,
     highlightSolutionPairs,
     highlightPartialSolution,
     debugSolutionStructure 
@@ -211,3 +211,4 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
