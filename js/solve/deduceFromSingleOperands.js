@@ -13,6 +13,10 @@ export function deduceFromSingleOperands(branch, line16, ns) {
 If the minimum number of times an operand that appears in the strip COULD appear in the strip equals the maximum
 number of times that the grid items could use it, then go for it.
 
+So:
+1. Only do each line16 value once. If there are multiple items with that value, take into account how many there are.
+2. 
+
 could be more effective.
 Doesn't currently account for how the line16 can gett filled in as the puzzle progresses.
 Also doesn't account for duplicates in the line. If there are three 3s, this looks at it and says 'oh no, too many'.
