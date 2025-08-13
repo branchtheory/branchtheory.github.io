@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.getElementById('unsolveBtn').addEventListener('click', function() {
     clearAllHighlights();
+    clearAllPairHighlighting()
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('notificationMessage').style.display = 'none';
     
@@ -70,6 +71,7 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
 
 document.getElementById('resetBtn').addEventListener('click', function() {
     clearAllHighlights();
+    clearAllPairHighlighting()
     document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('notificationMessage').style.display = 'none';
     
@@ -206,6 +208,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
 
 
 
