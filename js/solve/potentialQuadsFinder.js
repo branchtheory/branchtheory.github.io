@@ -2,7 +2,6 @@ import {
   NUMBER_OF_GRID_ITEMS,
   PRODUCT_SIGNIFIER,
   SUM_SIGNIFIER,
-  UNUSED,
 } from './sharedValuesAndTools.js';
 
 export function findPotentialQuads(grid16, line16) {
@@ -59,12 +58,25 @@ function linePair2IsAWholeNumber(linePair1, gridItemValue) {
 
 function buildTheQuad(gridItemValue, gridPairValue, linePair1, linePair2, operation) {
   return {
-    operation,
     value: gridItemValue,
-    pairedValue: gridPairValue,
-    pairIndex: "",
-    operands: [linePair1, linePair2],
-    status: UNUSED
+    gridPair: {
+      value: gridPairValue,
+      index: "",
+      status: UNUSED
+    },
+    operation,
+    operands: [
+      {
+        value: linePair1,
+        index: "",
+        status: UNUSED
+      },
+      {
+        value: linePair2,
+        index: "",
+        status: UNUSED
+      }
+    ],
   };
 }
 
