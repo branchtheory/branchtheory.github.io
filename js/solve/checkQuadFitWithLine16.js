@@ -2,10 +2,12 @@ import {
   BLANK_LINE_ITEM,
   SUM_SIGNIFIER,
   UNUSED,
-  SELECTED,
+  isSelected,
   REJECTED,
   BROKEN_BRANCH,
 } from './sharedValuesAndTools.js';
+
+const SELECTED = "selected";
 
 export function rejectQuadsThatCannotFitInLine16(branch, line16) {
   let workingLine16 = [];
@@ -24,11 +26,11 @@ export function rejectQuadsThatCannotFitInLine16(branch, line16) {
 function checkUnused(branch, line16) {
   for (let item of branch) {
     for (let quad of item) {
-      if (quad.status === UNUSED) {
-        const deepCopyLine16 = line16.map(obj => ({ value: obj.value, status: obj.status }));
+      if (quad.gridPairIndex === UNUSED) {
+        const deepCopyLine16 = line16.map(obj => ({ value: obj.value, gridPairIndex: obj.gridPairIndex }));
         const result = fillLineWithSelectedQuads([...quad.operands], deepCopyLine16);
         if (result === BROKEN_BRANCH) {
-          quad.status = REJECTED;
+          quad.gridPairIndex = REJECTED;
         }
       }
     }
@@ -54,6 +56,8 @@ function fillLineWithSelectedQuads(operands, line16) {
     }
   }
   operands = remainingOperands;
+ // if (operands.length === 0) { return line16; }
+
 
   let gapSequences = findGapSequences(line16);
 
@@ -83,7 +87,7 @@ function getOperandsOfSelected(branch) {
   let operands = [];
   for (let item of branch) {
     for (let quad of item) {
-      if (quad.status === SELECTED && quad.operation === SUM_SIGNIFIER) {
+      if (isSelected(quad.gridPairIndex) && quad.operation === SUM_SIGNIFIER) {
         operands.push(...quad.operands);
       }
     }
