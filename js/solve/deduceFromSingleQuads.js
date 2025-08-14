@@ -1,6 +1,6 @@
 import {
   UNUSED,
-  SELECTED,
+  isSelected,
   NOT_FOUND,
   BROKEN_BRANCH,
   isBrokenBranch
@@ -28,11 +28,11 @@ function getSingleQuadLocation(branch, grid16) {
   for (let gridIndex = 0; gridIndex < grid16.length; gridIndex++) {
     const quads = branch[gridIndex];
 
-    const unused = quads.filter(quad => quad.status === UNUSED);
-    const hasSelected = quads.some(quad => quad.status === SELECTED);
+    const unused = quads.filter(quad => quad.gridPairIndex === UNUSED);
+    const hasSelected = quads.some(quad => isSelected(quad.gridPairIndex));
 
     if (unused.length === 1 && !hasSelected) {
-      const quadIndex = quads.findIndex(quad => quad.status === UNUSED);
+      const quadIndex = quads.findIndex(quad => quad.gridPairIndex === UNUSED);
       return { grid: gridIndex, quad: quadIndex };
     }
   }
@@ -48,7 +48,7 @@ function getCorrespondingQuadLocation(branch, singleQuadLocation, singleQuad, gr
         && singleQuadLocation.grid !== gridIndex
         && quads.length > 0) {
         
-        quadIndex = quads.findIndex(quad => quad.status === UNUSED 
+        quadIndex = quads.findIndex(quad => quad.gridPairIndex === UNUSED 
           && quad.pairedValue === singleQuad.value 
           && quad.operation !== singleQuad.operation
         );
