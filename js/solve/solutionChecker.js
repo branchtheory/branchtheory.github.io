@@ -1,14 +1,14 @@
 import {
   NUMBER_OF_GRID_ITEMS,
   BLANK_LINE_ITEM,
-  SELECTED,
+  isSelected,
   UNUSED,
   getLine16FromFinishedBranch
 } from './sharedValuesAndTools.js';
 
-export function isPotentialSolution(branch) {
+export function isPotentialSolution(branch, ns) {
   for (let gridItem of branch) {
-    if (gridItem.length === 0 || gridItem.some(quad => quad.status === UNUSED)) {
+    if (gridItem.length === 0 || gridItem.some(quad => quad.gridPairIndex === UNUSED)) {
       return false;
     }
   }
@@ -32,7 +32,7 @@ function isValidLine16(line16FromSolution, line16) {
 
 function oneSelectionPerGridItem(branch) {
   for (let item of branch) {
-    if (item.filter(quad => quad.status === SELECTED).length !== 1) {
+    if (item.filter(quad => isSelected(quad.gridPairIndex)).length !== 1) {
       return false;
     }
   }
