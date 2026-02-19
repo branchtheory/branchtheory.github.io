@@ -197,6 +197,26 @@
             border: 2px solid rgba(0, 0, 0, 0.1) !important;
         }
 
+        @media (max-width: 800px) {
+          .bottom-strip table {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            width: 100%;
+          }
+        
+          .bottom-strip thead {
+            display: contents;
+          }
+        
+          .bottom-strip tr {
+            display: contents;
+          }
+        
+          .bottom-strip td {
+            display: block;
+          }
+        }
+
         .conflict-cell {
             background-color: #ffcccc !important;
         }
