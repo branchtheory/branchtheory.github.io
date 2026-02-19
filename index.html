@@ -202,30 +202,28 @@
           .container {
             padding: 10px;
           }
-            
+        
           .bottom-strip {
-            display: table; 
-            border-collapse: unset;
+            display: block; 
             border: none;
-            margin: 20px auto; 
+            width: 100%;
           }
         
           .bottom-strip tr {
             display: grid;
-            grid-template-columns: repeat(8, 30px);
+            grid-template-columns: repeat(8, 1fr);
             border-top: 1px solid #222;
             border-left: 1px solid #222;
           }
         
           .bottom-strip td {
             display: block;
-            width: 30px;
-            height: 30px;
+            width: auto;
+            height: 40px; 
             border: none;
             border-right: 1px solid #222;
             border-bottom: 1px solid #222;
             margin: 0;
-            padding: 0;
           }
         }
 
