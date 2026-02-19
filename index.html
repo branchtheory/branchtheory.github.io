@@ -198,18 +198,14 @@
         }
 
         @media (max-width: 800px) {
-          .bottom-strip table {
+          .bottom-strip {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            width: 100%;
-          }
-        
-          .bottom-strip thead {
-            display: contents;
+            grid-template-columns: 1fr;
           }
         
           .bottom-strip tr {
-            display: contents;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
           }
         
           .bottom-strip td {
