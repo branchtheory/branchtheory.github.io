@@ -1,5 +1,5 @@
 export const GRID_PLACEHOLDERS = ['23', '23', '26', '27', '27', '28', '29', '31', '92', '120', '126', '130', '132', '168', '180', '198'];
-export const STRIP_PLACEHOLDERS = ['', '', '6', '', '9', '9', '10', '', '', '','', '', '', '', '22', ''];
+export const STRIP_PLACEHOLDERS = ['4', '', '6', '', '9', '9', '10', '12', '13', '','', '', '', '', '22', ''];
 export const DEMO_GRID_DATA = GRID_PLACEHOLDERS.map(str => parseInt(str, 10));
 export const DEMO_STRIP_DATA = STRIP_PLACEHOLDERS.map(str => str === '' ? 0 : parseInt(str, 10));
 let originalGridData = [];
