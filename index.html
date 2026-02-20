@@ -71,7 +71,7 @@
             border-collapse: collapse;
         }
 
-        .main-grid td {
+        .main-grid td, bottom-strip td {
             padding: 0 !important;
             border: 1px solid #222;
             text-align: center;
@@ -137,6 +137,7 @@
             box-sizing: border-box;
             padding: 0;
             margin: 0;
+            display: block;
         }
 
         .small-input:focus, .operation-input:focus, .bottom-strip input:focus {
@@ -162,6 +163,7 @@
             text-align: center;
             vertical-align: middle;
             background-color: white;
+            padding: 0;
         }
 
         @media (max-width: 550px) {
