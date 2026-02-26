@@ -66,10 +66,10 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
     document.getElementById('partialSolveBtn').disabled = false; // Add this line
     document.getElementById('checkBtn').disabled = false;
     this.disabled = true;
-    document.getElementById('resetBtn').disabled = false;
+    document.getElementById('clearBtn').disabled = false;
 });
 
-document.getElementById('resetBtn').addEventListener('click', function() {
+document.getElementById('clearBtn').addEventListener('click', function() {
     clearAllHighlights();
     clearAllPairHighlighting()
     document.getElementById('errorMessage').style.display = 'none';
@@ -169,7 +169,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     this.disabled = true;
     document.getElementById('partialSolveBtn').disabled = true;
     document.getElementById('unsolveBtn').disabled = false;
-    document.getElementById('resetBtn').disabled = false;
+    document.getElementById('clearBtn').disabled = false;
     document.getElementById('checkBtn').disabled = true;
 });
 
@@ -208,6 +208,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         highlightConflicts(conflicts); 
     }
 });
+
 
 
 
