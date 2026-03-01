@@ -35,7 +35,6 @@ function checkUnused(branch, line16) {
   }
 }
 
-
 function fillLineWithSelectedQuads(operands, line16) {
   if (operands.length === 0) return line16;
 

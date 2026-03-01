@@ -4,7 +4,7 @@ export const UNUSED = "unused";
 export const SELECTED = "selected";
 export const REJECTED = "rejected";
 
-export const BLANK_LINE_ITEM = 0;
+export const BLANK_LINE_ITEM = null;
 
 export const NUMBER_OF_GRID_ITEMS = 16;
 

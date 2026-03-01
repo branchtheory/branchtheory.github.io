@@ -2,12 +2,12 @@ import { BranchQueue } from './branchQueue.js';
 import { isPotentialSolution, isValidSolution } from './solutionChecker.js';
 import { deduce } from './logicalDeductions.js';
 import { splitFirstBranch, deepCopyABranch } from './branchSplitter.js';
-import { isBrokenBranch, getLine16FromFinishedBranch } from './sharedValuesAndTools.js';
+import { isBrokenBranch, getLine16FromFinishedBranch, BLANK_LINE_ITEM } from './sharedValuesAndTools.js';
 import { findPotentialQuads } from './potentialQuadsFinder.js';
 
 export function getSolution(grid16original, line16original) {
   const grid16 = [...grid16original];
-  const line16 = fillZerosBetweenLine16Duplicates([...line16original]);
+  const line16 = fillBetweenLine16Duplicates([...line16original]);
 
   const potentialQuads = findPotentialQuads(grid16, line16);
   if (isBrokenBranch(potentialQuads)) {
@@ -76,13 +76,11 @@ function prepBranchQueue(initialQuads, branchQueue, grid16, line16) {
   branchQueue.firstBranch = deduce(branchQueue.firstBranch, grid16, line16);
 }
 
-function fillZerosBetweenLine16Duplicates(line16) {
+function fillBetweenLine16Duplicates(line16) {
   const result = [...line16];
 
-  // Map to track positions of each non-zero value
   const valuePositions = {};
 
-  // Collect all positions for each non-zero value
   line16.forEach((value, index) => {
     if (value !== 0) {
       if (!valuePositions[value]) {
@@ -92,7 +90,6 @@ function fillZerosBetweenLine16Duplicates(line16) {
     }
   });
 
-  // Iterate over each value with multiple occurrences
   for (const [valueString, positions] of Object.entries(valuePositions)) {
     const value = Number(valueString);
 
@@ -104,7 +101,6 @@ function fillZerosBetweenLine16Duplicates(line16) {
 
       const between = line16.slice(start + 1, end);
       if (between.every(v => v === BLANK_LINE_ITEM)) {
-        // Fill in between with value
         for (let j = start + 1; j < end; j++) {
           result[j] = value;
         }

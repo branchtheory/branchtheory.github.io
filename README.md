@@ -12,6 +12,7 @@ This ain't a readme.
 ## - Proper push and pull functions for the grid, strip and crunched
 Push and pull from crunched only activates after it's created.
 ## Auto-fill of strip if there's only one option
+## Better handling of strip being incorrect. Currently just says 'no solution for this puzzle'
 
 # Bugs
 * Small cells are editable in the solved state

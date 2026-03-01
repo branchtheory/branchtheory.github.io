@@ -10,7 +10,7 @@ export const HIGHLIGHT_COLORS = [
 ];
 
 export function clearAllPairHighlighting() {
-    const allInputs = document.querySelectorAll('.grid-input, .strip-input, .small-input, .operation-input');
+    const allInputs = document.querySelectorAll('.big-input, .strip-input, .operand-input, .operation-input');
     allInputs.forEach(input => {
         input.classList.remove('conflict-cell');
         // Remove any existing highlight colors
@@ -19,12 +19,12 @@ export function clearAllPairHighlighting() {
     });
 }
 
-export function highlightGridInputs(gridIndices, color) {
-    const gridInputs = document.querySelectorAll('.grid-input');
+export function highlightbigNumberInputs(gridIndices, color) {
+    const bigNumberInputs = document.querySelectorAll('.big-input');
     gridIndices.forEach(index => {
-        if (index >= 0 && index < gridInputs.length) {
+        if (index >= 0 && index < bigNumberInputs.length) {
             // Highlight the parent cell (big-number cell) for better visibility
-            gridInputs[index].parentElement.style.backgroundColor = color;
+            bigNumberInputs[index].parentElement.style.backgroundColor = color;
         }
     });
 }
@@ -95,7 +95,7 @@ export function highlightSolutionPairs(solution) {
                 const color = HIGHLIGHT_COLORS[colorIndex % HIGHLIGHT_COLORS.length];
                 
                 // Highlight both grid cells (addition and multiplication)
-                highlightGridInputs([gridIndex, pairIndex], color);
+                highlightbigNumberInputs([gridIndex, pairIndex], color);
                 
                 // Highlight the corresponding line positions
                 highlightStripInputs(lineIndices, color);

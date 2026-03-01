@@ -5,8 +5,8 @@ import {
         generatePartialSolutionTable 
 } from './page/partialSolve.js';
 import {
-        GRID_PLACEHOLDERS, 
-        STRIP_PLACEHOLDERS,
+        DEMO_GRID_DATA, 
+        DEMO_STRIP_DATA,
         saveOriginalData,
         restoreOriginalData,
         clearAllData
@@ -20,11 +20,7 @@ import {
         checkUserSolution,
         highlightConflicts
 } from './page/check.js';
-import { 
-        getDemoOrUserPuzzle,
-        collectUserGridData, 
-        collectUserStrip 
-} from './page/getData.js';
+import { getPuzzle } from './page/getPuzzle.js';
 import { 
     clearAllPairHighlighting,
     highlightSolutionPairs,
@@ -32,22 +28,21 @@ import {
 } from './page/highlightPairs.js';
 
 function clearAllHighlights() {
-        const allInputs = document.querySelectorAll('.grid-input, .strip-input, .small-input, .operation-input');
+        const allInputs = document.querySelectorAll('.big-input, .strip-input, .operand-input, .operation-input');
     allInputs.forEach(input => {
         input.classList.remove('conflict-cell');
     });
 }
         
 document.addEventListener('DOMContentLoaded', function() {
-    // Set placeholders from constants
-    const gridInputs = document.querySelectorAll('.grid-input');
-    gridInputs.forEach((input, index) => {
-        input.placeholder = GRID_PLACEHOLDERS[index] || '';
+    const bigNumberInputs = document.querySelectorAll('.big-input');
+    bigNumberInputs.forEach((input, index) => {
+        input.placeholder = DEMO_GRID_DATA[index] || '';
     });
     
     const stripInputs = document.querySelectorAll('.strip-input');
     stripInputs.forEach((input, index) => {
-        input.placeholder = STRIP_PLACEHOLDERS[index] || '';
+        input.placeholder = DEMO_STRIP_DATA[index] || '';
     });
 
    setUpInputValidation();   
@@ -61,9 +56,8 @@ document.getElementById('unsolveBtn').addEventListener('click', function() {
     
     restoreOriginalData();
     
-    // Update button states
     document.getElementById('solveBtn').disabled = false;
-    document.getElementById('partialSolveBtn').disabled = false; // Add this line
+    document.getElementById('partialSolveBtn').disabled = false; 
     document.getElementById('checkBtn').disabled = false;
     this.disabled = true;
     document.getElementById('clearBtn').disabled = false;
@@ -77,9 +71,8 @@ document.getElementById('clearBtn').addEventListener('click', function() {
     
     clearAllData();
     
-    // Update button states
     document.getElementById('solveBtn').disabled = false;
-    document.getElementById('partialSolveBtn').disabled = false; // Add this line
+    document.getElementById('partialSolveBtn').disabled = false; 
     document.getElementById('unsolveBtn').disabled = true;
     document.getElementById('checkBtn').disabled = false;
     this.disabled = false;
@@ -97,16 +90,16 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
 
-    const dataResult = getDemoOrUserPuzzle();
+    const dataResult = getPuzzle();
     
-    if (dataResult.error) {
-        showError(dataResult.error);
+    if (Object.hasOwn(dataResult, 'error')) {
+        showError(dataResult.error); 
         return;
     }
     
     saveOriginalData();
 
-    const solution = getSolution(dataResult.gridData, dataResult.stripData);
+    const solution = getSolution(dataResult.bigNumberData, dataResult.stripData);
     
     if (solution === "invalid") {
         showError('There is no solution for this puzzle.');
@@ -117,10 +110,10 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         showNotification(`This puzzle has ${solution.grids.length} solutions. Showing one of them.`);
     }
     
-    const gridInputs = document.querySelectorAll('.grid-input');
+    const bigNumberInputs = document.querySelectorAll('.big-input');
     const stripInputs = document.querySelectorAll('.strip-input');
 
-    gridInputs.forEach(input => {
+    bigNumberInputs.forEach(input => {
         input.disabled = true;
     });
 
@@ -128,15 +121,12 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         input.disabled = true;
     });
     
-    // Fill the bottom strip with solution values
     solution.lines[0].forEach((value, index) => {
         if (index < stripInputs.length) {
             stripInputs[index].value = value;
         }
     });
     
-    // Fill the small cells with operation data
-    // Get all small cell rows (rows 2, 4, 6, 8 - which are index 1, 3, 5, 7)
     const mainGridRows = document.querySelectorAll('.main-grid tr');
     const smallCellRows = [mainGridRows[1], mainGridRows[3], mainGridRows[5], mainGridRows[7]];
 
@@ -144,7 +134,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         const cells = row.querySelectorAll('td');
         
         for (let cellIndex = 0; cellIndex < 4; cellIndex++) {
-            const gridIndex = rowIndex * 4 + cellIndex; // Flat array index
+            const gridIndex = rowIndex * 4 + cellIndex;
             const cellData = solution.grids[0][gridIndex].find(cell => cell.status === 'selected');
             const startIdx = cellIndex * 3;
             
@@ -165,7 +155,6 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     
     highlightSolutionPairs(solution);
                 
-    // Update button states
     this.disabled = true;
     document.getElementById('partialSolveBtn').disabled = true;
     document.getElementById('unsolveBtn').disabled = false;
@@ -177,39 +166,26 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     clearAllHighlights(); 
     document.getElementById('notificationMessage').style.display = 'none';
     document.getElementById('errorMessage').style.display = 'none';
-    const gridInput = document.querySelectorAll('.grid-input');
-    const stripInput = document.querySelectorAll('.strip-input');
-    const smallInput = document.querySelectorAll('.small-input');
-    const operationInput = document.querySelectorAll('.operation-input');
 
-        const dataResult = getDemoOrUserPuzzle();
+    const dataResult = getPuzzle();
         
     if (Object.hasOwn(dataResult, 'error')) {
         showError(dataResult.error); 
         return;
     }
 
-    const solution = getSolution(dataResult.gridData, dataResult.stripData); 
+    const solution = getSolution(dataResult.bigNumberData, dataResult.stripData); 
 
     if (solution === "invalid") {
-        showError('There is no solution for this puzzle.');
+        showError('Either there is no solution for this puzzle, or the strip is incorrect.');
         return;
     }
 
-    // First, check if the user's input combination is valid for ANY solution.
     if (checkUserSolution(solution)) {
         showNotification('All correct. That matches a solution.');
     } else {
-        // If the combination is not valid, show an error.
         showError('Some of that does not match any solution.'); 
-
-        // THEN, find and highlight the specific cells that are wrong in ALL solutions.
         const conflicts = findUniversalConflicts(solution);
         highlightConflicts(conflicts); 
     }
 });
-
-
-
-
-

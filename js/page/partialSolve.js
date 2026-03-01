@@ -8,9 +8,7 @@ import {
         showError,
         showNotification
 } from './notify.js';
-import { 
-    getDemoOrUserPuzzle,
-} from './getData.js';
+import { getPuzzle } from './getPuzzle.js';
 
 export function generatePartialSolutionTable(partialSolveArray) {
   const table = document.getElementById('partialSolutionTable');
@@ -70,8 +68,8 @@ export function generatePartialSolutionTable(partialSolveArray) {
 }
 
 export function partialSolve() {
-    const demoModeState = getIsDemoMode(document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.small-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getDemoOrUserPuzzle(demoModeState, document.querySelectorAll('.grid-input'), document.querySelectorAll('.strip-input'));
+    const demoModeState = getIsDemoMode(document.querySelectorAll('.big-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.operand-input'), document.querySelectorAll('.operation-input'))
+    const dataResult = getPuzzle(demoModeState, document.querySelectorAll('.big-input'), document.querySelectorAll('.strip-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo); }
 
     if (dataResult.error) {
@@ -80,7 +78,7 @@ export function partialSolve() {
     }
 
     // Get solution data
-    const solution = getSolution(dataResult.gridData, dataResult.stripData);
+    const solution = getSolution(dataResult.bigNumberData, dataResult.stripData);
 
     if (solution === "invalid") {
         showError('There is no solution for this puzzle.');
