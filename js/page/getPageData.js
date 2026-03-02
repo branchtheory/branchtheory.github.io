@@ -1,7 +1,7 @@
-export function collectOperationOperandData(returnType) {
-    const operationOperandCells = getOperationOperandCells();
+export function collectSmallCellData(returnType) {
+    const smallCells = getSmallCells();
     
-    return operationOperandCells.map(cell => {
+    return smallCells.map(cell => {
         if (returnType === "return as elements") {
             return {
                 operand1: cell.operand1Element,
@@ -22,11 +22,11 @@ export function collectOperationOperandData(returnType) {
     });
 }
 
-function getOperationOperandCells() {
+function getSmallCells() {
     const operandInputs = document.querySelectorAll('.operand-input');
     const operationInputs = document.querySelectorAll('.operation-input');
     
-    const operationOperandCells = [];
+    const smallCells = [];
     
     for (let i = 0; i < 16; i++) {
         const row = Math.floor(i / 4);
@@ -39,14 +39,14 @@ function getOperationOperandCells() {
         const operationElement = operationInputs[operationIndex];
         const operand2Element = operandInputs[operandInputBaseIndex + 1];
         
-        operationOperandCells.push({
+        smallCells.push({
             operand1Element,
             operationElement,
             operand2Element
         });
     }
     
-    return operationOperandCells;
+    return smallCells;
 }
 
 export function collectBigNumberData() {
@@ -61,14 +61,14 @@ export function collectBigNumberData() {
     return bigNumberData;
 }
 
-export function collectStripData() {
-    const stripInputs = document.querySelectorAll('.strip-input');
-    const stripData = [];
+export function collectLineData() {
+    const lineInputs = document.querySelectorAll('.line-input');
+    const lineData = [];
 
-    stripInputs.forEach(input => {
+    lineInputs.forEach(input => {
         const value = input.value.trim();
-        stripData.push(value === '' ? null : parseInt(value, 10));
+        lineData.push(value === '' ? null : parseInt(value, 10));
     });
 
-    return stripData;
+    return lineData;
 }

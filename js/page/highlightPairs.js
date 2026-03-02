@@ -10,7 +10,7 @@ export const HIGHLIGHT_COLORS = [
 ];
 
 export function clearAllPairHighlighting() {
-    const allInputs = document.querySelectorAll('.big-input, .strip-input, .operand-input, .operation-input');
+    const allInputs = document.querySelectorAll('.big-input, .line-input, .operand-input, .operation-input');
     allInputs.forEach(input => {
         input.classList.remove('conflict-cell');
         // Remove any existing highlight colors
@@ -29,11 +29,11 @@ export function highlightbigNumberInputs(gridIndices, color) {
     });
 }
 
-export function highlightStripInputs(stripIndices, color) {
-    const stripInputs = document.querySelectorAll('.strip-input');
-    stripIndices.forEach(index => {
-        if (index >= 0 && index < stripInputs.length) {
-            stripInputs[index].parentElement.style.backgroundColor = color;
+export function highlightLineInputs(lineIndices, color) {
+    const lineInputs = document.querySelectorAll('.line-input');
+    lineIndices.forEach(index => {
+        if (index >= 0 && index < lineInputs.length) {
+            lineInputs[index].parentElement.style.backgroundColor = color;
         }
     });
 }
@@ -98,7 +98,7 @@ export function highlightSolutionPairs(solution) {
                 highlightbigNumberInputs([gridIndex, pairIndex], color);
                 
                 // Highlight the corresponding line positions
-                highlightStripInputs(lineIndices, color);
+                highlightLineInputs(lineIndices, color);
                 
                 colorIndex++;
             } else {

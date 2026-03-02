@@ -68,8 +68,8 @@ export function generatePartialSolutionTable(partialSolveArray) {
 }
 
 export function partialSolve() {
-    const demoModeState = getIsDemoMode(document.querySelectorAll('.big-input'), document.querySelectorAll('.strip-input'), document.querySelectorAll('.operand-input'), document.querySelectorAll('.operation-input'))
-    const dataResult = getPuzzle(demoModeState, document.querySelectorAll('.big-input'), document.querySelectorAll('.strip-input'));
+    const demoModeState = getIsDemoMode(document.querySelectorAll('.big-input'), document.querySelectorAll('.line-input'), document.querySelectorAll('.operand-input'), document.querySelectorAll('.operation-input'))
+    const dataResult = getPuzzle(demoModeState, document.querySelectorAll('.big-input'), document.querySelectorAll('.line-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo); }
 
     if (dataResult.error) {
@@ -78,7 +78,7 @@ export function partialSolve() {
     }
 
     // Get solution data
-    const solution = getSolution(dataResult.bigNumberData, dataResult.stripData);
+    const solution = getSolution(dataResult.bigNumberData, dataResult.lineData);
 
     if (solution === "invalid") {
         showError('There is no solution for this puzzle.');

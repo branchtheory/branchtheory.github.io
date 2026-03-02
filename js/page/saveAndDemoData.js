@@ -1,24 +1,17 @@
-export const DEMO_GRID_DATA = [23, 23, 26, 27, 27, 28, 29, 31, 92, 120, 126, 130, 132, 168, 180, 198];
-export const DEMO_STRIP_DATA = [4, null, 6, null, 9, 9, 10, 12, 13, null, null, null, null, null, 22, null];
+import { 
+    DEMO_GRID_DATA, 
+    DEMO_LINE_DATA,
+} from './getPuzzle.js';
 
 let originalGridData = [];
-let originalStripData = [];
+let originalLineData = [];
 let originalDataSaved = false; 
 let isDemoMode = false;
 
 export function getIsDemoMode() {
-    const bigNumberInputs = document.querySelectorAll('.big-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
-    const operandInputs = document.querySelectorAll('.operand-input');
-    const operationInputs = document.querySelectorAll('.operation-input');
-
-    const mainInputsEmpty = Array.from(bigNumberInputs).every(input => !input.value.trim()) &&
-                           Array.from(stripInputs).every(input => !input.value.trim());
+    const bigNumberInputs = Array.from(document.querySelectorAll('.big-input'));
     
-    const smallOpInputsEmpty = Array.from(operandInputs).every(input => !input.value.trim()) &&
-                              Array.from(operationInputs).every(input => !input.value.trim());
-    
-    return mainInputsEmpty && smallOpInputsEmpty;
+    return bigNumberInputs[0].placeholder !== ''; // could be any of them -- all placeholders should be ''s
 }
 
 export function setIsDemoMode(state) {
@@ -33,10 +26,10 @@ export function restoreOriginalData() {
         input.disabled = false;
     });
     
-    // Restore strip data
-    const stripInputs = document.querySelectorAll('.strip-input');
-    stripInputs.forEach((input, index) => {
-        input.value = originalStripData[index] || '';
+    // Restore line data
+    const lineInputs = document.querySelectorAll('.line-input');
+    lineInputs.forEach((input, index) => {
+        input.value = originalLineData[index] || '';
         input.disabled = false;
     });
     
@@ -67,9 +60,9 @@ export function clearAllData() {
         input.disabled = false;
     });
     
-    // Clear strip inputs
-    const stripInputs = document.querySelectorAll('.strip-input');
-    stripInputs.forEach(input => {
+    // Clear line inputs
+    const lineInputs = document.querySelectorAll('.line-input');
+    lineInputs.forEach(input => {
         input.value = '';
         input.disabled = false;
     });
@@ -89,14 +82,14 @@ export function clearAllData() {
     
     // Reset arrays
     originalGridData = [];
-    originalStripData = [];
+    originalLineData = [];
 
     bigNumberInputs.forEach((input, index) => {
     input.placeholder = DEMO_GRID_DATA[index] || '';
     });
     
-    stripInputs.forEach((input, index) => {
-        input.placeholder = DEMO_STRIP_DATA[index] || '';
+    lineInputs.forEach((input, index) => {
+        input.placeholder = DEMO_LINE_DATA[index] || '';
     });
 
     isDemoMode = false;
@@ -112,9 +105,9 @@ export function saveOriginalData() {
     const bigNumberInputs = document.querySelectorAll('.big-input');
     originalGridData = Array.from(bigNumberInputs).map(input => input.value);
     
-    // Save strip data
-    const stripInputs = document.querySelectorAll('.strip-input');
-    originalStripData = Array.from(stripInputs).map(input => input.value);
+    // Save line data
+    const lineInputs = document.querySelectorAll('.line-input');
+    originalLineData = Array.from(lineInputs).map(input => input.value);
     
     originalDataSaved = true;
 }

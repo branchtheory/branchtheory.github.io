@@ -1,17 +1,18 @@
 import { 
         validateAllFieldsFilled, 
-        validateStripSequential
+        validateLineSequential
 } from './validateInput.js';
 import { 
-        DEMO_GRID_DATA, 
-        DEMO_STRIP_DATA,
         getIsDemoMode,
         setIsDemoMode
 } from './saveAndDemoData.js';
 import {
         collectBigNumberData,
-        collectStripData
+        collectLineData
 } from './getPageData.js';
+
+export const DEMO_GRID_DATA = [23, 23, 26, 27, 27, 28, 29, 31, 92, 120, 126, 130, 132, 168, 180, 198];
+export const DEMO_LINE_DATA = [4, null, 6, null, 9, 9, 10, 12, 13, null, null, null, null, null, 22, null];
 
 export function getPuzzle() {
     const demoState = getIsDemoMode();
@@ -20,17 +21,17 @@ export function getPuzzle() {
     if (demoState) {
         return {
             bigNumberData: DEMO_GRID_DATA,
-            stripData: DEMO_STRIP_DATA
+            lineData: DEMO_LINE_DATA
         };
     }
     
     const bigNumberInput = document.querySelectorAll('.big-input');
     if (!validateAllFieldsFilled(bigNumberInput)) { return { error: 'Fill the big numbers in the grid first.' } } 
-    const stripInput = document.querySelectorAll('.strip-input');
-    if (!validateStripSequential(stripInput)) { return { error: 'Numbers in the bottom strip must be in ascending order.' } }
+    const lineInput = document.querySelectorAll('.line-input');
+    if (!validateLineSequential(lineInput)) { return { error: 'Numbers in the bottom line must be in ascending order.' } }
     
     return {
         bigNumberData: collectBigNumberData(),
-        stripData: collectStripData()
+        lineData: collectLineData()
     };
 }

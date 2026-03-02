@@ -5,8 +5,6 @@ import {
         generatePartialSolutionTable 
 } from './page/partialSolve.js';
 import {
-        DEMO_GRID_DATA, 
-        DEMO_STRIP_DATA,
         saveOriginalData,
         restoreOriginalData,
         clearAllData
@@ -20,15 +18,19 @@ import {
         checkUserSolution,
         highlightConflicts
 } from './page/check.js';
-import { getPuzzle } from './page/getPuzzle.js';
 import { 
-    clearAllPairHighlighting,
-    highlightSolutionPairs,
-    highlightPartialSolution
+        getPuzzle,
+        DEMO_GRID_DATA, 
+        DEMO_LINE_DATA,
+} from './page/getPuzzle.js';
+import { 
+        clearAllPairHighlighting,
+        highlightSolutionPairs,
+        highlightPartialSolution
 } from './page/highlightPairs.js';
 
 function clearAllHighlights() {
-        const allInputs = document.querySelectorAll('.big-input, .strip-input, .operand-input, .operation-input');
+        const allInputs = document.querySelectorAll('.big-input, .line-input, .operand-input, .operation-input');
     allInputs.forEach(input => {
         input.classList.remove('conflict-cell');
     });
@@ -40,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
         input.placeholder = DEMO_GRID_DATA[index] || '';
     });
     
-    const stripInputs = document.querySelectorAll('.strip-input');
-    stripInputs.forEach((input, index) => {
-        input.placeholder = DEMO_STRIP_DATA[index] || '';
+    const lineInputs = document.querySelectorAll('.line-input');
+    lineInputs.forEach((input, index) => {
+        input.placeholder = DEMO_LINE_DATA[index] || '';
     });
 
    setUpInputValidation();   
@@ -99,7 +101,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     
     saveOriginalData();
 
-    const solution = getSolution(dataResult.bigNumberData, dataResult.stripData);
+    const solution = getSolution(dataResult.bigNumberData, dataResult.lineData);
     
     if (solution === "invalid") {
         showError('There is no solution for this puzzle.');
@@ -111,19 +113,19 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     }
     
     const bigNumberInputs = document.querySelectorAll('.big-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
+    const lineInputs = document.querySelectorAll('.line-input');
 
     bigNumberInputs.forEach(input => {
         input.disabled = true;
     });
 
-    stripInputs.forEach(input => {
+    lineInputs.forEach(input => {
         input.disabled = true;
     });
     
     solution.lines[0].forEach((value, index) => {
-        if (index < stripInputs.length) {
-            stripInputs[index].value = value;
+        if (index < lineInputs.length) {
+            lineInputs[index].value = value;
         }
     });
     
@@ -174,10 +176,10 @@ document.getElementById('checkBtn').addEventListener('click', function() {
         return;
     }
 
-    const solution = getSolution(dataResult.bigNumberData, dataResult.stripData); 
+    const solution = getSolution(dataResult.bigNumberData, dataResult.lineData); 
 
     if (solution === "invalid") {
-        showError('Either there is no solution for this puzzle, or the strip is incorrect.');
+        showError('Either there is no solution for this puzzle, or the line is incorrect.');
         return;
     }
 

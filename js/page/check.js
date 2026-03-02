@@ -1,13 +1,13 @@
 import { 
-    collectOperationOperandData, 
-    collectStripData 
+    collectSmallCellData, 
+    collectLineData 
 } from './getPageData.js';
 
 export function findUniversalConflicts(solution) {
-    const allUserInputElements = Array.from(document.querySelectorAll('.strip-input, .operand-input, .operation-input'))
+    const allUserInputElements = Array.from(document.querySelectorAll('.line-input, .operand-input, .operation-input'))
         .filter(el => el.value.trim() !== '');
 
-    const operationOperandData = collectOperationOperandData("return as elements");
+    const smallCellData = collectSmallCellData("return as elements");
 
     const universalConflicts = [];
 
@@ -18,7 +18,7 @@ export function findUniversalConflicts(solution) {
             const solutionLine = solution.lines[i]; 
             const solutionGrid = solution.grids[i];
 
-            if (isElementCorrectForSolution(element, solutionLine, solutionGrid, operationOperandData)) {
+            if (isElementCorrectForSolution(element, solutionLine, solutionGrid, smallCellData)) {
                 isCorrectInAtLeastOneSolution = true;
                 break;
             }
@@ -32,17 +32,17 @@ export function findUniversalConflicts(solution) {
     return universalConflicts;
 }
 
-function isElementCorrectForSolution(element, solutionLine, solutionGrid, operationOperandData) {
-    if (element.classList.contains('strip-input')) {
-        const stripInputs = Array.from(document.querySelectorAll('.strip-input'));
-        const elIndex = stripInputs.indexOf(element);
+function isElementCorrectForSolution(element, solutionLine, solutionGrid, smallCellData) {
+    if (element.classList.contains('line-input')) {
+        const lineInputs = Array.from(document.querySelectorAll('.line-input'));
+        const elIndex = lineInputs.indexOf(element);
         if (elIndex > -1 && parseInt(element.value, 10) === solutionLine[elIndex]) {
             return true;
         }
     }
 
-    for (let i = 0; i < operationOperandData.length; i++) {
-        const gridCellElements = operationOperandData[i];
+    for (let i = 0; i < smallCellData.length; i++) {
+        const gridCellElements = smallCellData[i];
         const [solutionData] = solutionGrid[i].filter((pair) => pair.status === "selected");
 
         if (gridCellElements.operand1 === element || gridCellElements.operand2 === element) {
@@ -82,14 +82,14 @@ function isElementCorrectForSolution(element, solutionLine, solutionGrid, operat
 }
 
 export function checkUserSolution(solution) {
-    const userStrip = collectStripData();
-    const operationOperandData = collectOperationOperandData("return as values");
+    const userLine = collectLineData();
+    const smallCellData = collectSmallCellData("return as values");
 
     for (let i = 0; i < solution.grids.length; i++) {
         const solutionLine = solution.lines[i];
         const solutionGrid = solution.grids[i];
         
-        if (checkAgainstSingleSolution(userStrip, operationOperandData, solutionLine, solutionGrid)) {
+        if (checkAgainstSingleSolution(userLine, smallCellData, solutionLine, solutionGrid)) {
             return true;
         }
     }
@@ -97,15 +97,15 @@ export function checkUserSolution(solution) {
     return false;
 }
 
-function checkAgainstSingleSolution(userStrip, operationOperandData, solutionLine, solutionGrid) {
-    for (let i = 0; i < userStrip.length; i++) {
-        if (userStrip[i] !== null && userStrip[i] !== solutionLine[i]) {
+function checkAgainstSingleSolution(userLine, smallCellData, solutionLine, solutionGrid) {
+    for (let i = 0; i < userLine.length; i++) {
+        if (userLine[i] !== null && userLine[i] !== solutionLine[i]) {
             return false;
         }
     }
     
     for (let i = 0; i < 16; i++) {
-        const smallCells = operationOperandData[i];
+        const smallCells = smallCellData[i];
         const [solutionData] = solutionGrid[i].filter((pair) => pair.status === "selected");
         
         const userOperands = [];

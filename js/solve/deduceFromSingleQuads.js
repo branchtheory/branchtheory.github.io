@@ -9,7 +9,7 @@ import {
   pairSelectAndReject,
 } from './selectAndReject.js';
 
-export function deduceFromSingleQuads(branch, grid16, optionalSingleLocation, ns) {
+export function deduceFromSingleQuads(branch, grid16, optionalSingleLocation) {
   const singleQuadLocation = optionalSingleLocation ?? getSingleQuadLocation(branch, grid16);
   if (singleQuadLocation === NOT_FOUND) { return { branch: branch, furtherDeductions: false }; }
   const singleQuad = branch[singleQuadLocation.grid][singleQuadLocation.quad];

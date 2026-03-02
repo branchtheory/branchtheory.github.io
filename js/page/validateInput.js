@@ -7,10 +7,10 @@ export function validateAllFieldsFilled(bigNumberInputs) {
     return true;
 }
 
-export function validateStripSequential(stripInputs) {
+export function validateLineSequential(lineInputs) {
     const values = [];
     
-    stripInputs.forEach((input, index) => {
+    lineInputs.forEach((input, index) => {
         const value = input.value.trim();
         if (value) {
             values.push({ position: index, value: parseInt(value) });
@@ -26,12 +26,12 @@ export function validateStripSequential(stripInputs) {
         }
     }
     
-    for (let i = 0; i < stripInputs.length - 1; i++) {
-        const currentValue = stripInputs[i].value.trim();
+    for (let i = 0; i < lineInputs.length - 1; i++) {
+        const currentValue = lineInputs[i].value.trim();
         if (!currentValue) continue;
         
-        for (let j = i + 1; j < stripInputs.length; j++) {
-            const laterValue = stripInputs[j].value.trim();
+        for (let j = i + 1; j < lineInputs.length; j++) {
+            const laterValue = lineInputs[j].value.trim();
             if (!laterValue) continue;
             
             if (parseInt(currentValue) > parseInt(laterValue)) {
@@ -45,7 +45,7 @@ export function validateStripSequential(stripInputs) {
 
 export function setUpInputValidation() {
     const bigNumberInputs = document.querySelectorAll('.big-input');
-    const stripInputs = document.querySelectorAll('.strip-input');
+    const lineInputs = document.querySelectorAll('.line-input');
     
     function addValidationTo(selector, validationFn) {
         document.querySelectorAll(selector).forEach(input => {
@@ -59,7 +59,7 @@ export function setUpInputValidation() {
     addValidationTo('.operand-input', validateSmallInput);
     addValidationTo('.operation-input', validateOperationInput);
     addValidationTo('.big-input', validatebigNumberInput);
-    addValidationTo('.strip-input', validateStripInput);
+    addValidationTo('.line-input', validateLineInput);
 }
 
 export function validateSmallInput(event) {
@@ -98,7 +98,7 @@ function validatebigNumberInput(event) {
     input.value = cleanValue;
 }
 
-function validateStripInput(event) {
+function validateLineInput(event) {
     const input = event.target;
     const value = input.value;
     
@@ -119,8 +119,8 @@ function clearAllPlaceholders(inputs) {
 function clearAllPlaceholdersOnFirstInput(event) {
     if (event.target.value.length === 1) {
         const bigNumberInputs = document.querySelectorAll('.big-input');
-        const stripInputs = document.querySelectorAll('.strip-input');
+        const lineInputs = document.querySelectorAll('.line-input');
         clearAllPlaceholders(bigNumberInputs);
-        clearAllPlaceholders(stripInputs);
+        clearAllPlaceholders(lineInputs);
     }
 }

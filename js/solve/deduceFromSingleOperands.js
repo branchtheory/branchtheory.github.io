@@ -6,11 +6,11 @@ import {
 } from './sharedValuesAndTools.js';
 import { pairSelectAndReject } from './selectAndReject.js';
 
-export function deduceFromSingleOperands(branch, line16, ns) {
+export function deduceFromSingleOperands(branch, line16) {
 
 /*
 
-If the minimum number of times an operand that appears in the strip COULD appear in the strip equals the maximum
+If the minimum number of times an operand that appears in the line COULD appear in the line equals the maximum
 number of times that the grid items could use it, then go for it.
 
 So:

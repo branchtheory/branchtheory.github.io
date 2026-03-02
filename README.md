@@ -9,13 +9,15 @@ This ain't a readme.
 * Trigger: If a) all three small cells of a grid element hae some data in, b) One of the cells is selected, and c) THEN that cell is clicked out of (so that the input for none of the 3 cells is selected any more)
 * Action: Check whether the grid item is currently paired with any other grid item. If it is paired, check whether that pairing still obtains. If the pairing obtains, do nothing; if not, uncolour both this cell and its pair. If the cell is not paired (either because it's been unpaired, or was not paired to begin with), check whether the data in the small cells makes this grid item pair up with any other unpaired grid item. If so: 1) auto-fill the small cells of the other grid item, 2) colour both grid items. 
 - Nice quick one to start with: Grid auto influences crunched numbers (selected, rejected). Updates to the grid reflect too.
-## - Proper push and pull functions for the grid, strip and crunched
+## - Proper push and pull functions for the grid, line and crunched
 Push and pull from crunched only activates after it's created.
-## Auto-fill of strip if there's only one option
-## Better handling of strip being incorrect. Currently just says 'no solution for this puzzle'
+## Auto-fill of line if there's only one option
+## Better handling of line being incorrect. Currently just says 'no solution for this puzzle'
+## Better checking. Currently it just checks if something contradicts all solutions. But you could have a Frankenstein solution that combined different bits from different solution, and while all parts individually would be correct, as a whole it would not. Need some way to figure out what the BEST match is, and then compare to that? Trouble is you don't want to put people off potential solutions. Maybe if there's more than one solution, say explicitly: "This puzzle has more than one solution, so it's harder to check. Highlighted the bits that match NO solution. Also beware that your solution as a whole does not match any solution." Everything here matches at least one solution, but as a whole they don't"?
 
 # Bugs
 * Small cells are editable in the solved state
+* getIsDemoMode does not check if placeholders are actually present -- just if the grid's empty. So you can run solve on an empty grid with no placeholders, and it solves it as if the placeholders were there.
 
 # What the buttons should do
 ## Solve
