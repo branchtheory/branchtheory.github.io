@@ -17,7 +17,6 @@ Push and pull from crunched only activates after it's created.
 
 # Bugs
 * Small cells are editable in the solved state
-* getIsDemoMode does not check if placeholders are actually present -- just if the grid's empty. So you can run solve on an empty grid with no placeholders, and it solves it as if the placeholders were there.
 
 # What the buttons should do
 ## Solve

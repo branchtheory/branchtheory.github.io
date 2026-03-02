@@ -111,6 +111,13 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     if (solution.grids.length && solution.grids.length > 1) {
         showNotification(`This puzzle has ${solution.grids.length} solutions. Showing one of them.`);
     }
+
+    /*
+    const inputsToDisable = document.querySelectorAll('.big-input, .line-input, .operation-input, .operand-input');
+    inputsToDisable.forEach(input => {
+        input.disabled = true;
+    });
+    */
     
     const bigNumberInputs = document.querySelectorAll('.big-input');
     const lineInputs = document.querySelectorAll('.line-input');
