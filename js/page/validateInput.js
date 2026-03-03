@@ -56,10 +56,10 @@ export function setUpInputValidation() {
         });
     }
     
-    addValidationTo('.operand-input', validateSmallInput);
+    addValidationTo('.big-input', validateBigNumberInput);
     addValidationTo('.operation-input', validateOperationInput);
-    addValidationTo('.big-input', validatebigNumberInput);
-    addValidationTo('.line-input', validateLineInput);
+    addValidationTo('.operand-input', validateOperandInput);
+    addValidationTo('.line-input', validateOperandInput);
 }
 
 function validateNumericInput(event, maxLength) {
@@ -70,15 +70,11 @@ function validateNumericInput(event, maxLength) {
         .substring(0, maxLength);
 }
 
-export function validateSmallInput(event) {
-    validateNumericInput(event, 2);
-}
-
-function validatebigNumberInput(event) {
+function validateBigNumberInput(event) {
     validateNumericInput(event, 3);
 }
 
-function validateLineInput(event) {
+function validateOperandInput(event) {
     validateNumericInput(event, 2);
 }
 

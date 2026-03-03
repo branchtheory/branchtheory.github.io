@@ -88,11 +88,19 @@ function resolveGroup(cells, groupIndex, prevTr, changedInput) {
     }
     
     else if (hasBig && has1 && !has2 && hasOperation) {
-        operand2Input.value = isMultiplyOperation ? bigValue / val1 : bigValue - val1;
+        if (isMultiplyOperation && val1IsFactor) {
+            operand2Input.value = bigValue / val1;
+        } else if (!isMultiplyOperation) {
+            operand2Input.value = bigValue - val1;
+        }
     } else if (hasBig && !has1 && has2 && hasOperation) {
-        operand1Input.value = isMultiplyOperation ? bigValue / val2 : bigValue - val2;
+        if (isMultiplyOperation && val2IsFactor) {
+            operand1Input.value = bigValue / val2;
+        } else if (!isMultiplyOperation) {
+            operand1Input.value = bigValue - val2;
+        }
     }
-    
+
     else if (hasBig && has1 && !has2 && !hasOperation && val1CanOnlyAdd) {
         operationInput.value = '+';
         operand2Input.value = bigValue - val1;
