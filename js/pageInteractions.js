@@ -50,6 +50,39 @@ document.addEventListener('DOMContentLoaded', function() {
    setUpInputValidation();   
 });
 
+document.querySelectorAll('.operand-input').forEach(input => {
+    input.addEventListener('blur', () => {
+      const td = input.closest('td');
+      const tr = td.closest('tr');
+      const prevTr = tr.previousElementSibling;
+      if (!prevTr) return;
+  
+      const cells = Array.from(tr.children);
+      const cellIndex = cells.indexOf(td);
+
+      const groupIndex = Math.floor(cellIndex / 3);
+      const groupStart = groupIndex * 3;
+  
+      const operand1 = parseFloat(cells[groupStart].querySelector('.operand-input')?.value);
+      const operand2 = parseFloat(cells[groupStart + 2].querySelector('.operand-input')?.value);
+      const operationInput = cells[groupStart + 1].querySelector('.operation-input');
+  
+      const prevCells = Array.from(prevTr.children);
+      const bigInput = prevCells[groupIndex]?.querySelector('.big-input');
+      const bigValue = parseFloat(bigInput?.value);
+  
+      if (isNaN(bigValue) || !operationInput) return;
+
+      if (operand1 !== operand2) {
+        if (operand1 * operand2 === bigValue) {
+          operationInput.value = '×';
+        } else if (operand1 + operand2 === bigValue) {
+          operationInput.value = '+';
+        }
+      }
+    });
+  });
+
 document.getElementById('unsolveBtn').addEventListener('click', function() {
     clearAllHighlights();
     clearAllPairHighlighting()
