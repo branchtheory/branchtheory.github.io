@@ -3,7 +3,7 @@ import {
         getIsDemoMode,
         setIsDemoMode,
         saveOriginalData
-} from './saveAndDemoData.js';
+} from './saveAndRestore.js';
 import {
         showError,
         showNotification

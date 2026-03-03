@@ -8,7 +8,7 @@ import {
         saveOriginalData,
         restoreOriginalData,
         clearAllData
-} from './page/saveAndDemoData.js';
+} from './page/saveAndRestore.js';
 import {
         showError,
         showNotification
@@ -26,23 +26,23 @@ import {
 import { 
         clearAllPairHighlighting,
         highlightSolutionPairs,
-        highlightPartialSolution
 } from './page/highlightPairs.js';
 
+const bigNumberInputs = document.querySelectorAll('.big-input');
+const lineInputs = document.querySelectorAll('.line-input');
+const allInputs = document.querySelectorAll('.big-input, .line-input, .operand-input, .operation-input');
+
 function clearAllHighlights() {
-        const allInputs = document.querySelectorAll('.big-input, .line-input, .operand-input, .operation-input');
     allInputs.forEach(input => {
         input.classList.remove('conflict-cell');
     });
 }
         
 document.addEventListener('DOMContentLoaded', function() {
-    const bigNumberInputs = document.querySelectorAll('.big-input');
     bigNumberInputs.forEach((input, index) => {
         input.placeholder = DEMO_GRID_DATA[index] || '';
     });
     
-    const lineInputs = document.querySelectorAll('.line-input');
     lineInputs.forEach((input, index) => {
         input.placeholder = DEMO_LINE_DATA[index] || '';
     });
@@ -87,6 +87,18 @@ document.getElementById('partialSolveBtn').addEventListener('click', function() 
     partialSolve();
 });
 
+
+function updateSolveBtn() {
+    const bigInputAllFilled = [...bigNumberInputs].every(input => input.value.trim() !== '');
+    document.getElementById('partialSolveBtn').disabled = !bigInputAllFilled;
+    document.getElementById('solveBtn').disabled = !bigInputAllFilled;
+    document.getElementById('checkBtn').disabled = !bigInputAllFilled;
+}
+
+allInputs.forEach(input => {
+    input.addEventListener('input', updateSolveBtn);
+});
+
 document.getElementById('solveBtn').addEventListener('click', function() {
     clearAllHighlights();
     document.getElementById('notificationMessage').style.display = 'none';
@@ -112,21 +124,7 @@ document.getElementById('solveBtn').addEventListener('click', function() {
         showNotification(`This puzzle has ${solution.grids.length} solutions. Showing one of them.`);
     }
 
-    /*
-    const inputsToDisable = document.querySelectorAll('.big-input, .line-input, .operation-input, .operand-input');
-    inputsToDisable.forEach(input => {
-        input.disabled = true;
-    });
-    */
-    
-    const bigNumberInputs = document.querySelectorAll('.big-input');
-    const lineInputs = document.querySelectorAll('.line-input');
-
-    bigNumberInputs.forEach(input => {
-        input.disabled = true;
-    });
-
-    lineInputs.forEach(input => {
+    allInputs.forEach(input => {
         input.disabled = true;
     });
     

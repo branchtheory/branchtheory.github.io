@@ -5,7 +5,7 @@ import {
 import { 
         getIsDemoMode,
         setIsDemoMode
-} from './saveAndDemoData.js';
+} from './saveAndRestore.js';
 import {
         collectBigNumberData,
         collectLineData

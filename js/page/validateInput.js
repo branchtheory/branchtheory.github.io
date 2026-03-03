@@ -110,6 +110,8 @@ function validateLineInput(event) {
     input.value = cleanValue;
 }
 
+// These don't belong here! Not sure where to put them though.
+
 function clearAllPlaceholders(inputs) {
     inputs.forEach(input => {
         input.placeholder = '';
