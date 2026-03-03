@@ -64,10 +64,13 @@ function resolveGroup(cells, groupIndex, prevTr, changedInput) {
     const val2 = parseFloat(operand2Input?.value);
     const operation = operationInput?.value;
     const bigValue = parseFloat(bigInput?.value);
+
     const val1IsFactor = bigValue % val1 === 0;
     const val2IsFactor = bigValue % val2 === 0;
-    const val1CanOnlyAdd = !val1IsFactor && val1 < bigValue && bigValue - val1 < 100;
-    const val2CanOnlyAdd = !val2IsFactor && val2 < bigValue && bigValue - val2 < 100;
+    const val1CanAdd = val1 < bigValue && bigValue - val1 < 100;
+    const val2CanAdd = val2 < bigValue && bigValue - val2 < 100;
+    const val1CanOnlyAdd = !val1IsFactor && val1CanAdd;
+    const val2CanOnlyAdd = !val2IsFactor && val2CanAdd;
 
     const has1 = !isNaN(val1);
     const has2 = !isNaN(val2);
@@ -90,13 +93,13 @@ function resolveGroup(cells, groupIndex, prevTr, changedInput) {
     else if (hasBig && has1 && !has2 && hasOperation) {
         if (isMultiplyOperation && val1IsFactor) {
             operand2Input.value = bigValue / val1;
-        } else if (!isMultiplyOperation) {
+        } else if (!isMultiplyOperation && val1CanAdd) {
             operand2Input.value = bigValue - val1;
         }
     } else if (hasBig && !has1 && has2 && hasOperation) {
         if (isMultiplyOperation && val2IsFactor) {
             operand1Input.value = bigValue / val2;
-        } else if (!isMultiplyOperation) {
+        } else if (!isMultiplyOperation && val2CanAdd) {
             operand1Input.value = bigValue - val2;
         }
     }
@@ -110,10 +113,10 @@ function resolveGroup(cells, groupIndex, prevTr, changedInput) {
     }
 
     else if (hasBig && has1 && has2 && hasOperation) {
-        if (changedInput === operand1Input && (val1CanOnlyAdd || !isMultiplyOperation)) {
+        if (changedInput === operand1Input && (val1CanOnlyAdd || (!isMultiplyOperation && val1CanAdd))) {
             operationInput.value = '+';
             operand2Input.value = bigValue - val1;
-        } else if (changedInput === operand2Input && (val1CanOnlyAdd || !isMultiplyOperation)) {
+        } else if (changedInput === operand2Input && (val1CanOnlyAdd || (!isMultiplyOperation && val1CanAdd))) {
             operationInput.value = '+';
             operand1Input.value = bigValue - val2;
         }
