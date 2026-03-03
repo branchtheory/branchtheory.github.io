@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
    setUpInputValidation();   
 });
 
-function resolveGroup(cells, groupIndex, prevTr) {
+function resolveGroup(cells, groupIndex, prevTr, changedInput) {
     const groupStart = groupIndex * 3;
 
     const operand1Input = cells[groupStart].querySelector('.operand-input');
@@ -85,44 +85,61 @@ function resolveGroup(cells, groupIndex, prevTr) {
             operand2Input.value = /[×xX]/.test(operation) ? bigValue / val1 : bigValue - val1;
         } else if (!has1 && has2 && hasOperation) {
             operand1Input.value = /[×xX]/.test(operation) ? bigValue / val2 : bigValue - val2;
-        } else if (has1 && !has2 && !hasOperation && !val1IsFactorOfBig && (bigValue - val1 < 100)) {
+        } else if (has1 && !has2 && !hasOperation && !val1IsFactorOfBig && (bigValue - val1 < 100 && bigValue - val1 > 0)) {
             operationInput.value = '+';
             operand2Input.value = bigValue - val1;
-        } else if (has1 && !has2 && !hasOperation && !val2IsFactorOfBig && (bigValue - val2 < 100)) {
+        } else if (has1 && !has2 && !hasOperation && !val2IsFactorOfBig && (bigValue - val2 < 100 && bigValue - val2 > 0)) {
             operationInput.value = '+';
             operand1Input.value = bigValue - val2;
         }
     }   
+
+    if (has1 && has2 && hasBig && hasOperation) {
+        if (changedInput === operand1Input && !val1IsFactorOfBig && (bigValue - val1 < 100 && bigValue - val1 > 0)) {
+            operationInput.value = '+';
+            operand2Input.value = bigValue - val1;
+        } else if (changedInput === operand2Input && !val2IsFactorOfBig && (bigValue - val2 < 100 && bigValue - val2 > 0)) {
+            operationInput.value = '+';
+            operand1Input.value = bigValue - val2;
+        }
+    }
 }
 
 let debounceTimer;
+
+function handleInput(input) {
+    const td = input.closest('td');
+    const isBigInput = input.classList.contains('big-input');
+
+    if (isBigInput) {
+        const tr = td.closest('tr');
+        const nextTr = tr.nextElementSibling;
+        if (!nextTr) return;
+        const cells = Array.from(nextTr.children);
+        const prevCells = Array.from(tr.children);
+        const groupIndex = Array.from(prevCells).indexOf(td);
+        resolveGroup(cells, groupIndex, tr, input);
+    } else {
+        const tr = td.closest('tr');
+        const prevTr = tr.previousElementSibling;
+        if (!prevTr) return;
+        const cells = Array.from(tr.children);
+        const cellIndex = cells.indexOf(td);
+        const groupIndex = Math.floor(cellIndex / 3);
+        resolveGroup(cells, groupIndex, prevTr, input);
+    }
+}
 
 document.querySelectorAll('.big-input, .operand-input, .operation-input').forEach(input => {
     input.addEventListener('input', (e) => {
         if (e.inputType.startsWith('delete')) return;
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            const td = input.closest('td');
-            const isBigInput = input.classList.contains('big-input');
-    
-            if (isBigInput) {
-                const tr = td.closest('tr');
-                const nextTr = tr.nextElementSibling;
-                if (!nextTr) return;
-                const cells = Array.from(nextTr.children);
-                const prevCells = Array.from(tr.children);
-                const groupIndex = Array.from(prevCells).indexOf(td);
-                resolveGroup(cells, groupIndex, tr);
-            } else {
-                const tr = td.closest('tr');
-                const prevTr = tr.previousElementSibling;
-                if (!prevTr) return;
-                const cells = Array.from(tr.children);
-                const cellIndex = cells.indexOf(td);
-                const groupIndex = Math.floor(cellIndex / 3);
-                resolveGroup(cells, groupIndex, prevTr);
-            }
-        }, 700);
+        debounceTimer = setTimeout(() => handleInput(input), 700);
+    });
+
+    input.addEventListener('blur', () => {
+        clearTimeout(debounceTimer);
+        handleInput(input);
     });
 });
 
