@@ -64,8 +64,10 @@ export function setUpInputValidation() {
 
 function validateNumericInput(event, maxLength) {
     const input = event.target;
-    let cleanValue = input.value.replace(/\D/g, '').replace(/^0+/, '');
-    input.value = cleanValue.substring(0, maxLength);
+    input.value = input.value
+        .replace(/\D/g, '')
+        .replace(/^0+/, '')
+        .substring(0, maxLength);
 }
 
 export function validateSmallInput(event) {
@@ -82,14 +84,10 @@ function validateLineInput(event) {
 
 function validateOperationInput(event) {
     const input = event.target;
-    const value = input.value;
-    
-    let cleanValue = value.replace(/[^+x*X×]/g, '');
-    if (cleanValue.length > 1) {
-        cleanValue = cleanValue.substring(0, 1);
-    }
-    
-    input.value = cleanValue;
+    input.value = input.value
+        .replace(/[^+x*X×]/g, '')
+        .replace(/[x*X]/, '×')
+        .substring(0, 1);
 }
 
 // These don't belong here! Not sure where to put them though.
