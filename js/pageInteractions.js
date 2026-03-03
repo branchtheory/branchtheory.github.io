@@ -50,38 +50,81 @@ document.addEventListener('DOMContentLoaded', function() {
    setUpInputValidation();   
 });
 
-document.querySelectorAll('.operand-input').forEach(input => {
-    input.addEventListener('blur', () => {
-      const td = input.closest('td');
-      const tr = td.closest('tr');
-      const prevTr = tr.previousElementSibling;
-      if (!prevTr) return;
-  
-      const cells = Array.from(tr.children);
-      const cellIndex = cells.indexOf(td);
+function resolveGroup(cells, groupIndex, prevTr) {
+    const groupStart = groupIndex * 3;
 
-      const groupIndex = Math.floor(cellIndex / 3);
-      const groupStart = groupIndex * 3;
-  
-      const operand1 = parseFloat(cells[groupStart].querySelector('.operand-input')?.value);
-      const operand2 = parseFloat(cells[groupStart + 2].querySelector('.operand-input')?.value);
-      const operationInput = cells[groupStart + 1].querySelector('.operation-input');
-  
-      const prevCells = Array.from(prevTr.children);
-      const bigInput = prevCells[groupIndex]?.querySelector('.big-input');
-      const bigValue = parseFloat(bigInput?.value);
-  
-      if (isNaN(bigValue) || !operationInput) return;
+    const operand1Input = cells[groupStart].querySelector('.operand-input');
+    const operand2Input = cells[groupStart + 2].querySelector('.operand-input');
+    const operationInput = cells[groupStart + 1].querySelector('.operation-input');
 
-      if (operand1 !== operand2) {
-        if (operand1 * operand2 === bigValue) {
-          operationInput.value = '×';
-        } else if (operand1 + operand2 === bigValue) {
-          operationInput.value = '+';
+    const prevCells = Array.from(prevTr.children);
+    const bigInput = prevCells[groupIndex]?.querySelector('.big-input');
+
+    const val1 = parseFloat(operand1Input?.value);
+    const val2 = parseFloat(operand2Input?.value);
+    const operation = operationInput?.value;
+    const bigValue = parseFloat(bigInput?.value);
+    const val1IsFactorOfBig = bigValue % val1 === 0;
+    const val2IsFactorOfBig = bigValue % val2 === 0;
+
+    const has1 = !isNaN(val1);
+    const has2 = !isNaN(val2);
+    const hasBig = !isNaN(bigValue);
+    const hasOperation = /[×xX*+]/.test(operation);
+
+    if (has1 && has2 && hasOperation && !hasBig) {
+        bigInput.value = /[×xX*]/.test(operation) ? val1 * val2 : val1 + val2;
+        return;
+    }
+
+    if (hasBig && bigValue !== 4) {
+        if (has1 && has2 && !hasOperation) {
+            if (val1 * val2 === bigValue) operationInput.value = '×';
+            else if (val1 + val2 === bigValue) operationInput.value = '+';
+        } else if (has1 && !has2 && hasOperation) {
+            operand2Input.value = /[×xX]/.test(operation) ? bigValue / val1 : bigValue - val1;
+        } else if (!has1 && has2 && hasOperation) {
+            operand1Input.value = /[×xX]/.test(operation) ? bigValue / val2 : bigValue - val2;
+        } else if (has1 && !has2 && !hasOperation && !val1IsFactorOfBig && (bigValue - val1 < 100)) {
+            operationInput.value = '+';
+            operand2Input.value = bigValue - val1;
+        } else if (has1 && !has2 && !hasOperation && !val2IsFactorOfBig && (bigValue - val2 < 100)) {
+            operationInput.value = '+';
+            operand1Input.value = bigValue - val2;
         }
-      }
+    }   
+}
+
+let debounceTimer;
+
+document.querySelectorAll('.big-input, .operand-input, .operation-input').forEach(input => {
+    input.addEventListener('input', (e) => {
+        if (e.inputType.startsWith('delete')) return;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            const td = input.closest('td');
+            const isBigInput = input.classList.contains('big-input');
+    
+            if (isBigInput) {
+                const tr = td.closest('tr');
+                const nextTr = tr.nextElementSibling;
+                if (!nextTr) return;
+                const cells = Array.from(nextTr.children);
+                const prevCells = Array.from(tr.children);
+                const groupIndex = Array.from(prevCells).indexOf(td);
+                resolveGroup(cells, groupIndex, tr);
+            } else {
+                const tr = td.closest('tr');
+                const prevTr = tr.previousElementSibling;
+                if (!prevTr) return;
+                const cells = Array.from(tr.children);
+                const cellIndex = cells.indexOf(td);
+                const groupIndex = Math.floor(cellIndex / 3);
+                resolveGroup(cells, groupIndex, prevTr);
+            }
+        }, 700);
     });
-  });
+});
 
 document.getElementById('unsolveBtn').addEventListener('click', function() {
     clearAllHighlights();
@@ -217,7 +260,7 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     const solution = getSolution(dataResult.bigNumberData, dataResult.lineData); 
 
     if (solution === "invalid") {
-        showError('Either there is no solution for this puzzle, or the line is incorrect.');
+        showError('Either there is no solution for this puzzle, or some of the numbers in the strip at the bottom are incorrect.');
         return;
     }
 
