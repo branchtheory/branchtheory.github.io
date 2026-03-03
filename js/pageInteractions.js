@@ -110,10 +110,10 @@ function resolveGroup(cells, groupIndex, prevTr, changedInput) {
     }
 
     else if (hasBig && has1 && has2 && hasOperation) {
-        if (changedInput === operand1Input && val1CanOnlyAdd) {
+        if (changedInput === operand1Input && (val1CanOnlyAdd || !isMultiplyOperation)) {
             operationInput.value = '+';
             operand2Input.value = bigValue - val1;
-        } else if (changedInput === operand2Input && val2CanOnlyAdd) {
+        } else if (changedInput === operand2Input && (val1CanOnlyAdd || !isMultiplyOperation)) {
             operationInput.value = '+';
             operand1Input.value = bigValue - val2;
         }
