@@ -62,16 +62,22 @@ export function setUpInputValidation() {
     addValidationTo('.line-input', validateLineInput);
 }
 
-export function validateSmallInput(event) {
+function validateNumericInput(event, maxLength) {
     const input = event.target;
-    const value = input.value;
-    
-    let cleanValue = value.replace(/\D/g, '');
-    if (cleanValue.length > 2) {
-        cleanValue = cleanValue.substring(0, 2);
-    }
-    
-    input.value = cleanValue;
+    let cleanValue = input.value.replace(/\D/g, '').replace(/^0+/, '');
+    input.value = cleanValue.substring(0, maxLength);
+}
+
+export function validateSmallInput(event) {
+    validateNumericInput(event, 2);
+}
+
+function validatebigNumberInput(event) {
+    validateNumericInput(event, 3);
+}
+
+function validateLineInput(event) {
+    validateNumericInput(event, 2);
 }
 
 function validateOperationInput(event) {
@@ -81,30 +87,6 @@ function validateOperationInput(event) {
     let cleanValue = value.replace(/[^+x*X×]/g, '');
     if (cleanValue.length > 1) {
         cleanValue = cleanValue.substring(0, 1);
-    }
-    
-    input.value = cleanValue;
-}
-
-function validatebigNumberInput(event) {
-    const input = event.target;
-    const value = input.value;
-    
-    let cleanValue = value.replace(/\D/g, '');
-    if (cleanValue.length > 3) {
-        cleanValue = cleanValue.substring(0, 3);
-    }
-    
-    input.value = cleanValue;
-}
-
-function validateLineInput(event) {
-    const input = event.target;
-    const value = input.value;
-    
-    let cleanValue = value.replace(/\D/g, '');
-    if (cleanValue.length > 2) {
-        cleanValue = cleanValue.substring(0, 2);
     }
     
     input.value = cleanValue;

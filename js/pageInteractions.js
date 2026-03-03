@@ -64,48 +64,59 @@ function resolveGroup(cells, groupIndex, prevTr, changedInput) {
     const val2 = parseFloat(operand2Input?.value);
     const operation = operationInput?.value;
     const bigValue = parseFloat(bigInput?.value);
-    const val1IsFactorOfBig = bigValue % val1 === 0;
-    const val2IsFactorOfBig = bigValue % val2 === 0;
+    const val1IsFactor = bigValue % val1 === 0;
+    const val2IsFactor = bigValue % val2 === 0;
+    const val1CanOnlyAdd = !val1IsFactor && val1 < bigValue && bigValue - val1 < 100;
+    const val2CanOnlyAdd = !val2IsFactor && val2 < bigValue && bigValue - val2 < 100;
 
     const has1 = !isNaN(val1);
     const has2 = !isNaN(val2);
     const hasBig = !isNaN(bigValue);
     const hasOperation = /[×xX*+]/.test(operation);
+    const isMultiplyOperation = /[×xX*]/.test(operation);
 
-    if (has1 && has2 && hasOperation && !hasBig) {
-        bigInput.value = /[×xX*]/.test(operation) ? val1 * val2 : val1 + val2;
+    if (bigValue === 4) return;
+
+    else if (!hasBig && has1 && has2 && hasOperation) {
+        bigInput.value = isMultiplyOperation ? val1 * val2 : val1 + val2;
         return;
     }
 
-    if (hasBig && bigValue !== 4) {
-        if (has1 && has2 && !hasOperation) {
-            if (val1 * val2 === bigValue) operationInput.value = '×';
-            else if (val1 + val2 === bigValue) operationInput.value = '+';
-        } else if (has1 && !has2 && hasOperation) {
-            operand2Input.value = /[×xX]/.test(operation) ? bigValue / val1 : bigValue - val1;
-        } else if (!has1 && has2 && hasOperation) {
-            operand1Input.value = /[×xX]/.test(operation) ? bigValue / val2 : bigValue - val2;
-        } else if (has1 && !has2 && !hasOperation && !val1IsFactorOfBig && (bigValue - val1 < 100 && bigValue - val1 > 0)) {
+    else if (hasBig && has1 && has2 && !hasOperation) {
+        if (val1 * val2 === bigValue) operationInput.value = '×';
+        else if (val1 + val2 === bigValue) operationInput.value = '+';
+    }
+    
+    else if (hasBig && has1 && !has2 && hasOperation) {
+        operand2Input.value = isMultiplyOperation ? bigValue / val1 : bigValue - val1;
+    } else if (hasBig && !has1 && has2 && hasOperation) {
+        operand1Input.value = isMultiplyOperation ? bigValue / val2 : bigValue - val2;
+    }
+    
+    else if (hasBig && has1 && !has2 && !hasOperation && val1CanOnlyAdd) {
+        operationInput.value = '+';
+        operand2Input.value = bigValue - val1;
+    } else if (hasBig && !has1 && has2 && !hasOperation && val2CanOnlyAdd) {
+        operationInput.value = '+';
+        operand1Input.value = bigValue - val2;
+    }
+
+    else if (hasBig && has1 && has2 && hasOperation) {
+        if (changedInput === operand1Input && val1CanOnlyAdd) {
             operationInput.value = '+';
             operand2Input.value = bigValue - val1;
-        } else if (has1 && !has2 && !hasOperation && !val2IsFactorOfBig && (bigValue - val2 < 100 && bigValue - val2 > 0)) {
+        } else if (changedInput === operand2Input && val2CanOnlyAdd) {
             operationInput.value = '+';
             operand1Input.value = bigValue - val2;
         }
-    }   
 
-    if (has1 && has2 && hasBig && hasOperation) {
-        if (changedInput === operand1Input && !val1IsFactorOfBig && (bigValue - val1 < 100 && bigValue - val1 > 0)) {
-            operationInput.value = '+';
-            operand2Input.value = bigValue - val1;
-        } else if (changedInput === operand2Input && !val2IsFactorOfBig && (bigValue - val2 < 100 && bigValue - val2 > 0)) {
-            operationInput.value = '+';
-            operand1Input.value = bigValue - val2;
+        else if (changedInput === operand1Input && isMultiplyOperation && val1IsFactor) {
+            operand2Input.value = bigValue / val1;
+        } else if (changedInput === operand2Input && isMultiplyOperation && val2IsFactor) {
+            operand1Input.value = bigValue / val2;
         }
     }
 }
-
-let debounceTimer;
 
 function handleInput(input) {
     const td = input.closest('td');
@@ -131,14 +142,16 @@ function handleInput(input) {
 }
 
 document.querySelectorAll('.big-input, .operand-input, .operation-input').forEach(input => {
+    input.dataset.lastInputType = '';
+
     input.addEventListener('input', (e) => {
+        input.dataset.lastInputType = e.inputType;
         if (e.inputType.startsWith('delete')) return;
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => handleInput(input), 700);
+        handleInput(input);
     });
 
     input.addEventListener('blur', () => {
-        clearTimeout(debounceTimer);
+        if (input.dataset.lastInputType.startsWith('delete')) return;
         handleInput(input);
     });
 });
