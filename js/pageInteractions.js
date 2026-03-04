@@ -1,5 +1,9 @@
-import { getSolution } from './solve/solve.js';
-import { setUpInputValidation } from './page/validateInput.js';
+import { 
+        getSolution 
+} from './solve/solve.js';
+import { 
+        setUpInputValidation 
+} from './page/validateInput.js';
 import { 
         partialSolve,
         generatePartialSolutionTable 
@@ -27,6 +31,12 @@ import {
         clearAllPairHighlighting,
         highlightSolutionPairs,
 } from './page/highlightPairs.js';
+import { 
+        autoFillWithinQuad 
+} from './page/autoFillWithinQuads.js';
+import { 
+        moveToNextCell
+} from './page/moveToNextCellBehaviour.js'; 
 
 const bigNumberInputs = document.querySelectorAll('.big-input');
 const lineInputs = document.querySelectorAll('.line-input');
@@ -50,179 +60,27 @@ document.addEventListener('DOMContentLoaded', function() {
    setUpInputValidation();   
 });
 
-function resolveGroup(cells, groupIndex, prevTr, changedInput) {
-    const groupStart = groupIndex * 3;
-
-    const operand1Input = cells[groupStart].querySelector('.operand-input');
-    const operand2Input = cells[groupStart + 2].querySelector('.operand-input');
-    const operationInput = cells[groupStart + 1].querySelector('.operation-input');
-
-    const prevCells = Array.from(prevTr.children);
-    const bigInput = prevCells[groupIndex]?.querySelector('.big-input');
-
-    const val1 = parseFloat(operand1Input?.value);
-    const val2 = parseFloat(operand2Input?.value);
-    const operation = operationInput?.value;
-    const bigValue = parseFloat(bigInput?.value);
-
-    const val1IsFactor = bigValue % val1 === 0;
-    const val2IsFactor = bigValue % val2 === 0;
-    const val1CanAdd = val1 < bigValue && bigValue - val1 < 100;
-    const val2CanAdd = val2 < bigValue && bigValue - val2 < 100;
-    const val1CanOnlyAdd = !val1IsFactor && val1CanAdd;
-    const val2CanOnlyAdd = !val2IsFactor && val2CanAdd;
-
-    const has1 = !isNaN(val1);
-    const has2 = !isNaN(val2);
-    const hasBig = !isNaN(bigValue);
-    const hasOperation = /[×xX*+]/.test(operation);
-    const isMultiplyOperation = /[×xX*]/.test(operation);
-
-    if (bigValue === 4) return;
-
-    else if (!hasBig && has1 && has2 && hasOperation) {
-        bigInput.value = isMultiplyOperation ? val1 * val2 : val1 + val2;
-        return;
-    }
-
-    else if (hasBig && has1 && has2 && !hasOperation) {
-        if (val1 * val2 === bigValue) operationInput.value = '×';
-        else if (val1 + val2 === bigValue) operationInput.value = '+';
-    }
-    
-    else if (hasBig && has1 && !has2 && hasOperation) {
-        if (isMultiplyOperation && val1IsFactor) {
-            operand2Input.value = bigValue / val1;
-        } else if (!isMultiplyOperation && val1CanAdd) {
-            operand2Input.value = bigValue - val1;
-        }
-    } else if (hasBig && !has1 && has2 && hasOperation) {
-        if (isMultiplyOperation && val2IsFactor) {
-            operand1Input.value = bigValue / val2;
-        } else if (!isMultiplyOperation && val2CanAdd) {
-            operand1Input.value = bigValue - val2;
-        }
-    }
-
-    else if (hasBig && has1 && !has2 && !hasOperation && val1CanOnlyAdd) {
-        operationInput.value = '+';
-        operand2Input.value = bigValue - val1;
-    } else if (hasBig && !has1 && has2 && !hasOperation && val2CanOnlyAdd) {
-        operationInput.value = '+';
-        operand1Input.value = bigValue - val2;
-    }
-
-    else if (hasBig && has1 && has2 && hasOperation) {
-        if (changedInput === operand1Input && (val1CanOnlyAdd || (!isMultiplyOperation && val1CanAdd))) {
-            operationInput.value = '+';
-            operand2Input.value = bigValue - val1;
-        } else if (changedInput === operand2Input && (val1CanOnlyAdd || (!isMultiplyOperation && val1CanAdd))) {
-            operationInput.value = '+';
-            operand1Input.value = bigValue - val2;
-        }
-
-        else if (changedInput === operand1Input && isMultiplyOperation && val1IsFactor) {
-            operand2Input.value = bigValue / val1;
-        } else if (changedInput === operand2Input && isMultiplyOperation && val2IsFactor) {
-            operand1Input.value = bigValue / val2;
-        }
-    }
-}
-
-function handleInput(input) {
-    const td = input.closest('td');
-    const isBigInput = input.classList.contains('big-input');
-
-    if (isBigInput) {
-        const tr = td.closest('tr');
-        const nextTr = tr.nextElementSibling;
-        if (!nextTr) return;
-        const cells = Array.from(nextTr.children);
-        const prevCells = Array.from(tr.children);
-        const groupIndex = Array.from(prevCells).indexOf(td);
-        resolveGroup(cells, groupIndex, tr, input);
-    } else {
-        const tr = td.closest('tr');
-        const prevTr = tr.previousElementSibling;
-        if (!prevTr) return;
-        const cells = Array.from(tr.children);
-        const cellIndex = cells.indexOf(td);
-        const groupIndex = Math.floor(cellIndex / 3);
-        resolveGroup(cells, groupIndex, prevTr, input);
-    }
-}
-
 document.querySelectorAll('.big-input, .operand-input, .operation-input').forEach(input => {
     input.dataset.lastInputType = '';
 
     input.addEventListener('input', (e) => {
         input.dataset.lastInputType = e.inputType;
         if (e.inputType.startsWith('delete')) return;
-        handleInput(input);
+        autoFillWithinQuad(input);
     });
 
     input.addEventListener('blur', () => {
         if (input.dataset.lastInputType.startsWith('delete')) return;
-        handleInput(input);
+        autoFillWithinQuad(input);
     });
 });
 
 document.addEventListener('keydown', function(e) {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-  
-    const allInputs = Array.from(document.querySelectorAll('.main-grid input, .bottom-line input'));
-    const index = allInputs.indexOf(e.target);
-    if (index === -1) return;
-  
-    const bigInputs = Array.from(document.querySelectorAll('.main-grid .big-input'));
-    const smallInputs = Array.from(document.querySelectorAll('.main-grid .operand-input, .main-grid .operation-input'));
-    const bottomInputs = Array.from(document.querySelectorAll('.bottom-line .line-input'));
-  
-    const isBig = e.target.classList.contains('big-input');
-    const isSmall = e.target.classList.contains('operand-input') || e.target.classList.contains('operation-input');
-    const isBottom = e.target.classList.contains('line-input');
-  
-    const ROW_SIZE = 4; // 4 inputs per big-input row, 12 inputs per small-cell row (3 per group × 4 groups... wait)
-  
-    e.preventDefault();
-  
-    if (isBig) {
-        const bigIndex = bigInputs.indexOf(e.target);
-        const posInRow = bigIndex % 4;
-        const isLastInRow = posInRow === 3;
-    
-        if (!isLastInRow) {
-            bigInputs[bigIndex + 1].focus();
-        } else {
-            const nextRowStart = bigIndex + 1;
-            if (nextRowStart < bigInputs.length) {
-                bigInputs[nextRowStart].focus();
-            } else {
-                bottomInputs[0].focus();
-            }
-        }
-    } else if (isSmall) {
-        const smallIndex = smallInputs.indexOf(e.target);
-        const posInRow = smallIndex % 12;
-        const isLastInRow = posInRow === 11;
-    
-        if (!isLastInRow) {
-          smallInputs[smallIndex + 1].focus();
-        } else {
-          const nextRowStart = smallIndex + 1;
-          if (nextRowStart < smallInputs.length) {
-            smallInputs[nextRowStart].focus();
-          } else {
-            bottomInputs[0].focus();
-          }
-        }
-    } else if (isBottom) {
-        const bottomIndex = bottomInputs.indexOf(e.target);
-        if (bottomIndex < bottomInputs.length - 1) {
-            bottomInputs[bottomIndex + 1].focus();
-        }
+    if (e.key === 'Enter' || e.key === ' ' || e.key === "Tab") {
+        moveToNextCell(e);
     }
 });
+
 
 document.getElementById('unsolveBtn').addEventListener('click', function() {
     clearAllHighlights();
