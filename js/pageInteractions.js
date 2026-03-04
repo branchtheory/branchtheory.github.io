@@ -76,11 +76,16 @@ document.querySelectorAll('.big-input, .operand-input, .operation-input').forEac
 });
 
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ' || e.key === "Tab") {
+    if (e.key === "Tab") {
         moveToNextCell(e);
     }
 });
 
+document.addEventListener('beforeinput', function(e) {
+    if (e.data === ' ' || e.inputType === 'insertLineBreak' || e.inputType === 'insertParagraph') {
+        moveToNextCell(e);
+    }
+});
 
 document.getElementById('unsolveBtn').addEventListener('click', function() {
     clearAllHighlights();
