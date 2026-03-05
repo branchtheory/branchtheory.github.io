@@ -44,9 +44,6 @@ export function validateLineSequential(lineInputs) {
 }
 
 export function setUpInputValidation() {
-    const bigNumberInputs = document.querySelectorAll('.big-input');
-    const lineInputs = document.querySelectorAll('.line-input');
-    
     function addValidationTo(selector, validationFn) {
         document.querySelectorAll(selector).forEach(input => {
             input.addEventListener('input', (event) => {

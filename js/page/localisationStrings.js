@@ -1,16 +1,5 @@
 export const strings = {
     en: {
-      title: "Tetonor Solver",
-      description: "",
-      mainHeading: "Tetonor Solver",
-      intro: "Enter your puzzle or check your solution below.",
-      buttons: {
-        solve: "Solve",
-        partialSolve: "Partial solve",
-        check: "Check",
-        undo: "Undo",
-        clearAll: "Clear all"
-      },
       notifications: { 
         noSolutionFound: "There is no solution for this puzzle.", 
         multipleSolutionsFound: (n) => `This puzzle has ${n} solutions. Showing one of them.`,
@@ -22,17 +11,6 @@ export const strings = {
       },
     },
     es: {
-      title: "Solucionador de Tetonor",
-      description: "",
-      mainHeading: "Solucionador de Tetonor",
-      intro: "Introduce tu puzzle o comprueba la solución debajo.",
-      buttons: {
-        solve: "Resolver",
-        partialSolve: "Resolución parcial",
-        check: "Comprobar",
-        undo: "Deshacer",
-        clearAll: "Borrar todo"
-      },
       notifications: { 
         noSolutionFound: "Este Tetonor no tiene solución.", 
         multipleSolutionsFound: (n) => `Este acertijo tiene ${n} soluciones. Mostrando una de ellas.`,

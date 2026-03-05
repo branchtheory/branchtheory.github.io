@@ -20,6 +20,8 @@ import {
         highlightConflicts
 } from './page/check.js';
 import { 
+        DEMO_GRID_DATA, 
+        DEMO_LINE_DATA,
         getPuzzle,
 } from './page/getPuzzle.js';
 import { 
@@ -35,16 +37,25 @@ import {
 import {
         strings
 } from './page/localisationStrings.js'
+import { 
+        setUpInputValidation 
+} from './page/validateInput.js';
 
 const bigNumberInputs = document.querySelectorAll('.big-input');
 const lineInputs = document.querySelectorAll('.line-input');
 const allInputs = document.querySelectorAll('.big-input, .line-input, .operand-input, .operation-input');
 
-function clearAllHighlights() {
-    allInputs.forEach(input => {
-        input.classList.remove('conflict-cell');
+document.addEventListener('DOMContentLoaded', function() {
+    bigNumberInputs.forEach((input, index) => {
+        input.placeholder = DEMO_GRID_DATA[index] || '';
     });
-}
+    
+    lineInputs.forEach((input, index) => {
+        input.placeholder = DEMO_LINE_DATA[index] || '';
+    });
+
+   setUpInputValidation();   
+});
 
 document.querySelectorAll('.big-input, .operand-input, .operation-input').forEach(input => {
     input.dataset.lastInputType = '';
@@ -116,6 +127,12 @@ function updateSolveBtn() {
     document.getElementById('partialSolveBtn').disabled = !bigInputAllFilled;
     document.getElementById('solveBtn').disabled = !bigInputAllFilled;
     document.getElementById('checkBtn').disabled = !bigInputAllFilled;
+}
+
+function clearAllHighlights() {
+    allInputs.forEach(input => {
+        input.classList.remove('conflict-cell');
+    });
 }
 
 allInputs.forEach(input => {
