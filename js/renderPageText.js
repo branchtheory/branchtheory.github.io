@@ -12,8 +12,9 @@ import {
 const bigNumberInputs = document.querySelectorAll('.big-input');
 const lineInputs = document.querySelectorAll('.line-input');
 
+document.title = strings[lang].title;
+
 document.addEventListener('DOMContentLoaded', function() {
-    document.title = strings[lang].title;
     document.getElementById('main-heading').textContent = strings[lang].mainHeading;
     document.getElementById('intro-para').textContent = strings[lang].intro;
     document.getElementById('solveBtn').textContent = strings[lang].buttons.solve;
