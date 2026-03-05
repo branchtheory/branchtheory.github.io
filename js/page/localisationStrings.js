@@ -7,7 +7,7 @@ export const strings = {
       buttons: {
         solve: "Solve",
         partialSolve: "Partial solve",
-        check: "✔ Check",
+        check: "Check",
         undo: "Undo",
         clearAll: "Clear all"
       },
@@ -29,7 +29,7 @@ export const strings = {
       buttons: {
         solve: "Resolver",
         partialSolve: "Resolución parcial",
-        check: "✔ Comprobar",
+        check: "Comprobar",
         undo: "Deshacer",
         clearAll: "Borrar todo"
       },

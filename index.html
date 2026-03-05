@@ -1,504 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <script>const lang = document.documentElement.lang</script>
-    <script type="module" src="./js/renderPageText.js"></script>
-    <script>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-5XRVFTD9');
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/favicon.png" type="image/png">
-    <style>
-        body {
-            font-family: system-ui, sans-serif;
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 20px;
-            background: white;
-        }
+    <head>
+        <script>const lang = document.documentElement.lang</script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/favicon.png" type="image/png">
+        <style>
+            body {
+                font-family: system-ui, sans-serif;
+                max-width: 700px;
+                margin: 0 auto;
+                padding: 20px;
+                background: white;
+            }
 
-        .container {
-            padding: 30px;
-            border-radius: 0px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            background-color: #f7f7f7fc;
-        }
+            .container {
+                padding: 30px;
+                border-radius: 0px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                background-color: #f7f7f7fc;
+            }
 
-        h1 {
-            text-align: center;
-            color: #222;
-            margin-bottom: 18px;
-            font-size: 40px;
-        }
+            h1 {
+                text-align: center;
+                color: #222;
+                margin-bottom: 18px;
+                font-size: 40px;
+            }
 
-        p {
-            text-align: center;
-            color: #222;
-            margin-bottom: 30px;
-        }
+            p {
+                text-align: center;
+                color: #222;
+                margin-bottom: 30px;
+            }
 
-        .puzzle-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-        }
+            .puzzle-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
 
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
+            .button-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
 
-        .button-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .main-grid {
-            table-layout: fixed;
-            width: 456px;
-            border: 1px solid #222;
-            border-collapse: collapse;
-        }
+            .button-row {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-grid {
+                table-layout: fixed;
+                width: 456px;
+                border: 1px solid #222;
+                border-collapse: collapse;
+            }
 
-        .main-grid td {
-            padding: 0 !important;
-            border: 1px dashed rgba(0, 0, 0, 0.4);
-            text-align: center;
-            vertical-align: middle;
-        }
+            .main-grid td {
+                padding: 0 !important;
+                border: 1px dashed rgba(0, 0, 0, 0.4);
+                text-align: center;
+                vertical-align: middle;
+            }
 
-        .main-grid tr:nth-child(odd):not(:first-child) td {
-            border-top: 1px solid #222;
-        }
+            .main-grid tr:nth-child(odd):not(:first-child) td {
+                border-top: 1px solid #222;
+            }
 
-        .main-grid td.big-number:not(:first-child) {
-            border-left: 1px solid #222;
-        }
+            .main-grid td.big-number:not(:first-child) {
+                border-left: 1px solid #222;
+            }
 
-        .main-grid td.small-cell:nth-child(3n+4),
-        .main-grid td.small-operation-cell:nth-child(3n+4) {
-            border-left: 1px solid #222;
-        }
+            .main-grid td.small-cell:nth-child(3n+4),
+            .main-grid td.small-operation-cell:nth-child(3n+4) {
+                border-left: 1px solid #222;
+            }
 
-        .big-number {
-            height: 64px;
-            background-color: rgb(240, 240, 240);
-            padding: 0; 
-            vertical-align: middle;
-            overflow: hidden; 
-            border-bottom: 1px dashed rgba(0, 0, 0, 0.4) !important; 
-        }
-        
-        .big-number input {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: transparent;
-            text-align: center;
-            font-size: 44px;
-            color: #222;
-            box-sizing: border-box;
-            margin: 0;
-            outline: none;
-        }
-        
-        .big-number input:focus {
-            outline: none !important;
-            background-color: rgba(134, 187, 216, 0.8) !important;
-        }
+            .big-number {
+                height: 64px;
+                background-color: rgb(240, 240, 240);
+                padding: 0; 
+                vertical-align: middle;
+                overflow: hidden; 
+                border-bottom: 1px dashed rgba(0, 0, 0, 0.4) !important; 
+            }
+            
+            .big-number input {
+                display: block;
+                width: 100%;
+                height: 100%;
+                border: none;
+                background: transparent;
+                text-align: center;
+                font-size: 44px;
+                color: #222;
+                box-sizing: border-box;
+                margin: 0;
+                outline: none;
+            }
+            
+            .big-number input:focus {
+                outline: none !important;
+                background-color: rgba(134, 187, 216, 0.8) !important;
+            }
 
-        .small-cell,
-        .small-operation-cell {
-            width: 38px;
-            height: 33px;
-            border: 1px solid #ccc;
-            background: white;
-            color: #222;
-            padding: 0;
-        }
+            .small-cell,
+            .small-operation-cell {
+                width: 38px;
+                height: 33px;
+                border: 1px solid #ccc;
+                background: white;
+                color: #222;
+                padding: 0;
+            }
 
-        .operand-input, 
-        .operation-input, 
-        .bottom-line input {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: transparent;
-            text-align: center;
-            font-size: 22px;
-            outline: none;
-            border-radius: 0;
-            box-sizing: border-box;
-            padding: 0;
-            margin: 0;
-            display: block;
-        }
+            .operand-input, 
+            .operation-input, 
+            .bottom-line input {
+                width: 100%;
+                height: 100%;
+                border: none;
+                background: transparent;
+                text-align: center;
+                font-size: 22px;
+                outline: none;
+                border-radius: 0;
+                box-sizing: border-box;
+                padding: 0;
+                margin: 0;
+                display: block;
+            }
 
-        .operation-input {
-          font-size: 26px;
-        }
+            .operation-input {
+            font-size: 26px;
+            }
 
-        .bottom-line input {
-          font-size: 21px;
-        }
- 
-        .operand-input:focus, 
-        .operation-input:focus, 
-        .bottom-line input:focus {
-            background-color: #86BBD8;
-            outline: none;
-            border-radius: 0;
-        }
+            .bottom-line input {
+            font-size: 21px;
+            }
+    
+            .operand-input:focus, 
+            .operation-input:focus, 
+            .bottom-line input:focus {
+                background-color: #86BBD8;
+                outline: none;
+                border-radius: 0;
+            }
 
-        .bottom-line {
-            border: 1px solid #222;
-            border-collapse: collapse;
-            margin: 10px auto 0;
-        }
+            .bottom-line {
+                border: 1px solid #222;
+                border-collapse: collapse;
+                margin: 10px auto 0;
+            }
 
-        .bottom-line td {
-            width: 31px;
-            height: 31px;
-            border: 1px solid #222;
-            text-align: center;
-            vertical-align: middle;
-            background-color: white;
-            padding: 0;
-        }
+            .bottom-line td {
+                width: 31px;
+                height: 31px;
+                border: 1px solid #222;
+                text-align: center;
+                vertical-align: middle;
+                background-color: white;
+                padding: 0;
+            }
 
 
-        @media (max-width: 600px) {
-          .bottom-line {
-            display: block; 
-            border: none;
-            width: fit-content;;
-          }
-        
-          .bottom-line tr {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            border-top: 1px solid #222;
-            border-left: 1px solid #222;
-            width: fit-content;
-          }
-        
-          .bottom-line td {
-            display: block;
-            width: auto;
-            border: none;
-            border-right: 1px solid #222;
-            border-bottom: 1px solid #222;
-            margin: 0;
-          }
-        }
+            @media (max-width: 600px) {
+            .bottom-line {
+                display: block; 
+                border: none;
+                width: fit-content;;
+            }
+            
+            .bottom-line tr {
+                display: grid;
+                grid-template-columns: repeat(8, 1fr);
+                border-top: 1px solid #222;
+                border-left: 1px solid #222;
+                width: fit-content;
+            }
+            
+            .bottom-line td {
+                display: block;
+                width: auto;
+                border: none;
+                border-right: 1px solid #222;
+                border-bottom: 1px solid #222;
+                margin: 0;
+            }
+            }
 
-        @media (max-width: 540px) {
-          .container {
-            padding: 10px;
-          }
+            @media (max-width: 540px) {
+            .container {
+                padding: 10px;
+            }
 
-          .main-grid {
-            width: 300px;
-          }
+            .main-grid {
+                width: 300px;
+            }
 
-          .big-number {
-            height: 52px;
-          }
+            .big-number {
+                height: 52px;
+            }
 
-          .big-number input {
-            font-size: 32px;
-          }
+            .big-number input {
+                font-size: 32px;
+            }
 
-          .small-cell,
-          .small-operation-cell {
-            width: 25px;
-            height: 22px;
-          }
+            .small-cell,
+            .small-operation-cell {
+                width: 25px;
+                height: 22px;
+            }
 
-          .operand-input {
-            font-size: 16px;
-          }
-         
-          .operation-input {
-            font-size: 20px;
-          }
-        }
-        
-        .conflict-cell {
-            background-color: #ffcccc !important;
-        }
+            .operand-input {
+                font-size: 16px;
+            }
+            
+            .operation-input {
+                font-size: 20px;
+            }
+            }
+            
+            .conflict-cell {
+                background-color: #ffcccc !important;
+            }
 
-        .control-button {
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            border-radius: 0px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+            .control-button {
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                font-size: 16px;
+                border-radius: 0px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
 
-        .solve-button {
-            background-color: #008000;
-        }
+            .solve-button {
+                background-color: #008000;
+            }
 
-        .solve-button:hover:not(:disabled) {
-            background-color: #096b09;
-        }
+            .solve-button:hover:not(:disabled) {
+                background-color: #096b09;
+            }
 
-        .unsolve-button {
-            background-color: #fc8c03;
-        }
+            .unsolve-button {
+                background-color: #fc8c03;
+            }
 
-        .unsolve-button:hover:not(:disabled) {
-            background-color: #d67600;
-        }
+            .unsolve-button:hover:not(:disabled) {
+                background-color: #d67600;
+            }
 
-        .clear-button {
-            background-color: rgb(255, 44, 44);
-        }
+            .clear-button {
+                background-color: rgb(255, 44, 44);
+            }
 
-        .clear-button:hover:not(:disabled) {
-            background-color: rgb(237, 33, 0);
-        }
+            .clear-button:hover:not(:disabled) {
+                background-color: rgb(237, 33, 0);
+            }
 
-        .control-button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
+            .control-button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
 
-        .error-message {
-            color: #666666;
-            background-color: #ffdcb0;
-            padding: 10px;
-            margin: 10px;
-            display: none;
-        }
+            .error-message {
+                color: #666666;
+                background-color: #ffdcb0;
+                padding: 10px;
+                margin: 10px;
+                display: none;
+            }
 
-        .notification-message {
-            color: #666666;
-            background-color: #dbffb0;
-            padding: 10px;
-            margin: 10px;
-            display: none;
-        }
+            .notification-message {
+                color: #666666;
+                background-color: #dbffb0;
+                padding: 10px;
+                margin: 10px;
+                display: none;
+            }
 
-        .partial-solve {
-            border: 1px solid #222;
-            border-collapse: collapse;
-            margin-top: 20px;
-            display: none;
-        }
+            .partial-solve {
+                border: 1px solid #222;
+                border-collapse: collapse;
+                margin-top: 20px;
+                display: none;
+            }
 
-        .partial-solve td {
-            border: 1px solid #222;
-            text-align: center;
-            vertical-align: middle;
-            padding: 4px;
-            font-size: 16px;
-        }
+            .partial-solve td {
+                border: 1px solid #222;
+                text-align: center;
+                vertical-align: middle;
+                padding: 4px;
+                font-size: 16px;
+            }
 
-        .partial-solve .key-cell {
-            background-color: #f0f0f0;
-            font-size: 24px;
-        }
+            .partial-solve .key-cell {
+                background-color: #f0f0f0;
+                font-size: 24px;
+            }
 
-        .partial-solve .paired-value-header {
-            background-color: #f0f0f0;
-        }
+            .partial-solve .paired-value-header {
+                background-color: #f0f0f0;
+            }
 
-        .partial-solve .operand-cell {
-            background-color: #fff;
-        }
+            .partial-solve .operand-cell {
+                background-color: #fff;
+            }
 
-        .partial-solve .operation-cell {
-            background-color: #fff;
-        }
-    </style>
-</head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BCXQZFM7B0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-BCXQZFM7B0');
-</script>
-<body>
-    <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5XRVFTD9"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <div class="container">
-        <h1 id="main-heading"></h1>
-        <p id="intro-para"></p>
-        <div class="puzzle-container">
-        <div class="button-container">
-            <div class="button-row">
-                <button id="solveBtn" class="control-button solve-button"></button>
-                <button id="partialSolveBtn" class="control-button solve-button"></button>
-                <button id="checkBtn" class="control-button solve-button"></button>
+            .partial-solve .operation-cell {
+                background-color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 id="main-heading"></h1>
+            <p id="intro-para"></p>
+            <div class="puzzle-container">
+            <div class="button-container">
+                <div class="button-row">
+                    <button id="solveBtn" class="control-button solve-button"></button>
+                    <button id="partialSolveBtn" class="control-button solve-button"></button>
+                    <button id="checkBtn" class="control-button solve-button"></button>
+                </div>
+                <div class="button-row">
+                    <button id="unsolveBtn" class="control-button unsolve-button" disabled></button>
+                    <button id="clearBtn" class="control-button clear-button"></button>
+                </div>
             </div>
-            <div class="button-row">
-                <button id="unsolveBtn" class="control-button unsolve-button" disabled></button>
-                <button id="clearBtn" class="control-button clear-button"></button>
-            </div>
-        </div>
-            <div id="errorMessage" class="error-message"></div>
-            <div id="notificationMessage" class="notification-message"></div>
+                <div id="errorMessage" class="error-message"></div>
+                <div id="notificationMessage" class="notification-message"></div>
 
-            <table class="main-grid">
-                <tr>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                    <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
-                </tr>
-            </table>
-
-            <table class="bottom-line">
-                <tr>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
-                </tr>
-            </table>
-
-            <div style="overflow-x: auto; max-width: 100%;">
-                <table id="partialSolutionTable" class="partial-solve">
+                <table class="main-grid">
+                    <tr>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                        <td colspan="3" class="big-number">
+                            <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                        <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                        <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    </tr>
                 </table>
+
+                <table class="bottom-line">
+                    <tr>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                        <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    </tr>
+                </table>
+
+                <div style="overflow-x: auto; max-width: 100%;">
+                    <table id="partialSolutionTable" class="partial-solve">
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-    <script type="module" src="./js/pageInteractions.js"></script>
-</body>
+        <script type="module" src="./js/pageInteractions.js"></script>
+        <script type="module" src="./js/renderPageText.js"></script>
+        <script>
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-5XRVFTD9');
+        </script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCXQZFM7B0"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-BCXQZFM7B0');
+        </script>
+    </body>
 </html>

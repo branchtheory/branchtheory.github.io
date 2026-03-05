@@ -34,7 +34,7 @@ import {
 } from './page/moveToNextCellBehaviour.js'; 
 import {
         strings
-} from './page/strings.js'
+} from './page/localisationStrings.js'
 
 const bigNumberInputs = document.querySelectorAll('.big-input');
 const lineInputs = document.querySelectorAll('.line-input');

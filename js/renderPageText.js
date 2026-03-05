@@ -4,7 +4,7 @@ import {
 } from './page/getPuzzle.js';
 import {
     strings
-} from './page/strings.js'
+} from './page/localisationStrings.js'
 import { 
     setUpInputValidation 
 } from './page/validateInput.js';

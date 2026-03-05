@@ -9,7 +9,7 @@ import {
         showNotification
 } from './notify.js';
 import { getPuzzle } from './getPuzzle.js';
-import { strings } from './strings.js';
+import { strings } from './localisationStrings.js';
 
 export function generatePartialSolutionTable(partialSolveArray) {
   const table = document.getElementById('partialSolutionTable');
