@@ -88,7 +88,7 @@ document.querySelectorAll('.big-input, .operand-input, .operation-input').forEac
 });
 
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ' || e.key === "Tab") {
+    if (e.key === "Tab") {
         moveToNextCell(e);
     }
 });
