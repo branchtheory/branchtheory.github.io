@@ -26,9 +26,9 @@ export function getPuzzle() {
     }
     
     const bigNumberInput = document.querySelectorAll('.big-input');
-    if (!validateAllFieldsFilled(bigNumberInput)) { return { error: 'Fill the big numbers in the grid first.' } } 
+    if (!validateAllFieldsFilled(bigNumberInput)) { return { error: strings[lang].notifications.cannotGetGrid } } 
     const lineInput = document.querySelectorAll('.line-input');
-    if (!validateLineSequential(lineInput)) { return { error: 'Numbers in the bottom line must be in ascending order.' } }
+    if (!validateLineSequential(lineInput)) { return { error: strings[lang].notifications.cannotGetBottomLine } }
     
     return {
         bigNumberData: collectBigNumberData(),

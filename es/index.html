@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
+    <script>const lang = document.documentElement.lang</script>
     <script>
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -11,7 +12,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/favicon.png" type="image/png">
-    <title>Solucionador de Tetonor</title>
     <style>
         body {
             font-family: system-ui, sans-serif;
@@ -339,18 +339,18 @@
         height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <div class="container">
-        <h1>Solucionador de Tetonor</h1>
-        <p>Introduce tu puzzle o comprueba la solución debajo.</p>
+        <h1 id="main-heading"></h1>
+        <p id="intro-para"></p>
         <div class="puzzle-container">
         <div class="button-container">
             <div class="button-row">
-                <button id="solveBtn" class="control-button solve-button">Resolver</button>
-                <button id="partialSolveBtn" class="control-button solve-button">Resolución parcial</button>
-                <button id="checkBtn" class="control-button solve-button">✔ Comprobar</button>
+                <button id="solveBtn" class="control-button solve-button"></button>
+                <button id="partialSolveBtn" class="control-button solve-button"></button>
+                <button id="checkBtn" class="control-button solve-button"></button>
             </div>
             <div class="button-row">
-                <button id="unsolveBtn" class="control-button unsolve-button" disabled>Deshacer solución</button>
-                <button id="clearBtn" class="control-button clear-button">Borrar todo</button>
+                <button id="unsolveBtn" class="control-button unsolve-button" disabled></button>
+                <button id="clearBtn" class="control-button clear-button"></button>
             </div>
         </div>
             <div id="errorMessage" class="error-message"></div>
@@ -359,138 +359,139 @@
             <table class="main-grid">
                 <tr>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                     <td colspan="3" class="big-number">
-                        <input type="text" inputmode="numeric" class="big-input">
+                        <input type="text" inputmode="numeric" class="big-input" enterkeyhint="go">
                     </td>
                 </tr>
                 <tr>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
-                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input"></td>
-                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
+                    <td class="small-operation-cell"><input type="text" inputmode="text" class="operation-input" enterkeyhint="go"></td>
+                    <td class="small-cell"><input type="text" inputmode="numeric" class="operand-input" enterkeyhint="go"></td>
                 </tr>
             </table>
 
             <table class="bottom-line">
                 <tr>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
-                    <td><input type="text" inputmode="numeric" class="line-input"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
+                    <td><input type="text" inputmode="numeric" class="line-input" enterkeyhint="go"></td>
                 </tr>
             </table>
+
             <div style="overflow-x: auto; max-width: 100%;">
                 <table id="partialSolutionTable" class="partial-solve">
                 </table>

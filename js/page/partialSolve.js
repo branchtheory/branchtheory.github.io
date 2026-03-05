@@ -9,6 +9,7 @@ import {
         showNotification
 } from './notify.js';
 import { getPuzzle } from './getPuzzle.js';
+import { strings } from './strings.js';
 
 export function generatePartialSolutionTable(partialSolveArray) {
   const table = document.getElementById('partialSolutionTable');
@@ -81,7 +82,7 @@ export function partialSolve() {
     const solution = getSolution(dataResult.bigNumberData, dataResult.lineData);
 
     if (solution === "invalid") {
-        showError('There is no solution for this puzzle.');
+        showError(strings[lang].notifications.noSolutionFound);
         return;
     }
 

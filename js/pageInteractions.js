@@ -37,6 +37,9 @@ import {
 import { 
         moveToNextCell
 } from './page/moveToNextCellBehaviour.js'; 
+import {
+        strings
+} from './page/strings.js'
 
 const bigNumberInputs = document.querySelectorAll('.big-input');
 const lineInputs = document.querySelectorAll('.line-input');
@@ -49,6 +52,15 @@ function clearAllHighlights() {
 }
         
 document.addEventListener('DOMContentLoaded', function() {
+    document.title = strings[lang].title;
+    document.getElementById('main-heading').textContent = strings[lang].mainHeading;
+    document.getElementById('intro-para').textContent = strings[lang].intro;
+    document.getElementById('solveBtn').textContent = strings[lang].buttons.solve;
+    document.getElementById('partialSolveBtn').textContent = strings[lang].buttons.partialSolve;
+    document.getElementById('checkBtn').textContent = strings[lang].buttons.check;
+    document.getElementById('unsolveBtn').textContent = strings[lang].buttons.undo;
+    document.getElementById('clearBtn').textContent = strings[lang].buttons.clearAll;
+
     bigNumberInputs.forEach((input, index) => {
         input.placeholder = DEMO_GRID_DATA[index] || '';
     });
@@ -76,7 +88,13 @@ document.querySelectorAll('.big-input, .operand-input, .operation-input').forEac
 });
 
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ' || e.key === "Tab") {
+    if (e.key === "Tab") {
+        moveToNextCell(e);
+    }
+});
+
+document.addEventListener('beforeinput', function(e) {
+    if (e.data === ' ' || e.inputType === 'insertLineBreak' || e.inputType === 'insertParagraph') {
         moveToNextCell(e);
     }
 });
@@ -148,12 +166,12 @@ document.getElementById('solveBtn').addEventListener('click', function() {
     const solution = getSolution(dataResult.bigNumberData, dataResult.lineData);
     
     if (solution === "invalid") {
-        showError('There is no solution for this puzzle.');
+        showError(strings[lang].notifications.noSolutionFound);
         return;
     }
 
     if (solution.grids.length && solution.grids.length > 1) {
-        showNotification(`This puzzle has ${solution.grids.length} solutions. Showing one of them.`);
+        showNotification(strings[lang].notifications.multipleSolutionsFound(solution.grids.length));
     }
 
     allInputs.forEach(input => {
@@ -216,14 +234,14 @@ document.getElementById('checkBtn').addEventListener('click', function() {
     const solution = getSolution(dataResult.bigNumberData, dataResult.lineData); 
 
     if (solution === "invalid") {
-        showError('Either there is no solution for this puzzle, or some of the numbers in the strip at the bottom are incorrect.');
+        showError(strings[lang].notifications.noSolutionFoundOrWrongLine);
         return;
     }
 
     if (checkUserSolution(solution)) {
-        showNotification('All correct. That matches a solution.');
+        showNotification(strings[lang].notifications.passedCheck);
     } else {
-        showError('Some of that does not match any solution.'); 
+        showError(strings[lang].notifications.failedCheck); 
         const conflicts = findUniversalConflicts(solution);
         highlightConflicts(conflicts); 
     }
