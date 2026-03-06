@@ -5,13 +5,26 @@ import {
 
 let originalGridData = [];
 let originalLineData = [];
+let originalOperandData = [];
+let originalOperationData = [];
 let originalDataSaved = false; 
 let isDemoMode = false;
 
+const bigNumberInputs = document.querySelectorAll('.big-input');
+const lineInputs = document.querySelectorAll('.line-input');
+const operandInputs = document.querySelectorAll('.operand-input');
+const operationInputs = document.querySelectorAll('.operation-input');
+
+const inputGroups = [
+    { inputs: bigNumberInputs, getData: () => originalGridData },
+    { inputs: lineInputs, getData: () => originalLineData },
+    { inputs: operandInputs, getData: () => originalOperandData },
+    { inputs: operationInputs, getData: () => originalOperationData },
+];
+
 export function getIsDemoMode() {
     const bigNumberInputs = Array.from(document.querySelectorAll('.big-input'));
-    
-    return bigNumberInputs[0].placeholder !== ''; // could be any of them -- all placeholders should be ''s
+    return bigNumberInputs[0].placeholder !== '';
 }
 
 export function setIsDemoMode(state) {
@@ -19,73 +32,31 @@ export function setIsDemoMode(state) {
 }
 
 export function restoreOriginalData() {
-    // Restore grid data
-    const bigNumberInputs = document.querySelectorAll('.big-input');
-    bigNumberInputs.forEach((input, index) => {
-        input.value = originalGridData[index] || '';
-        input.disabled = false;
+    inputGroups.forEach(({ inputs, getData }) => {
+        inputs.forEach((input, index) => {
+            input.value = getData()[index] || '';
+            input.disabled = false;
+        });
     });
     
-    // Restore line data
-    const lineInputs = document.querySelectorAll('.line-input');
-    lineInputs.forEach((input, index) => {
-        input.value = originalLineData[index] || '';
-        input.disabled = false;
-    });
-    
-    // Clear small cell inputs (not the cells themselves)
-    const operandInputs = document.querySelectorAll('.operand-input');
-    operandInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-
-    // Clear operation inputs (not the cells themselves)
-    const operationInputs = document.querySelectorAll('.operation-input');
-    operationInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-
     originalDataSaved = false;
-
-    document.getElementById('partialSolutionTable').style.display = 'none';
 }
 
 export function clearAllData() {
-    // Clear grid inputs
-    const bigNumberInputs = document.querySelectorAll('.big-input');
-    bigNumberInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-    
-    // Clear line inputs
-    const lineInputs = document.querySelectorAll('.line-input');
-    lineInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-    
-    // Clear small cell inputs and operation inputs
-    const operandInputs = document.querySelectorAll('.operand-input');
-    operandInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
+    inputGroups.forEach(({ inputs }) => {
+        inputs.forEach(input => {
+            input.value = '';
+            input.disabled = false;
+        });
     });
 
-    const operationInputs = document.querySelectorAll('.operation-input');
-    operationInputs.forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
-    
-    // Reset arrays
     originalGridData = [];
     originalLineData = [];
+    originalOperandData = [];
+    originalOperationData = [];
 
     bigNumberInputs.forEach((input, index) => {
-    input.placeholder = DEMO_GRID_DATA[index] || '';
+        input.placeholder = DEMO_GRID_DATA[index] || '';
     });
     
     lineInputs.forEach((input, index) => {
@@ -101,13 +72,10 @@ export function clearAllData() {
 export function saveOriginalData() {
     if (originalDataSaved) return; // Don't overwrite already saved data
     
-    // Save grid data
-    const bigNumberInputs = document.querySelectorAll('.big-input');
     originalGridData = Array.from(bigNumberInputs).map(input => input.value);
-    
-    // Save line data
-    const lineInputs = document.querySelectorAll('.line-input');
     originalLineData = Array.from(lineInputs).map(input => input.value);
-    
+    originalOperandData = Array.from(operandInputs).map(input => input.value);
+    originalOperationData = Array.from(operationInputs).map(input => input.value);
+
     originalDataSaved = true;
 }

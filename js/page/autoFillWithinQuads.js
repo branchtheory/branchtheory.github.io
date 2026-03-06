@@ -1,4 +1,19 @@
-export function autoFillWithinQuad(input) {
+document.querySelectorAll('.big-input, .operand-input, .operation-input').forEach(input => {
+    input.dataset.lastInputType = '';
+
+    input.addEventListener('input', (e) => {
+        input.dataset.lastInputType = e.inputType;
+        if (e.inputType.startsWith('delete')) return;
+        autoFillWithinQuad(input);
+    });
+
+    input.addEventListener('blur', () => {
+        if (input.dataset.lastInputType.startsWith('delete')) return;
+        autoFillWithinQuad(input);
+    });
+});
+
+function autoFillWithinQuad(input) {
     const td = input.closest('td');
     const isBigInput = input.classList.contains('big-input');
 
@@ -21,7 +36,7 @@ export function autoFillWithinQuad(input) {
     }
 }
 
-export function autoFill(cells, groupIndex, prevTr, changedInput) {
+function autoFill(cells, groupIndex, prevTr, changedInput) {
     const groupStart = groupIndex * 3;
 
     const operand1Input = cells[groupStart].querySelector('.operand-input');

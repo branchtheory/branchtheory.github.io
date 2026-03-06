@@ -4,16 +4,25 @@ import {
         setIsDemoMode,
         saveOriginalData
 } from './saveAndRestore.js';
-import {
-        showError,
-        showNotification
-} from './notify.js';
 import { getPuzzle } from './getPuzzle.js';
 import { strings } from './localisationStrings.js';
+import {
+  clearAllHighlights
+} from './clearHighlighting.js';
+import {
+  showError,
+} from './notify.js';
+
+document.getElementById('partial-solve-btn').addEventListener('click', function() {
+  clearAllHighlights();
+  document.getElementById('notification-message').style.display = 'none';
+  document.getElementById('error-message').style.display = 'none';
+  partialSolve();
+});
 
 export function generatePartialSolutionTable(partialSolveArray) {
   const table = document.getElementById('partialSolutionTable');
-  table.innerHTML = ''; // Clear existing content
+  table.innerHTML = ''; // Clear existing content ///////////////////////////// <<<<<<<<<<<<<<<< THIS IS BAD
   
   for (let i = 0; i < partialSolveArray.length; i++) {
     const dataArray = partialSolveArray[i]; // Now directly an array of operation objects
@@ -69,6 +78,11 @@ export function generatePartialSolutionTable(partialSolveArray) {
 }
 
 export function partialSolve() {
+    if (document.getElementById('partialSolutionTable').style.display === 'table') {
+      document.getElementById('partialSolutionTable').style.display = 'none';
+      return;
+    }
+
     const demoModeState = getIsDemoMode(document.querySelectorAll('.big-input'), document.querySelectorAll('.line-input'), document.querySelectorAll('.operand-input'), document.querySelectorAll('.operation-input'))
     const dataResult = getPuzzle(demoModeState, document.querySelectorAll('.big-input'), document.querySelectorAll('.line-input'));
     if (Object.hasOwn(dataResult, 'isDemo')) { setIsDemoMode(dataResult.isDemo); }
@@ -78,7 +92,6 @@ export function partialSolve() {
         return;
     }
 
-    // Get solution data
     const solution = getSolution(dataResult.bigNumberData, dataResult.lineData);
 
     if (solution === "invalid") {
@@ -88,10 +101,7 @@ export function partialSolve() {
 
     saveOriginalData();
 
-    // Generate the partial results table
     generatePartialSolutionTable(solution.partialSolution);
-
-    document.getElementById('unsolveBtn').disabled = false;
 
     setTimeout(() => {
         document.getElementById('partialSolutionTable').scrollIntoView({

@@ -1,5 +1,5 @@
 export function showError(message) {
-    const errorDiv = document.getElementById('errorMessage');
+    const errorDiv = document.getElementById('error-message');
     errorDiv.textContent = message;
     errorDiv.style.display = 'block';
 
@@ -9,7 +9,7 @@ export function showError(message) {
 }
 
 export function showNotification(message) {
-    const notificationDiv = document.getElementById('notificationMessage');
+    const notificationDiv = document.getElementById('notification-message');
     notificationDiv.textContent = message;
     notificationDiv.style.display = 'block';
 }

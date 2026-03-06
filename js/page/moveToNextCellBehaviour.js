@@ -1,4 +1,16 @@
-export function moveToNextCell (e) {
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Tab") {
+        moveToNextCell(e);
+    }
+});
+
+document.addEventListener('beforeinput', function(e) {
+    if (e.data === ' ' || e.inputType === 'insertLineBreak' || e.inputType === 'insertParagraph') {
+        moveToNextCell(e);
+    }
+});
+
+function moveToNextCell (e) {
     const allInputs = Array.from(document.querySelectorAll('.main-grid input, .bottom-line input'));
     const index = allInputs.indexOf(e.target);
     if (index === -1) return;

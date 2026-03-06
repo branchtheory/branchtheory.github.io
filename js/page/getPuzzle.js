@@ -1,5 +1,4 @@
 import { 
-        validateAllFieldsFilled, 
         validateLineSequential
 } from './validateInput.js';
 import { 
@@ -10,6 +9,10 @@ import {
         collectBigNumberData,
         collectLineData
 } from './getPageData.js';
+import {
+    strings
+} from './localisationStrings.js'
+
 
 export const DEMO_GRID_DATA = [23, 23, 26, 27, 27, 28, 29, 31, 92, 120, 126, 130, 132, 168, 180, 198];
 export const DEMO_LINE_DATA = [4, null, 6, null, 9, 9, 10, 12, 13, null, null, null, null, null, 22, null];
@@ -26,7 +29,7 @@ export function getPuzzle() {
     }
     
     const bigNumberInput = document.querySelectorAll('.big-input');
-    if (!validateAllFieldsFilled(bigNumberInput)) { return { error: strings[lang].notifications.cannotGetGrid } } 
+    if (!allFieldsFilled(bigNumberInput)) { return { error: strings[lang].notifications.cannotGetGrid } } 
     const lineInput = document.querySelectorAll('.line-input');
     if (!validateLineSequential(lineInput)) { return { error: strings[lang].notifications.cannotGetBottomLine } }
     
@@ -34,4 +37,13 @@ export function getPuzzle() {
         bigNumberData: collectBigNumberData(),
         lineData: collectLineData()
     };
+}
+
+export function allFieldsFilled(bigNumberInputs) {
+    for (let input of bigNumberInputs) {
+        if (!input.value.trim()) {
+            return false;
+        }
+    }
+    return true;
 }

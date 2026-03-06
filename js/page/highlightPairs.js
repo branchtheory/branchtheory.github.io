@@ -91,7 +91,6 @@ export function highlightSolutionPairs(solution) {
             }
             
             if (lineIndices.length === 2) {
-                // Get color for this pair
                 const color = HIGHLIGHT_COLORS[colorIndex % HIGHLIGHT_COLORS.length];
                 
                 // Highlight both grid cells (addition and multiplication)

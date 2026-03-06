@@ -2,6 +2,50 @@ import {
     collectSmallCellData, 
     collectLineData 
 } from './getPageData.js';
+import {
+    clearAllHighlights
+} from './clearHighlighting.js';
+import { 
+    getSolution 
+} from '../solve/solve.js';
+import {
+    showError,
+    showNotification
+} from './notify.js';
+import {
+    getPuzzle
+} from './getPuzzle.js';
+import {
+    strings
+} from './localisationStrings.js';
+
+document.getElementById('check-btn').addEventListener('click', function() {
+    clearAllHighlights(); 
+    document.getElementById('notification-message').style.display = 'none';
+    document.getElementById('error-message').style.display = 'none';
+
+    const dataResult = getPuzzle();
+        
+    if (Object.hasOwn(dataResult, 'error')) {
+        showError(dataResult.error); 
+        return;
+    }
+
+    const solution = getSolution(dataResult.bigNumberData, dataResult.lineData); 
+
+    if (solution === "invalid") {
+        showError(strings[lang].notifications.noSolutionFoundOrWrongLine);
+        return;
+    }
+
+    if (checkUserSolution(solution)) {
+        showNotification(strings[lang].notifications.passedCheck);
+    } else {
+        showError(strings[lang].notifications.failedCheck); 
+        const conflicts = findUniversalConflicts(solution);
+        highlightConflicts(conflicts); 
+    }
+});
 
 export function findUniversalConflicts(solution) {
     const allUserInputElements = Array.from(document.querySelectorAll('.line-input, .operand-input, .operation-input'))

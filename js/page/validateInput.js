@@ -1,13 +1,4 @@
-export function validateAllFieldsFilled(bigNumberInputs) {
-    for (let input of bigNumberInputs) {
-        if (!input.value.trim()) {
-            return false;
-        }
-    }
-    return true;
-}
-
-export function validateLineSequential(lineInputs) {
+export function validateLineSequential(lineInputs) { // should validate in real time ...
     const values = [];
     
     lineInputs.forEach((input, index) => {
